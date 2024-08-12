@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<Description>Jalpan.Security</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Security</AssemblyName>
+		<Title>Jalpan.Security</Title>
+		<PackageId>Jalpan.Security</PackageId>
+		<PackageTags>Jalpan.Security</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.Messaging.Idempotency.MongoDB</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Messaging.Idempotency.MongoDB</AssemblyName>
+		<Title>Jalpan.Messaging.Idempotency.MongoDB</Title>
+		<PackageId>Jalpan.Messaging.Idempotency.MongoDB</PackageId>
+		<PackageTags>Jalpan.Messaging.Idempotency.MongoDB</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

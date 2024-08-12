@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.LoadBalancing.Fabio</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.LoadBalancing.Fabio</AssemblyName>
+		<Title>Jalpan.LoadBalancing.Fabio</Title>
+		<PackageId>Jalpan.LoadBalancing.Fabio</PackageId>
+		<PackageTags>Jalpan.LoadBalancing.Fabio</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan.Discovery.Consul\src\Jalpan.Discovery.Consul\Jalpan.Discovery.Consul.csproj" />
+  </ItemGroup>
+
+</Project>

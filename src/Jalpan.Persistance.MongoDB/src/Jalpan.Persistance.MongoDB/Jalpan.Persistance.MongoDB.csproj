@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.Persistance.MongoDB</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Persistance.MongoDB</AssemblyName>
+		<Title>Jalpan.Persistance.MongoDB</Title>
+		<PackageId>Jalpan.Persistance.MongoDB</PackageId>
+		<PackageTags>Jalpan.Persistance.MongoDB</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.26.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+  </ItemGroup>
+
+</Project>

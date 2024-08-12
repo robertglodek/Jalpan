@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.WebApi.CQRS</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.WebApi.CQRS</AssemblyName>
+		<Title>Jalpan.WebApi.CQRS</Title>
+		<PackageId>Jalpan.WebApi.CQRS</PackageId>
+		<PackageTags>Jalpan.WebApi.CQRS</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Jalpan.WebApi\src\Jalpan.WebApi\Jalpan.WebApi.csproj" />
+	</ItemGroup>
+
+</Project>

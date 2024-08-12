@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.Auth</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Auth</AssemblyName>
+		<Title>Jalpan.Auth</Title>
+		<PackageId>Jalpan.Auth</PackageId>
+		<PackageTags>Jalpan.Auth</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="7.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+  </ItemGroup>
+
+</Project>

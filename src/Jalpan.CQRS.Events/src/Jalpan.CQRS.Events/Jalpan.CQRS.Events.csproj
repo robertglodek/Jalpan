@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.CQRS.Events</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.CQRS.Events</AssemblyName>
+		<Title>Jalpan.CQRS.Events</Title>
+		<PackageId>Jalpan.CQRS.Events</PackageId>
+		<PackageTags>Jalpan.CQRS.Events</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
+
+</Project>
