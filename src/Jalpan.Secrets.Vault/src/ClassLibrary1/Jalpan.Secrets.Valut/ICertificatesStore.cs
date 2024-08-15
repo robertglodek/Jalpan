@@ -1,6 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 
-namespace Jalpan.Secretc.Vault;
+namespace Jalpan.Secrets.Vault;
 
 public interface ICertificatesStore
 {

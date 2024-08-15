@@ -1,4 +1,4 @@
-namespace Jalpan.Secretc.Vault;
+namespace Jalpan.Secrets.Vault;
 
 public interface IKeyValueSecrets
 {

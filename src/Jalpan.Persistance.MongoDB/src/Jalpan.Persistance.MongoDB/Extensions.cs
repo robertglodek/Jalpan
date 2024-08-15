@@ -47,7 +47,8 @@ public static class Extensions
             return client.GetDatabase(mongoOptions.Database);
         });
         builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
-        builder.Services.AddTransient<IMongoSessionFactory, MongoSessionFactory>();
+        builder.Services.AddTransient<IMongoDbSessionFactory, MongoDbSessionFactory>();
+        builder.Services.AddScoped<IUnitOfWork, MongoDbUnitOfWork>();
 
         if (seederType is null)
         {
@@ -68,10 +69,10 @@ public static class Extensions
         string collectionName)
         where TEntity : IIdentifiable<TIdentifiable>
     {
-        builder.Services.AddTransient<IMongoRepository<TEntity, TIdentifiable>>(sp =>
+        builder.Services.AddTransient<IMongoDbRepository<TEntity, TIdentifiable>>(sp =>
         {
             var database = sp.GetRequiredService<IMongoDatabase>();
-            return new MongoRepository<TEntity, TIdentifiable>(database, collectionName);
+            return new MongoDbRepository<TEntity, TIdentifiable>(database, collectionName);
         });
 
         return builder;

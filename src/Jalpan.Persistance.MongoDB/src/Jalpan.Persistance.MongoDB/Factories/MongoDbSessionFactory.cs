@@ -2,11 +2,11 @@
 
 namespace Jalpan.Persistance.MongoDB.Factories;
 
-internal sealed class MongoSessionFactory : IMongoSessionFactory
+internal sealed class MongoDbSessionFactory : IMongoDbSessionFactory
 {
     private readonly IMongoClient _client;
 
-    public MongoSessionFactory(IMongoClient client)
+    public MongoDbSessionFactory(IMongoClient client)
         => _client = client;
 
     public Task<IClientSessionHandle> CreateAsync()

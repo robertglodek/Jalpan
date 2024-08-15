@@ -18,4 +18,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
+    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+  </ItemGroup>
+
 </Project>

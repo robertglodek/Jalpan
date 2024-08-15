@@ -17,5 +17,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan.Messaging.Idempotency\src\Jalpan.Messaging.Idempotency\Jalpan.Messaging.Idempotency.csproj" />
+    <ProjectReference Include="..\..\..\Jalpan.Persistance.MongoDB\src\Jalpan.Persistance.MongoDB\Jalpan.Persistance.MongoDB.csproj" />
+  </ItemGroup>
 
 </Project>

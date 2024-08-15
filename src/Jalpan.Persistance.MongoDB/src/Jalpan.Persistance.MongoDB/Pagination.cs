@@ -7,11 +7,11 @@ namespace Jalpan.Persistance.MongoDB;
 
 public static class Pagination
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query)
-        => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results);
+    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query, CancellationToken cancellationToken = default)
+        => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results, cancellationToken);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string? orderBy,
-        string? sortOrder, int page = 1, int resultsPerPage = 10)
+        string? sortOrder, int page = 1, int resultsPerPage = 10, CancellationToken cancellationToken = default)
     {
         if (page <= 0)
         {
@@ -23,29 +23,29 @@ public static class Pagination
             resultsPerPage = 10;
         }
 
-        var isEmpty = await collection.AnyAsync() == false;
+        var isEmpty = await collection.AnyAsync(cancellationToken) == false;
         if (isEmpty)
         {
             return PagedResult<T>.Empty;
         }
 
-        var totalResults = await collection.CountAsync();
+        var totalResults = await collection.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling((decimal)totalResults / resultsPerPage);
 
         List<T> data;
         if (string.IsNullOrWhiteSpace(orderBy))
         {
-            data = await collection.Limit(page, resultsPerPage).ToListAsync();
+            data = await collection.Limit(page, resultsPerPage).ToListAsync(cancellationToken);
             return PagedResult<T>.Create(data, page, resultsPerPage, totalPages, totalResults);
         }
 
         if (sortOrder?.ToLowerInvariant() == "asc")
         {
-            data = await collection.OrderBy(ToLambda<T>(orderBy)).Limit(page, resultsPerPage).ToListAsync();
+            data = await collection.OrderBy(ToLambda<T>(orderBy)).Limit(page, resultsPerPage).ToListAsync(cancellationToken);
         }
         else
         {
-            data = await collection.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, resultsPerPage).ToListAsync();
+            data = await collection.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, resultsPerPage).ToListAsync(cancellationToken);
         }
 
         return PagedResult<T>.Create(data, page, resultsPerPage, totalPages, totalResults);

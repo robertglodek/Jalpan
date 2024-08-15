@@ -1,9 +1,9 @@
-using Jalpan.Secretc.Vault;
+using Jalpan.Secrets.Vault;
 using Jalpan.Serialization;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 
-namespace Jalpan.Secretc.Internals.Vault;
+namespace Jalpan.Secrets.Internals.Vault;
 
 internal sealed class KeyValueSecrets : IKeyValueSecrets
 {

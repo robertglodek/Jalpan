@@ -1,13 +1,13 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Jalpan.Secretc.Vault;
+using Jalpan.Secrets.Vault;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SecretsEngines.PKI;
 
-namespace Jalpan.Secretc.Internals.Vault;
+namespace Jalpan.Secrets.Internals.Vault;
 
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {

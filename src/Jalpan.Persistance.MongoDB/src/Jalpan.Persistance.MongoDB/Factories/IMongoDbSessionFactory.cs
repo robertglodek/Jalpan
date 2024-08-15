@@ -2,7 +2,7 @@
 
 namespace Jalpan.Persistance.MongoDB.Factories;
 
-public interface IMongoSessionFactory
+public interface IMongoDbSessionFactory
 {
     Task<IClientSessionHandle> CreateAsync();
 }

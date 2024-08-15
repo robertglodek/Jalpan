@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Text.Json;
 
-namespace Jalpan.Secretc.Vault;
+namespace Jalpan.Secrets.Vault;
 
 internal sealed class JsonParser
 {

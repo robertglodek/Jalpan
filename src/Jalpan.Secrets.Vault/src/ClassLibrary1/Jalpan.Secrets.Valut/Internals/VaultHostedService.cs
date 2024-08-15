@@ -1,10 +1,10 @@
-using Jalpan.Secretc.Vault;
+using Jalpan.Secrets.Vault;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 
-namespace Jalpan.Secretc.Internals.Vault;
+namespace Jalpan.Secrets.Internals.Vault;
 
 internal sealed class VaultHostedService : BackgroundService
 {

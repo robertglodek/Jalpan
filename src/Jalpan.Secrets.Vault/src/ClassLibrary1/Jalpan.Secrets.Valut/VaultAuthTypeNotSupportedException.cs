@@ -1,4 +1,4 @@
-namespace Jalpan.Secretc.Vault;
+namespace Jalpan.Secrets.Vault;
 
 internal sealed class VaultAuthTypeNotSupportedException : Exception
 {

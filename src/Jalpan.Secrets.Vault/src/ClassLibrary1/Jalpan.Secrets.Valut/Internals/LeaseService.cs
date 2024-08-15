@@ -1,7 +1,7 @@
-using Jalpan.Secretc.Vault;
+using Jalpan.Secrets.Vault;
 using System.Collections.Concurrent;
 
-namespace Jalpan.Secretc.Internals.Vault;
+namespace Jalpan.Secrets.Internals.Vault;
 
 internal sealed class LeaseService : ILeaseService
 {
