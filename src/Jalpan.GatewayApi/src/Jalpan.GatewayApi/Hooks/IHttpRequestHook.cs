@@ -1,10 +1,6 @@
-using System.Net.Http;
-using System.Threading.Tasks;
+namespace Jalpan.GatewayApi.Hooks;
 
-namespace Ntrada.Hooks
+public interface IHttpRequestHook
 {
-    public interface IHttpRequestHook
-    {
-        Task InvokeAsync(HttpRequestMessage request, ExecutionData data);
-    }
+    Task InvokeAsync(HttpRequestMessage request, ExecutionData data);
 }

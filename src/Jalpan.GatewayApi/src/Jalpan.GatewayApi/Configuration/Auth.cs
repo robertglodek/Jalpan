@@ -1,11 +1,8 @@
-using System.Collections.Generic;
+namespace Jalpan.GatewayApi.Configuration;
 
-namespace Ntrada.Configuration
+public class Auth
 {
-    public class Auth
-    {
-        public bool Enabled { get; set; }
-        public bool Global { get; set; }
-        public IDictionary<string, Policy> Policies { get; set; }
-    }
+    public bool Enabled { get; set; }
+    public bool Global { get; set; }
+    public IDictionary<string, Policy>? Policies { get; set; }
 }

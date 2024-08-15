@@ -5,7 +5,7 @@ using Jalpan.Contexts;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Types;
 
-namespace Micro.Observability.Tracing.Decorators;
+namespace Jalpan.Tracing.OpenTelemetry.Decorators;
 
 internal sealed class MessageBrokerTracingDecorator : IMessageBroker
 {

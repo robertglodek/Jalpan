@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace Micro.Messaging.RabbitMQ.Streams;
+namespace Jalpan.Messaging.RabbitMQ.Streams;
 
 internal sealed class RabbitStreamInitializer : IHostedService
 {

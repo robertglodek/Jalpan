@@ -1,28 +1,28 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-namespace Jalpan.GatewayApi.Auth
+namespace Jalpan.GatewayApi.Auth;
+
+internal sealed class AuthenticationManager : IAuthenticationManager
 {
-    internal sealed class AuthenticationManager : IAuthenticationManager
+    private readonly GatewayOptions _options;
+
+    public AuthenticationManager(IOptions<GatewayOptions> options)
     {
-        private readonly GatewayOptions _options;
+        _options = options.Value;
+    }
 
-        public AuthenticationManager(IOptions<GatewayOptions> options)
+    public async Task<bool> TryAuthenticateAsync(HttpRequest request, RouteConfig routeConfig)
+    {
+        if (_options.Auth is null || !_options.Auth.Enabled || _options.Auth?.Global != true &&
+            routeConfig.Route?.Auth != true)
         {
-            _options = options.Value;
+            return true;
         }
 
-        public async Task<bool> TryAuthenticateAsync(HttpRequest request, RouteConfig routeConfig)
-        {
-            if (_options.Auth is null || !_options.Auth.Enabled || _options.Auth?.Global != true &&
-                routeConfig.Route?.Auth != true)
-            {
-                return true;
-            }
+        var result = await request.HttpContext.AuthenticateAsync();
 
-            var result = await request.HttpContext.AuthenticateAsync();
-
-            return result.Succeeded;
-        }
+        return result.Succeeded;
     }
 }

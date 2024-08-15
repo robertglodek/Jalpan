@@ -1,9 +1,8 @@
 using System.Text;
-using Jalpan.GatewayApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Ntrada.Routing
+namespace Jalpan.GatewayApi.Routing
 {
     internal sealed class DownstreamBuilder : IDownstreamBuilder
     {

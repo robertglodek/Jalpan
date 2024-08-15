@@ -1,10 +1,10 @@
 using Jalpan.Messaging.Streams;
-using Micro.Messaging.RabbitMQ.Streams.Publishers;
-using Micro.Messaging.RabbitMQ.Streams.Subscribers;
+using Jalpan.Messaging.RabbitMQ.Streams.Publishers;
+using Jalpan.Messaging.RabbitMQ.Streams.Subscribers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Micro.Messaging.RabbitMQ.Streams;
+namespace Jalpan.Messaging.RabbitMQ.Streams;
 
 public static class Extensions
 {

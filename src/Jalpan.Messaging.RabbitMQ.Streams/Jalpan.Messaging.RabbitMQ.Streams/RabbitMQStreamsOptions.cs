@@ -1,4 +1,4 @@
-namespace Micro.Messaging.RabbitMQ.Streams;
+namespace Jalpan.Messaging.RabbitMQ.Streams;
 
 public sealed class RabbitMQStreamsOptions
 {

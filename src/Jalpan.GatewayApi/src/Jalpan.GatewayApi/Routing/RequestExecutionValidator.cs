@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
 using Jalpan.GatewayApi.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Ntrada.Routing
+namespace Jalpan.GatewayApi.Routing
 {
     internal sealed class RequestExecutionValidator : IRequestExecutionValidator
     {

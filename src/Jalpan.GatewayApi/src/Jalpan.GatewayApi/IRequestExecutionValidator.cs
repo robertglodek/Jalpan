@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+internal interface IRequestExecutionValidator
 {
-    internal interface IRequestExecutionValidator
-    {
-        Task<bool> TryExecuteAsync(HttpContext context, RouteConfig routeConfig);
-    }
+    Task<bool> TryExecuteAsync(HttpContext context, RouteConfig routeConfig);
 }

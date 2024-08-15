@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Stream.Client;
 using RabbitMQ.Stream.Client.Reliable;
 
-namespace Micro.Messaging.RabbitMQ.Streams.Subscribers;
+namespace Jalpan.Messaging.RabbitMQ.Streams.Subscribers;
 
 internal sealed class RabbitMQStreamSubscriber : IStreamSubscriber
 {

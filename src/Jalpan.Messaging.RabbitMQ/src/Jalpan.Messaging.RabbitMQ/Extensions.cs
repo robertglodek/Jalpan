@@ -9,8 +9,6 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Jalpan.Messaging.Clients;
 using Jalpan.Messaging.Subscribers;
-using IMessageHandler = Jalpan.Messaging.RabbitMQ.Internals.IMessageHandler;
-using MessageHandler = Jalpan.Messaging.RabbitMQ.Internals.MessageHandler;
 using Jalpan.Handlers;
 
 namespace Jalpan.Messaging.RabbitMQ;
@@ -54,7 +52,7 @@ public static class Extensions
         services.AddSingleton(bus);
         services.AddSingleton<IMessageBrokerClient, RabbitMqBrokerClient>();
         services.AddSingleton<IMessageSubscriber, RabbitMqMessageSubscriber>();
-        services.AddSingleton<IMessageHandler, MessageHandler>();
+        services.AddSingleton<Internals.IMessageHandler, Internals.MessageHandler>();
         services.AddSingleton<IMessageTypeRegistry>(messageTypeRegistry);
         services.AddSingleton<IContextAccessor>(contextAccessor);
         services.AddSingleton<IMessageContextAccessor>(messageContextAccessor);
@@ -64,7 +62,6 @@ public static class Extensions
     
     public static IServiceCollection AddMessagingErrorHandlingDecorators(this IServiceCollection services)
     {
-        services.TryDecorate(typeof(ICommandHandler<>), typeof(MessagingErrorHandlingCommandHandlerDecorator<>));
         services.TryDecorate(typeof(IEventHandler<>), typeof(MessagingErrorHandlingEventHandlerDecorator<>));
         return services;
     }

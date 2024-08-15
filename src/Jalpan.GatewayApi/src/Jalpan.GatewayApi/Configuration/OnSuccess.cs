@@ -1,8 +1,7 @@
-namespace Ntrada.Configuration
+namespace Jalpan.GatewayApi.Configuration;
+
+public class OnSuccess
 {
-    public class OnSuccess
-    {
-        public int Code { get; set; } = 200;
-        public object Data { get; set; }
-    }
+    public int Code { get; set; } = 200;
+    public object Data { get; set; }
 }

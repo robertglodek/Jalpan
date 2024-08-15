@@ -1,10 +1,13 @@
 ﻿using Jalpan.Messaging.Brokers;
 using Jalpan.Messaging.RabbitMQ.Internals;
-using Micro.Observability.Tracing.Decorators;
+using Jalpan.Tracing.OpenTelemetry.Decorators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
-namespace Micro.Observability.Tracing;
+namespace Jalpan.Tracing.OpenTelemetry;
 
 internal static class Extensions
 {
@@ -40,8 +43,7 @@ internal static class Extensions
                     .AddSource(MessageBrokerTracingDecorator.ActivitySourceName)
                     .AddSource(MessageHandlerTracingDecorator.ActivitySourceName)
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddSqlClientInstrumentation();
+                    .AddHttpClientInstrumentation();
 
                 switch (tracingOptions.Exporter.ToLowerInvariant())
                 {

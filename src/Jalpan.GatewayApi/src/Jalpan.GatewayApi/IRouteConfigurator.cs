@@ -1,9 +1,8 @@
-using Ntrada.Configuration;
+using Jalpan.GatewayApi.Configuration;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+internal interface IRouteConfigurator
 {
-    internal interface IRouteConfigurator
-    {
-        RouteConfig Configure(Module module, Route route);
-    }
+    RouteConfig Configure(Module module, Route route);
 }

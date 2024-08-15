@@ -1,9 +1,8 @@
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+public class Error
 {
-    public class Error
-    {
-        public string Code { get; set; }
-        public string Property { get; set; }
-        public string Message { get; set; }
-    }
+    public string Code { get; set; }
+    public string Property { get; set; }
+    public string Message { get; set; }
 }

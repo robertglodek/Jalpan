@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using RabbitMQ.Stream.Client;
 using RabbitMQ.Stream.Client.Reliable;
 
-namespace Micro.Messaging.RabbitMQ.Streams;
+namespace Jalpan.Messaging.RabbitMQ.Streams;
 
 public sealed class RabbitStreamManager
 {

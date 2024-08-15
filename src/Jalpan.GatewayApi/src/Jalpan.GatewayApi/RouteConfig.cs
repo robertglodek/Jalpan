@@ -1,10 +1,9 @@
-using Ntrada.Configuration;
+using Jalpan.GatewayApi.Configuration;
 
-namespace Jalpan.GatewayApi
+namespace Jalpan.GatewayApi;
+
+public class RouteConfig
 {
-    public class RouteConfig
-    {
-        public Route Route { get; set; }
-        public string Downstream { get; set; }
-    }
+    public Route Route { get; set; }
+    public string Downstream { get; set; }
 }

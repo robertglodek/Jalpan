@@ -1,12 +1,10 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+public interface IRequestHandlerManager
 {
-    public interface IRequestHandlerManager
-    {
-        IHandler Get(string name);
-        void AddHandler(string name, IHandler handler);
-        Task HandleAsync(string handler, HttpContext context, RouteConfig routeConfig);
-    }
+    IHandler Get(string name);
+    void AddHandler(string name, IHandler handler);
+    Task HandleAsync(string handler, HttpContext context, RouteConfig routeConfig);
 }

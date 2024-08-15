@@ -1,11 +1,9 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+public interface IPayloadBuilder
 {
-    public interface IPayloadBuilder
-    {
-        Task<string> BuildRawAsync(HttpRequest request);
-        Task<T> BuildJsonAsync<T>(HttpRequest request) where T : class, new();
-    }
+    Task<string> BuildRawAsync(HttpRequest request);
+    Task<T> BuildJsonAsync<T>(HttpRequest request) where T : class, new();
 }

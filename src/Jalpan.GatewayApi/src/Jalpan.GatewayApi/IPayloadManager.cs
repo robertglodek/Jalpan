@@ -1,10 +1,7 @@
-using System.Collections.Generic;
+namespace Jalpan.GatewayApi;
 
-namespace Ntrada
+internal interface IPayloadManager
 {
-    internal interface IPayloadManager
-    {
-        string GetKey(string method, string upstream);
-        IDictionary<string, PayloadSchema> Payloads { get; }
-    }
+    string GetKey(string method, string upstream);
+    IDictionary<string, PayloadSchema> Payloads { get; }
 }

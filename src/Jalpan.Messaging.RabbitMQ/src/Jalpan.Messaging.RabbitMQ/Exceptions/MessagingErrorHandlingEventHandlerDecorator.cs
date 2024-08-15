@@ -29,7 +29,6 @@ internal sealed class MessagingErrorHandlingEventHandlerDecorator<T> : IEventHan
             return _handler.HandleAsync(@event, cancellationToken);
         }
 
-        return _messagingExceptionPolicyHandler.HandleAsync(@event,
-            () => _handler.HandleAsync(@event, cancellationToken));
+        return _messagingExceptionPolicyHandler.HandleAsync(@event, () => _handler.HandleAsync(@event, cancellationToken));
     }
 }

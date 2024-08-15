@@ -85,6 +85,6 @@ internal sealed class CustomMessageSerializationStrategy : IMessageSerialization
 
     private static string GetHeaderValue(MessageProperties properties, string key)
         => properties.Headers.TryGetValue(key, out var bytes)
-            ? Encoding.UTF8.GetString(bytes as byte[] ?? Array.Empty<byte>())
+            ? Encoding.UTF8.GetString(bytes as byte[] ?? [])
             : string.Empty;
 }

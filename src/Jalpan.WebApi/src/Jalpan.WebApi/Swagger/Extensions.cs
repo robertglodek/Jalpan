@@ -17,13 +17,10 @@ public static class Extensions
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<SwaggerOptions>(sectionName);
-        return builder.AddSwaggerDocs(options);
-    }
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<SwaggerOptions>();
+        builder.Services.Configure<SwaggerOptions>(section);
 
-    public static IJalpanBuilder AddSwaggerDocs(this IJalpanBuilder builder, SwaggerOptions options)
-    {
-        builder.Services.AddSingleton(options);
         if (!options.Enabled || !builder.TryRegister(RegistryName))
         {
             return builder;

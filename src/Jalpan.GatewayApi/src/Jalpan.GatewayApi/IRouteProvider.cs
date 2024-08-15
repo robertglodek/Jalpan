@@ -1,10 +1,8 @@
-using System;
 using Microsoft.AspNetCore.Routing;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+internal interface IRouteProvider
 {
-    internal interface IRouteProvider
-    {
-        Action<IEndpointRouteBuilder> Build();
-    }
+    Action<IEndpointRouteBuilder> Build();
 }

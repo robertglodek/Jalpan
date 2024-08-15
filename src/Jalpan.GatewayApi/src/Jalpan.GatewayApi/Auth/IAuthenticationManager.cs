@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Jalpan.GatewayApi.Auth
+namespace Jalpan.GatewayApi.Auth;
+
+public interface IAuthenticationManager
 {
-    public interface IAuthenticationManager
-    {
-        Task<bool> TryAuthenticateAsync(HttpRequest request, RouteConfig routeConfig);
-    }
+    Task<bool> TryAuthenticateAsync(HttpRequest request, RouteConfig routeConfig);
 }

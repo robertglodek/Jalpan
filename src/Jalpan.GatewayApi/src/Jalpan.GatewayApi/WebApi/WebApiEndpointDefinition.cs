@@ -1,12 +1,9 @@
-using System.Collections.Generic;
+namespace Jalpan.GatewayApi.WebApi;
 
-namespace Ntrada.WebApi
+public class WebApiEndpointDefinition
 {
-    public class WebApiEndpointDefinition
-    {
-        public string Method { get; set; }
-        public string Path { get; set; }
-        public IEnumerable<WebApiEndpointParameter> Parameters { get; set; } = new List<WebApiEndpointParameter>();
-        public IEnumerable<WebApiEndpointResponse> Responses { get; set; } = new List<WebApiEndpointResponse>();
-    }
+    public string Method { get; set; }
+    public string Path { get; set; }
+    public IEnumerable<WebApiEndpointParameter> Parameters { get; set; } = [];
+    public IEnumerable<WebApiEndpointResponse> Responses { get; set; } = [];
 }

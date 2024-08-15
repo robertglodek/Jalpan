@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+public interface IRequestProcessor
 {
-    public interface IRequestProcessor
-    {
-        Task<ExecutionData> ProcessAsync(RouteConfig routeConfig, HttpContext context);
-    }
+    Task<ExecutionData> ProcessAsync(RouteConfig routeConfig, HttpContext context);
 }

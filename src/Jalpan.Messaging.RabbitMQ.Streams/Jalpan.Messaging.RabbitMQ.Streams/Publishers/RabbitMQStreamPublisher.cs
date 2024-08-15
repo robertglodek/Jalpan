@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using Humanizer;
 using Jalpan.Messaging.Streams;
 using Jalpan.Messaging.Streams.Serialization;
 using Jalpan.Types;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Stream.Client;
 using RabbitMQ.Stream.Client.Reliable;
 
-namespace Micro.Messaging.RabbitMQ.Streams.Publishers;
+namespace Jalpan.Messaging.RabbitMQ.Streams.Publishers;
 
 internal sealed class RabbitMQStreamPublisher : IStreamPublisher
 {

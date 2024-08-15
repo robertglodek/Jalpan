@@ -1,9 +1,6 @@
-using System.Collections.Generic;
+namespace Jalpan.GatewayApi.Configuration;
 
-namespace Ntrada.Configuration
+public class Policy
 {
-    public class Policy
-    {
-        public IDictionary<string, string> Claims { get; set; }
-    }
+    public IDictionary<string, string> Claims { get; set; }
 }

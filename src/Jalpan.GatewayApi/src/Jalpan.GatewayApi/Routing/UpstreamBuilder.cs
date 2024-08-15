@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using Jalpan.GatewayApi;
+using Jalpan.GatewayApi.Configuration;
 using Microsoft.Extensions.Logging;
-using Ntrada.Configuration;
 
-namespace Ntrada.Routing
+namespace Jalpan.GatewayApi.Routing
 {
     internal sealed class UpstreamBuilder : IUpstreamBuilder
     {

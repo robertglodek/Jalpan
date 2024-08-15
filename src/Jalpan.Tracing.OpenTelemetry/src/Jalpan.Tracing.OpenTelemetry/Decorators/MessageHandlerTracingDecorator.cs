@@ -1,11 +1,10 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using Humanizer;
 using Jalpan.Contexts;
 using Jalpan.Messaging.RabbitMQ.Internals;
 using Jalpan.Types;
 
-namespace Micro.Observability.Tracing.Decorators;
+namespace Jalpan.Tracing.OpenTelemetry.Decorators;
 
 internal sealed class MessageHandlerTracingDecorator : IMessageHandler
 {

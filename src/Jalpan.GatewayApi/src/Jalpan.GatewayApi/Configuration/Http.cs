@@ -1,9 +1,8 @@
-namespace Ntrada.Configuration
+namespace Jalpan.GatewayApi.Configuration;
+
+public class Http
 {
-    public class Http
-    {
-        public int Retries { get; set; }
-        public bool Exponential { get; set; }
-        public double Interval { get; set; }
-    }
+    public int Retries { get; set; }
+    public bool Exponential { get; set; }
+    public double Interval { get; set; }
 }

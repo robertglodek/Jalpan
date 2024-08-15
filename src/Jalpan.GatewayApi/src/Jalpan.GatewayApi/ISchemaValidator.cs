@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace Jalpan.GatewayApi;
 
-namespace Ntrada
+internal interface ISchemaValidator
 {
-    internal interface ISchemaValidator
-    {
-        Task<IEnumerable<Error>> ValidateAsync(string payload, string schema);
-    }
+    Task<IEnumerable<Error>> ValidateAsync(string payload, string schema);
 }

@@ -1,12 +1,10 @@
-using System.Threading.Tasks;
+using Jalpan.GatewayApi.Configuration;
 using Microsoft.AspNetCore.Http;
-using Route = Ntrada.Configuration.Route;
 
-namespace Ntrada
+namespace Jalpan.GatewayApi;
+
+public interface IHandler
 {
-    public interface IHandler
-    {
-        string GetInfo(Route route);
-        Task HandleAsync(HttpContext context, RouteConfig config);
-    }
+    string GetInfo(Route route);
+    Task HandleAsync(HttpContext context, RouteConfig config);
 }

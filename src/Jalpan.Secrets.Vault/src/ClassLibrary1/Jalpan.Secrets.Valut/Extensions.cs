@@ -1,4 +1,5 @@
 using Jalpan.Secrets.Internals.Vault;
+using Jalpan.Serializers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -89,7 +90,7 @@ public static class Extensions
                 jsonSerializer);
             var secret = await keyValueSecrets.GetAsync(kvPath);
             var parser = new JsonParser();
-            var json = JsonConvert.SerializeObject(secret);
+            var json = jsonSerializer.Serialize(secret);
             var data = parser.Parse(json);
             var source = new MemoryConfigurationSource {InitialData = data!};
             builder.Add(source);

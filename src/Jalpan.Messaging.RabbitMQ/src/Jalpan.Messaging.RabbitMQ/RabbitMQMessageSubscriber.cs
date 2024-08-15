@@ -22,9 +22,6 @@ internal sealed class RabbitMqMessageSubscriber : IMessageSubscriber
         _bus = bus;
     }
     
-    public IMessageSubscriber Command<T>() where T : class, ICommand
-        => Message<T>((serviceProvider, command, cancellationToken) =>
-            serviceProvider.GetRequiredService<IDispatcher>().SendAsync(command, cancellationToken));
 
     public IMessageSubscriber Event<T>() where T : class, IEvent
         => Message<T>((serviceProvider, @event, cancellationToken) =>

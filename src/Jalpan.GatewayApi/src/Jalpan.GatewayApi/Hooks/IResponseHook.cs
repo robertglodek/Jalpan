@@ -1,10 +1,8 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Ntrada.Hooks
+namespace Jalpan.GatewayApi.Hooks;
+
+public interface IResponseHook
 {
-    public interface IResponseHook
-    {
-        Task InvokeAsync(HttpResponse response, ExecutionData data);
-    }
+    Task InvokeAsync(HttpResponse response, ExecutionData data);
 }

@@ -9,27 +9,22 @@ public static class Extensions
     private const string SectionName = "cors";
     private const string RegistryName = "webApi.cors";
 
-    public static IJalpanBuilder AddCorsPolicy(
-       this IJalpanBuilder builder,
-       string sectionName = SectionName)
+    public static IJalpanBuilder AddCorsPolicy(this IJalpanBuilder builder, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
             sectionName = SectionName;
         }
 
-        var options = builder.GetOptions<CorsOptions>(sectionName);
-        return builder.AddCorsPolicy(options);
-    }
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<CorsOptions>();
+        builder.Services.Configure<CorsOptions>(section);
 
-    public static IJalpanBuilder AddCorsPolicy(this IJalpanBuilder builder, CorsOptions options)
-    {
-        if (!builder.TryRegister(RegistryName) || !options.Enabled)
+        if (!options.Enabled || !builder.TryRegister(RegistryName))
         {
             return builder;
         }
 
-        builder.Services.AddSingleton(options);
         builder.Services.AddCors(cors =>
         {
             var allowedHeaders = options.AllowedHeaders;

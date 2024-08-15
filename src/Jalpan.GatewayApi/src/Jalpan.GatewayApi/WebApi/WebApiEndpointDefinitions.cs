@@ -1,8 +1,5 @@
-using System.Collections.Generic;
+namespace Jalpan.GatewayApi.WebApi;
 
-namespace Ntrada.WebApi
+public class WebApiEndpointDefinitions : List<WebApiEndpointDefinition>
 {
-    public class WebApiEndpointDefinitions : List<WebApiEndpointDefinition>
-    {
-    }
 }

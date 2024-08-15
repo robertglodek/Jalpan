@@ -1,9 +1,8 @@
 using System.Security.Claims;
 
-namespace Jalpan.GatewayApi.Auth
+namespace Jalpan.GatewayApi.Auth;
+
+public interface IAuthorizationManager
 {
-    public interface IAuthorizationManager
-    {
-        bool IsAuthorized(ClaimsPrincipal user, RouteConfig routeConfig);
-    }
+    bool IsAuthorized(ClaimsPrincipal user, RouteConfig routeConfig);
 }

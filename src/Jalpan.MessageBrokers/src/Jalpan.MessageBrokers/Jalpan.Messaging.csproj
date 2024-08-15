@@ -1,5 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<PropertyGroup>
+		<Description>Jalpan.Messaging</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Messaging</AssemblyName>
+		<Title>Jalpan.Messaging</Title>
+		<PackageId>Jalpan.Messaging</PackageId>
+		<PackageTags>Jalpan.Messaging</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -1,14 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Description>Jalpan.Messaging.RabbitMQ.Streams</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Messaging.RabbitMQ.Streams</AssemblyName>
+		<Title>Jalpan.Messaging.RabbitMQ.Streams</Title>
+		<PackageId>Jalpan.Messaging.RabbitMQ.Streams</PackageId>
+		<PackageTags>Jalpan.Messaging.RabbitMQ.Streams</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="RabbitMQ.Stream.Client" Version="1.5.0" />
