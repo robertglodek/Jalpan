@@ -1,5 +1,6 @@
 ﻿using Jalpan.Contexts.Accessors;
 using Jalpan.Contexts.Providers;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Contexts;
@@ -13,4 +14,8 @@ public static class Extensions
 
         return builder;
     }
+
+    public static IApplicationBuilder UseEnsureActivity(this IApplicationBuilder app,
+       string headerName = "/traceparent")
+       => app.UseMiddleware<EnsureActivityMiddleware>(string.IsNullOrWhiteSpace(headerName) ? "/traceparent": headerName);
 }

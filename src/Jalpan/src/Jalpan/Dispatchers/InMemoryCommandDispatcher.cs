@@ -19,7 +19,7 @@ internal sealed class InMemoryCommandDispatcher : ICommandDispatcher
         }
 #pragma warning disable CS8600
 #pragma warning disable CS8602
-        return await (Task<TResult>)GetType().GetMethods().First(x => x.Name == "CommandAsync" && x.GetGenericArguments().Length == 2)
+        return await (Task<TResult>)GetType().GetMethods().First(x => x.Name == "SendAsync" && x.GetGenericArguments().Length == 2)
                    .MakeGenericMethod(command.GetType(), typeof(TResult)).Invoke(this, [command, cancellationToken]);
 #pragma warning restore CS8602
 #pragma warning restore CS8600

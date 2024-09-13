@@ -1,4 +1,5 @@
 using Jalpan.GatewayApi.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Jalpan.GatewayApi.Auth;
 
@@ -7,9 +8,9 @@ internal sealed class PolicyManager : IPolicyManager
     private readonly IDictionary<string, Dictionary<string, string>> _policies;
     private readonly GatewayOptions _options;
 
-    public PolicyManager(GatewayOptions options)
+    public PolicyManager(IOptions<GatewayOptions> options)
     {
-        _options = options;
+        _options = options.Value;
         _policies = LoadPolicies();
     }
 

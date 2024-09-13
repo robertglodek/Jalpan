@@ -1,4 +1,5 @@
-﻿using Jalpan.Jobs.Quartz.Exceptions;
+﻿using Jalpan.Exceptions;
+using Jalpan.Jobs.Quartz.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
@@ -27,7 +28,26 @@ public static class Extensions
 
         builder.Services.AddQuartz(q =>
         {
-            q.AddJobs(options); 
+            if(options.PostgresPersistency != null && options.PostgresPersistency.Enabled)
+            {
+                if (string.IsNullOrEmpty(options.PostgresPersistency.ConnectionString))
+                {
+                    throw new ConfigurationException("Postgres database connection string cannot be empty.", nameof(options.PostgresPersistency.ConnectionString));
+                }
+
+                q.UsePersistentStore(persistentStoreOptions =>
+                {
+                    persistentStoreOptions.UsePostgres(postgresOptions =>
+                    {
+                        postgresOptions.ConnectionString = options.PostgresPersistency.ConnectionString;
+                    });
+
+                    persistentStoreOptions.UseSerializer<SystemTextJsonObjectSerializer>();
+                    persistentStoreOptions.UseClustering();
+                });
+            }
+
+            q.AddJobs(options);
         });
 
         builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

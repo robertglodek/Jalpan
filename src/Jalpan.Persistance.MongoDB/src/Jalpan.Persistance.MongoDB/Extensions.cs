@@ -1,7 +1,4 @@
-﻿using Jalpan.Persistance.MongoDB.Factories;
-using Jalpan.Persistance.MongoDB.Initializers;
-using Jalpan.Persistance.MongoDB.Seeders;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Microsoft.Extensions.DependencyInjection;
 using Jalpan.Persistance.MongoDB.Repositories;
 using Jalpan.Types;
@@ -13,10 +10,7 @@ public static class Extensions
     private const string SectionName = "mongo";
     private const string RegistryName = "persistence.mongoDb";
 
-    public static IJalpanBuilder AddMongo(
-        this IJalpanBuilder builder,
-        string sectionName = SectionName,
-        Type? seederType = null)
+    public static IJalpanBuilder AddMongo(this IJalpanBuilder builder, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -27,40 +21,20 @@ public static class Extensions
         var options = section.BindOptions<MongoDbOptions>();
         builder.Services.Configure<MongoDbOptions>(section);
 
-        return builder.AddMongo(options, seederType);
-    }
-
-    public static IJalpanBuilder AddMongo(
-        this IJalpanBuilder builder,
-        MongoDbOptions mongoOptions,
-        Type? seederType = null)
-    {
         if (!builder.TryRegister(RegistryName))
         {
             return builder;
         }
 
-        builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(mongoOptions.ConnectionString));
+        builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(options.ConnectionString));
         builder.Services.AddTransient(sp =>
         {
             var client = sp.GetRequiredService<IMongoClient>();
-            return client.GetDatabase(mongoOptions.Database);
+            return client.GetDatabase(options.Database);
         });
-        builder.Services.AddTransient<IMongoDbInitializer, MongoDbInitializer>();
-        builder.Services.AddTransient<IMongoDbSessionFactory, MongoDbSessionFactory>();
+
         builder.Services.AddScoped<IUnitOfWork, MongoDbUnitOfWork>();
 
-        if (seederType is null)
-        {
-            builder.Services.AddTransient<IMongoDbSeeder, MongoDbSeeder>();
-        }
-        else
-        {
-            builder.Services.AddTransient(typeof(IMongoDbSeeder), seederType);
-        }
-
-        builder.AddInitializer<IMongoDbInitializer>();
-      
         return builder;
     }
 

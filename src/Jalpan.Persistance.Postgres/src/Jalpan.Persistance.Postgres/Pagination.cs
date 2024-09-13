@@ -1,16 +1,15 @@
-﻿using Jalpan.Pagination;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Jalpan.Pagination;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Jalpan.Persistance.MongoDB;
+namespace Jalpan.Persistance.Postgres;
 
 public static class Pagination
 {
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, IPagedQuery query, CancellationToken cancellationToken = default)
-        => await collection.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results, cancellationToken);
+    public static Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, IPagedQuery query, CancellationToken cancellationToken = default)
+        => data.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results, cancellationToken);
 
-    public static async Task<PagedResult<T>> PaginateAsync<T>(this IMongoQueryable<T> collection, string? orderBy,
+    public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, string? orderBy,
         SortOrder? sortOrder, int page, int results, CancellationToken cancellationToken = default)
     {
         if (page <= 0)
@@ -25,34 +24,29 @@ public static class Pagination
             _ => results
         };
 
-        var totalResults = await collection.CountAsync(cancellationToken);
-        if(totalResults == 0)
-        {
-            return PagedResult<T>.Empty;
-        }
-
-        var totalPages = (int)Math.Ceiling((decimal)totalResults / results);
+        var totalResults = await data.CountAsync(cancellationToken);
+        var totalPages = totalResults <= results ? 1 : (int) Math.Floor((double) totalResults / results);
 
         List<T> result;
         if (string.IsNullOrWhiteSpace(orderBy))
         {
-            result = await collection.Limit(page, results).ToListAsync(cancellationToken);
+            result = await data.Skip((page - 1) * results).Take(results).ToListAsync(cancellationToken);
             return PagedResult<T>.Create(result, page, results, totalPages, totalResults);
         }
 
         if (sortOrder is null || sortOrder == SortOrder.asc)
         {
-            result = await collection.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            result = await data.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
         }
         else
         {
-            result = await collection.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            result = await data.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
         }
 
         return PagedResult<T>.Create(result, page, results, totalPages, totalResults);
     }
 
-    public static IMongoQueryable<T> Limit<T>(this IMongoQueryable<T> collection,
+    public static IQueryable<T> Limit<T>(this IQueryable<T> collection,
         int page, int resultsPerPage)
     {
         var skip = (page - 1) * resultsPerPage;

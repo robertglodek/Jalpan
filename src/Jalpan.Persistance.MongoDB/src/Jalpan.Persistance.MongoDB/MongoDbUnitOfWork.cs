@@ -1,20 +1,19 @@
-﻿using Jalpan.Persistance.MongoDB.Factories;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace Jalpan.Persistance.MongoDB;
 
 internal class MongoDbUnitOfWork : IUnitOfWork
 {
-    private readonly IMongoDbSessionFactory _mongoDbSessionFactory;
+    private readonly IMongoClient _mongoClient;
 
-    public MongoDbUnitOfWork(IMongoDbSessionFactory mongoDbSessionFactory)
+    public MongoDbUnitOfWork(IMongoClient mongoClient)
     {
-        _mongoDbSessionFactory = mongoDbSessionFactory;
+        _mongoClient = mongoClient;
     }
 
     public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
     {
-        IClientSessionHandle session = await _mongoDbSessionFactory.CreateAsync();
+        IClientSessionHandle session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken);
 
         try
         {
@@ -33,7 +32,7 @@ internal class MongoDbUnitOfWork : IUnitOfWork
 
     public async Task<T> ExecuteAsync<T>(Func<Task<T>> action, CancellationToken cancellationToken = default)
     {
-        IClientSessionHandle session = await _mongoDbSessionFactory.CreateAsync();
+        IClientSessionHandle session = await _mongoClient.StartSessionAsync(cancellationToken: cancellationToken);
 
         try
         {
@@ -49,6 +48,10 @@ internal class MongoDbUnitOfWork : IUnitOfWork
         {
             await session.AbortTransactionAsync(cancellationToken);
             throw;
+        }
+        finally 
+        {
+            session.Dispose();
         }
     }
 }

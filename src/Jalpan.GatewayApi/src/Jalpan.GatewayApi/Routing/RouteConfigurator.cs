@@ -1,4 +1,5 @@
 using Jalpan.GatewayApi.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Jalpan.GatewayApi.Routing;
 
@@ -6,9 +7,9 @@ internal sealed class RouteConfigurator : IRouteConfigurator
 {
     private readonly GatewayOptions _options;
 
-    public RouteConfigurator(GatewayOptions options)
+    public RouteConfigurator(IOptions<GatewayOptions> options)
     {
-        _options = options;
+        _options = options.Value;
     }
 
     public RouteConfig Configure(Module module, Route route)

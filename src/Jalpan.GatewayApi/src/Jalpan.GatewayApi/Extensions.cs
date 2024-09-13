@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
+using Polly.Extensions.Http;
 
 namespace Jalpan.GatewayApi;
 
@@ -69,7 +70,7 @@ public static class Extensions
     private static IServiceCollection ConfigureHttpClient(this IServiceCollection services, GatewayOptions options)
     {
         var http = options.Http ?? new Http();
-        var httpClientBuilder = services.AddHttpClient("ntrada");
+        var httpClientBuilder = services.AddHttpClient("jalpan.gateway");
         httpClientBuilder.AddTransientHttpErrorPolicy(p =>
             p.WaitAndRetryAsync(http.Retries, retryAttempt =>
             {
@@ -79,7 +80,19 @@ public static class Extensions
 
                 return TimeSpan.FromSeconds(interval);
             }));
-        
+
+
+        var httpClientbuilder = services
+           .AddHttpClient("jalpan.gateway.api.httpClient")
+           .AddTransientHttpErrorPolicy(_ => HttpPolicyExtensions.HandleTransientHttpError()
+               .WaitAndRetryAsync(options.Resiliency.Retries, retry =>
+                   options.Resiliency.Exponential
+                       ? TimeSpan.FromSeconds(Math.Pow(2, retry))
+                       : options.Resiliency.RetryInterval ?? TimeSpan.FromSeconds(2)));
+
+
+
+
         return services;
     }
 
@@ -166,7 +179,7 @@ public static class Extensions
         var options = app.ApplicationServices.GetRequiredService<GatewayOptions>();
         var requestHandlerManager = app.ApplicationServices.GetRequiredService<IRequestHandlerManager>();
         requestHandlerManager.AddHandler("downstream",
-            app.ApplicationServices.GetRequiredService<DownstreamHandler>());
+                 app.ApplicationServices.GetRequiredService<DownstreamHandler>());
         requestHandlerManager.AddHandler("return_value",
             app.ApplicationServices.GetRequiredService<ReturnValueHandler>());
 

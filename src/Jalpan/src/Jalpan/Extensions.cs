@@ -15,18 +15,19 @@ public static class Extensions
 {
     private const string SectionName = "app";
 
-    public static IJalpanBuilder AddJalpan(
-        this IServiceCollection services,
-        IConfiguration configuration,
+    public static IServiceCollection AddJalpan(
+        this IServiceCollection services, 
+        IConfiguration configuration, 
+        Action<IJalpanBuilder>? configure = null, 
         string sectionName = SectionName)
     {
-        if (configuration is null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(configuration);
 
         if (string.IsNullOrWhiteSpace(sectionName))
         {
             sectionName = SectionName;
         }
-            
+
         var builder = JalpanBuilder.Create(services, configuration);
 
         var section = builder.Configuration.GetSection(sectionName);
@@ -45,25 +46,23 @@ public static class Extensions
             jsonOptions.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
         });
 
+        services.AddHostedService<StartupInitializer>();
+
+        configure?.Invoke(builder);
+
         if (string.IsNullOrWhiteSpace(options.Name))
         {
-            return builder;
+            return services;
         }
 
         var version = !string.IsNullOrWhiteSpace(options.Version) ? $" {options.Version}" : string.Empty;
         Console.WriteLine(FiggleFonts.Doom.Render($"{options.Name}{version}"));
 
-        return builder;
+        return services;
     }
 
-    public static IApplicationBuilder UseJalpan(this IApplicationBuilder app)
-    {
-        using var scope = app.ApplicationServices.CreateScope();
-        var initializer = scope.ServiceProvider.GetRequiredService<IStartupInitializer>();
-        Task.Run(initializer.InitializeAsync).GetAwaiter().GetResult();
-
-        return app;
-    }
+    public static IServiceCollection AddInitializer<T>(this IServiceCollection services) where T : class, IInitializer 
+        => services.AddTransient<IInitializer, T>();
 
     public static T BindOptions<T>(this IConfiguration configuration, string sectionName) where T : new()
         => BindOptions<T>(configuration.GetSection(sectionName));
@@ -76,6 +75,5 @@ public static class Extensions
     }
 
     public static string Underscore(this string value)
-       => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()))
-           .ToLowerInvariant();
+       => string.Concat(value.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString())).ToLowerInvariant();
 }

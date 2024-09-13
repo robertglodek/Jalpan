@@ -1,20 +1,37 @@
-﻿namespace Jalpan;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-public class StartupInitializer : IStartupInitializer
+namespace Jalpan;
+
+internal sealed class StartupInitializer : IHostedService
 {
-    private readonly IList<IInitializer> _initializers = [];
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<StartupInitializer> _logger;
 
-    public void AddInitializer(IInitializer initializer)
+    public StartupInitializer(IServiceProvider serviceProvider, ILogger<StartupInitializer> logger)
     {
-        if (initializer == null) throw new ArgumentNullException(nameof(initializer));
-        if (_initializers.Contains(initializer)) return;
-
-        _initializers.Add(initializer);
+        _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
-    public async Task InitializeAsync()
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        foreach (var initializer in _initializers)
-            await initializer.InitializeAsync();
+        await using var scope = _serviceProvider.CreateAsyncScope();
+        var initializers = scope.ServiceProvider.GetServices<IInitializer>();
+        foreach (var initializer in initializers)
+        {
+            try
+            {
+                _logger.LogInformation($"Running the initializer: {initializer.GetType().Name}...");
+                await initializer.InitializeAsync();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+            }
+        }
     }
+
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }

@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using Humanizer;
 using Jalpan.Contexts;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Types;

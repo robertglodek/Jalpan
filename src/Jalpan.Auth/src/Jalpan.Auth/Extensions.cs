@@ -12,7 +12,7 @@ public static class Extensions
     private const string SectionName = "jwt";
     private const string RegistryName = "auth";
 
-    public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = SectionName,  Action<JwtBearerOptions>? optionsFactory = null)
+    public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = SectionName)
     {
         if (string.IsNullOrWhiteSpace(sectionName))
         {
@@ -27,9 +27,6 @@ public static class Extensions
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<AuthOptions>();
         builder.Services.Configure<AppOptions>(section);
-
-        builder.Services.AddAuthorization();
-        builder.Services.AddAuthentication();
 
         if (options.Jwt is null)
         {
@@ -148,9 +145,9 @@ public static class Extensions
             {
                 jwtBearerOptions.Challenge = options.Jwt.Challenge;
             }
-
-            optionsFactory?.Invoke(jwtBearerOptions);
         });
+
+        builder.Services.AddAuthorization();
 
         if (securityKey is not null)
         {

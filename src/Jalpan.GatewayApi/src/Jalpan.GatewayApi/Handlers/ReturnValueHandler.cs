@@ -1,4 +1,4 @@
-using Jalpan.GatewayApi.Configuration;
+﻿using Jalpan.GatewayApi.Configuration;
 using Jalpan.GatewayApi.Hooks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +23,7 @@ internal sealed class ReturnValueHandler : IHandler
     public async Task HandleAsync(HttpContext context, RouteConfig config)
     {
         var executionData = await _requestProcessor.ProcessAsync(config, context);
-        if (_requestHooks is {})
+        if (_requestHooks is { })
         {
             foreach (var hook in _requestHooks)
             {
@@ -36,7 +36,7 @@ internal sealed class ReturnValueHandler : IHandler
             }
         }
 
-        if (_responseHooks is {})
+        if (_responseHooks is { })
         {
             foreach (var hook in _responseHooks)
             {

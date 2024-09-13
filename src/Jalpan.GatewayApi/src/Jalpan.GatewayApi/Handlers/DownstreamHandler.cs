@@ -6,6 +6,7 @@ using Jalpan.GatewayApi.Hooks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -13,14 +14,7 @@ namespace Jalpan.GatewayApi.Handlers;
 
 internal sealed class DownstreamHandler : IHandler
 {
-    private const string ContentTypeApplicationJson = "application/json";
-    private const string ContentTypeHeader = "Content-Type";
-    private static readonly string[] ExcludedResponseHeaders = {"transfer-encoding", "content-length"};
-
-    private static readonly HttpContent EmptyContent =
-        new StringContent("{}", Encoding.UTF8, ContentTypeApplicationJson);
     private readonly IRequestProcessor _requestProcessor;
-    private readonly IPayloadValidator _payloadValidator;
     private readonly GatewayOptions _options;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DownstreamHandler> _logger;
@@ -29,26 +23,25 @@ internal sealed class DownstreamHandler : IHandler
     private readonly IEnumerable<IHttpRequestHook> _httpRequestHooks;
     private readonly IEnumerable<IHttpResponseHook> _httpResponseHooks;
 
-    public DownstreamHandler(IServiceProvider serviceProvider, IRequestProcessor requestProcessor,
-        IPayloadValidator payloadValidator, GatewayOptions options, IHttpClientFactory httpClientFactory,
-        ILogger<DownstreamHandler> logger)
+    public DownstreamHandler(IRequestProcessor requestProcessor, IOptions<GatewayOptions> options,
+        IHttpClientFactory httpClientFactory, ILogger<DownstreamHandler> logger, IEnumerable<IRequestHook> requestHooks,
+        IEnumerable<IResponseHook> responseHooks, IEnumerable<IHttpRequestHook> httpRequestHooks, IEnumerable<IHttpResponseHook> httpResponseHooks)
     {
-        _requestProcessor = requestProcessor;
-        _payloadValidator = payloadValidator;
-        _options = options;
-        _httpClientFactory = httpClientFactory;
         _logger = logger;
-        _requestHooks = serviceProvider.GetServices<IRequestHook>();
-        _responseHooks = serviceProvider.GetServices<IResponseHook>();
-        _httpRequestHooks = serviceProvider.GetServices<IHttpRequestHook>();
-        _httpResponseHooks = serviceProvider.GetServices<IHttpResponseHook>();
+        _options = options.Value;
+        _requestProcessor = requestProcessor;
+        _httpClientFactory = httpClientFactory; 
+        _requestHooks = requestHooks;
+        _responseHooks = responseHooks;
+        _httpRequestHooks = httpRequestHooks;
+        _httpResponseHooks = httpResponseHooks;
     }
 
     public string GetInfo(Route route) => $"call the downstream: '{route.Downstream}'";
 
     public async Task HandleAsync(HttpContext context, RouteConfig config)
     {
-        if (config.Route.Downstream is null)
+        if (config.Route!.Downstream is null)
         {
             return;
         }
@@ -66,13 +59,7 @@ internal sealed class DownstreamHandler : IHandler
                 await hook.InvokeAsync(context.Request, executionData);
             }
         }
-        
-        if (!executionData.IsPayloadValid)
-        {
-            await _payloadValidator.TryValidate(executionData, context.Response);
-            return;
-        }
-
+       
         if (string.IsNullOrWhiteSpace(executionData.Downstream))
         {
             return;
@@ -92,7 +79,7 @@ internal sealed class DownstreamHandler : IHandler
         await WriteResponseAsync(context.Response, response, executionData);
     }
 
-    private async Task<HttpResponseMessage> SendRequestAsync(ExecutionData executionData)
+    private async Task<HttpResponseMessage?> SendRequestAsync(ExecutionData executionData)
     {
         var httpClient = _httpClientFactory.CreateClient("jalpan.gatewayapi");
         var method = (string.IsNullOrWhiteSpace(executionData.Route.DownstreamMethod)
@@ -304,15 +291,7 @@ internal sealed class DownstreamHandler : IHandler
     {
         const string responseDataKey = "response.data";
         var content = await httpResponse.Content.ReadAsStringAsync();
-        var onSuccess = executionData.Route.OnSuccess;
-        if (_options.ForwardStatusCode == false || executionData.Route.ForwardStatusCode == false)
-        {
-            response.StatusCode = 200;
-        }
-        else
-        {
-            response.StatusCode = (int) httpResponse.StatusCode;
-        }
+        response.StatusCode = (int)httpResponse.StatusCode;
 
         if (executionData.Route.ForwardResponseHeaders == true ||
             (_options.ForwardResponseHeaders == true && executionData.Route.ForwardResponseHeaders != false))
@@ -329,7 +308,7 @@ internal sealed class DownstreamHandler : IHandler
                     continue;
                 }
 
-                response.Headers.Add(header.Key, header.Value.ToArray());
+                response.Headers.Append(header.Key, header.Value.ToArray());
             }
 
             // Fixed for missing Content-Type header
@@ -345,7 +324,7 @@ internal sealed class DownstreamHandler : IHandler
                     continue;
                 }
 
-                response.Headers.Add(header.Key, header.Value.ToArray());
+                response.Headers.Append(header.Key, header.Value.ToArray());
             }
         }
 
@@ -363,7 +342,7 @@ internal sealed class DownstreamHandler : IHandler
             if (!string.IsNullOrWhiteSpace(header.Value))
             {
                 response.Headers.Remove(header.Key);
-                response.Headers.Add(header.Key, header.Value);
+                response.Headers.Append(header.Key, header.Value);
                 continue;
             }
 
@@ -373,7 +352,7 @@ internal sealed class DownstreamHandler : IHandler
             }
 
             response.Headers.Remove(header.Key);
-            response.Headers.Add(header.Key, values.ToArray());
+            response.Headers.Append(header.Key, values.ToArray());
         }
 
         if (executionData.Context.Request.Method is "GET" && !response.Headers.ContainsKey(ContentTypeHeader))

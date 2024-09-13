@@ -61,8 +61,6 @@ public static class Extensions
             builder.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpLoggingFilter>());
         }
 
-        builder.Services.AddSingleton(options);
-
         return builder;
     }
 }

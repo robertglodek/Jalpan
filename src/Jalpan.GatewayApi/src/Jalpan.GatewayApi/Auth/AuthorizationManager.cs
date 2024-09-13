@@ -32,6 +32,6 @@ internal sealed class AuthorizationManager : IAuthorizationManager
     private bool HasPolicy(ClaimsPrincipal user, string policy)
         => HasClaims(user, _policyManager.GetClaims(policy));
 
-    private static bool HasClaims(ClaimsPrincipal user, IDictionary<string, string> claims)
+    private static bool HasClaims(ClaimsPrincipal user, IDictionary<string, string>? claims)
         => claims is null || claims.All(claim => user.HasClaim(claim.Key, claim.Value));
 }

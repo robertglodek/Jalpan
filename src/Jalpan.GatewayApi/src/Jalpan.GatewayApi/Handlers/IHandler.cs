@@ -1,7 +1,7 @@
 using Jalpan.GatewayApi.Configuration;
 using Microsoft.AspNetCore.Http;
 
-namespace Jalpan.GatewayApi;
+namespace Jalpan.GatewayApi.Handlers;
 
 public interface IHandler
 {

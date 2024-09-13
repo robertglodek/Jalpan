@@ -15,8 +15,8 @@ internal sealed class AuthenticationManager : IAuthenticationManager
 
     public async Task<bool> TryAuthenticateAsync(HttpRequest request, RouteConfig routeConfig)
     {
-        if (_options.Auth is null || !_options.Auth.Enabled || _options.Auth?.Global != true &&
-            routeConfig.Route?.Auth != true)
+        if (_options.Auth is null || !_options.Auth.Enabled || _options.Auth.Global != true &&
+            routeConfig.Route.Auth != true)
         {
             return true;
         }

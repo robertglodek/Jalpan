@@ -1,6 +1,6 @@
 ﻿namespace Jalpan.Exceptions;
 
-public class ConfigurationException : Exception
+public class ConfigurationException : CustomException
 {
     public string PropertyName { get; }
 
