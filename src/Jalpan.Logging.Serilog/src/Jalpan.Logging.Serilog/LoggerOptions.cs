@@ -7,6 +7,7 @@ public class LoggerOptions
     public FileOptions? File { get; set; }
     public SeqOptions? Seq { get; set; }
     public MongoDBOptions? Mongo { get; set; }
+    public ElkOptions? Elk { get; set; }
     public IDictionary<string, string>? MinimumLevelOverrides { get; set; }
     public IEnumerable<string>? ExcludePaths { get; set; }
     public IEnumerable<string>? ExcludeProperties { get; set; }
@@ -38,5 +39,14 @@ public class LoggerOptions
         public bool Enabled { get; set; }
         public string Url { get; set; } = null!;
         public string? ApiKey { get; set; }
+    }
+
+    public class ElkOptions
+    {
+        public bool Enabled { get; set; }
+        public string Url { get; set; } = string.Empty;
+        public bool BasicAuthEnabled { get; set; }
+        public string? Username { get; set; }
+        public string? Password { get; set; }
     }
 }

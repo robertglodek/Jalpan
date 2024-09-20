@@ -10,6 +10,13 @@ using Microsoft.AspNetCore.Routing;
 using Jalpan.Handlers;
 using Jalpan.Logging.Serilog.Middlewares;
 using Jalpan.Logging.Serilog.Decorators;
+using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
+using Elastic.Serilog.Sinks;
+using Elastic.Channels;
+using Elastic.Ingest.Elasticsearch.DataStreams;
+using Elastic.Ingest.Elasticsearch;
+using Elastic.Transport;
 
 namespace Jalpan.Logging.Serilog;
 
@@ -94,16 +101,17 @@ public static class Extensions
         loggerOptions.ExcludeProperties?.ToList().ForEach(p => loggerConfiguration.Filter
             .ByExcluding(Matching.WithProperty(p)));
 
-        Configure(loggerConfiguration, loggerOptions);
+        Configure(loggerConfiguration, loggerOptions, appOptions);
     }
 
     private static void Configure(LoggerConfiguration loggerConfiguration,
-        LoggerOptions options)
+        LoggerOptions options, AppOptions appOptions)
     {
         var consoleOptions = options.Console ?? new LoggerOptions.ConsoleOptions();
         var fileOptions = options.File ?? new LoggerOptions.FileOptions();
         var seqOptions = options.Seq ?? new LoggerOptions.SeqOptions();
         var mongoOptions = options.Mongo ?? new LoggerOptions.MongoDBOptions();
+        var elkOptions = options.Elk ?? new LoggerOptions.ElkOptions();
 
         if (consoleOptions.Enabled)
         {
@@ -135,7 +143,22 @@ public static class Extensions
                 cfg.SetMongoUrl(mongoOptions.Url);
                 cfg.SetCollectionName(mongoOptions.Collection);
             });
-        } 
+        }
+
+        if(elkOptions.Enabled)
+        {
+            loggerConfiguration.WriteTo.Elasticsearch([new Uri(elkOptions.Url)], opts =>
+            {
+                opts.DataStream = new DataStreamName("logs", appOptions.Service, appOptions.Name);
+                opts.BootstrapMethod = BootstrapMethod.Failure;
+            }, transport =>
+            {
+                if (elkOptions.BasicAuthEnabled)
+                {
+                    transport.Authentication(new BasicAuthentication(elkOptions.Username, elkOptions.Password));
+                }
+            });
+        }
     }
 
     public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder,

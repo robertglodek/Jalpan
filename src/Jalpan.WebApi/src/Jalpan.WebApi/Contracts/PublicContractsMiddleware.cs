@@ -2,8 +2,9 @@
 using System.Reflection;
 using Jalpan.Helpers;
 using System.Net.Mime;
-using Jalpan.Serialization;
 using Jalpan.Types;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Jalpan.WebApi.Contracts;
 
@@ -13,17 +14,22 @@ public class PublicContractsMiddleware
     private readonly string _endpoint;
     private readonly RequestDelegate _next;
     private readonly bool _attributeRequired;
-    private readonly IJsonSerializer _jsonSerializer;
     private static string _serializedContracts = null!;
+    private readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
+    
 
     public PublicContractsMiddleware(
-        IJsonSerializer jsonSerializer,
         RequestDelegate next,
         string endpoint,
         Type attributeType,
         bool attributeRequired)
     {
-        _jsonSerializer = jsonSerializer;
         _next = next;
         _endpoint = endpoint;
         _attributeRequired = attributeRequired;
@@ -31,17 +37,16 @@ public class PublicContractsMiddleware
         Load(attributeType);
     }
 
-    public Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
-        if (context.Request.Path != _endpoint)
+        if (context.Request.Path == _endpoint)
         {
-            return _next(context);
+            context.Response.ContentType = MediaTypeNames.Application.Json;
+            await context.Response.WriteAsync(_serializedContracts);
+            return;
         }
 
-        context.Response.ContentType = MediaTypeNames.Application.Json;
-        context.Response.WriteAsync(_serializedContracts);
-
-        return Task.CompletedTask;
+        await _next(context);
     }
 
     private void Load(Type attributeType)
@@ -71,7 +76,7 @@ public class PublicContractsMiddleware
             contracts.Events[name] = instance;
         }
 
-        _serializedContracts = _jsonSerializer.Serialize(contracts);
+        _serializedContracts = JsonSerializer.Serialize(contracts, _options);
     }
 
     private class ContractTypes

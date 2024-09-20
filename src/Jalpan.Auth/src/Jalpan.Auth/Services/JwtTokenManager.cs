@@ -8,7 +8,7 @@ namespace Jalpan.Auth.Services;
 
 internal sealed class JwtTokenManager : IJwtTokenManager
 {
-    private static readonly Dictionary<string, IEnumerable<string>> EmptyClaims = new();
+    private static readonly Dictionary<string, IEnumerable<string>> EmptyClaims = [];
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
     private readonly string? _issuer;
     private readonly TimeSpan _expiry;
@@ -30,15 +30,18 @@ internal sealed class JwtTokenManager : IJwtTokenManager
         _signingCredentials = new SigningCredentials(securityKeyDetails.Key, securityKeyDetails.Algorithm);
     }
 
-    public JsonWebToken CreateToken(string userId, string? email = null, string? role = null,
+    public JsonWebToken CreateToken(
+        string userId,
+        string? email = null,
+        string? role = null,
         IDictionary<string, IEnumerable<string>>? claims = null)
     {
         var now = _dateTime.Now;
-        var jwtClaims = new List<Claim>
-    {
-        new(JwtRegisteredClaimNames.Sub, userId),
-        new(JwtRegisteredClaimNames.UniqueName, userId)
-    };
+        var jwtClaims = new List<Claim> { 
+            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.UniqueName, userId) 
+        };
+
         if (!string.IsNullOrWhiteSpace(email))
         {
             jwtClaims.Add(new Claim(JwtRegisteredClaimNames.Email, email));

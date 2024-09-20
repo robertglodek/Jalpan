@@ -1,6 +1,5 @@
 ﻿using Figgle;
 using Jalpan.Serializers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;

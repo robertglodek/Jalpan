@@ -135,7 +135,7 @@ public static class Extensions
         {
             jwtBearerOptions.Authority = options.Jwt.Authority;
             jwtBearerOptions.Audience = options.Jwt.Audience;
-            jwtBearerOptions.MetadataAddress = options.Jwt.MetadataAddress ?? string.Empty;
+            jwtBearerOptions.MetadataAddress = options.Jwt.MetadataAddress;
             jwtBearerOptions.SaveToken = options.Jwt.SaveToken;
             jwtBearerOptions.RefreshOnIssuerKeyNotFound = options.Jwt.RefreshOnIssuerKeyNotFound;
             jwtBearerOptions.RequireHttpsMetadata = options.Jwt.RequireHttpsMetadata;

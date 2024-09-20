@@ -8,20 +8,26 @@ public class PagedResult<T> : PagedResultBase
 
     protected PagedResult()
     {
-        Items = Enumerable.Empty<T>();
+        Items = [];
     }
 
-    protected PagedResult(IEnumerable<T> items,
-        int currentPage, int resultsPerPage,
-        int totalPages, long totalResults) :
+    protected PagedResult(
+        IEnumerable<T> items,
+        int currentPage,
+        int resultsPerPage,
+        int totalPages,
+        long totalResults):
         base(currentPage, resultsPerPage, totalPages, totalResults)
     {
         Items = items;
     }
 
-    public static PagedResult<T> Create(IEnumerable<T> items,
-        int currentPage, int resultsPerPage,
-        int totalPages, long totalResults)
+    public static PagedResult<T> Create(
+        IEnumerable<T> items,
+        int currentPage,
+        int resultsPerPage,
+        int totalPages,
+        long totalResults) 
         => new(items, currentPage, resultsPerPage, totalPages, totalResults);
 
     public static PagedResult<T> From(PagedResultBase result, IEnumerable<T> items)

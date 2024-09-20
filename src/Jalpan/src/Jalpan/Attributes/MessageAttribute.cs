@@ -10,8 +10,13 @@ public class MessageAttribute : Attribute
     public string ErrorQueue { get; }
     public string SubscriptionId { get; }
 
-    public MessageAttribute(string? exchange = null, string? topic = null, string? queue = null,
-        string? queueType = null, string? errorQueue = null, string? subscriptionId = null)
+    public MessageAttribute(
+        string? exchange = null,
+        string? topic = null,
+        string? queue = null,
+        string? queueType = null,
+        string? errorQueue = null,
+        string? subscriptionId = null)
     {
         Exchange = exchange ?? string.Empty;
         Topic = topic ?? string.Empty;

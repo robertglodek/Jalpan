@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.Testing</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Testing</AssemblyName>
+		<Title>Jalpan.Testing</Title>
+		<PackageId>Jalpan.Testing</PackageId>
+		<PackageTags>Jalpan.Testing</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
+	
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

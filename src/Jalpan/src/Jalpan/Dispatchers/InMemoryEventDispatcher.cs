@@ -9,9 +9,12 @@ internal sealed class InMemoryEventDispatcher : IEventDispatcher
     private readonly IServiceProvider _serviceProvider;
 
     public InMemoryEventDispatcher(IServiceProvider serviceProvider)
-        => _serviceProvider = serviceProvider;
+    {
+        _serviceProvider = serviceProvider;
+    }
 
-    public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default) where TEvent : class, IEvent
+    public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
+        where TEvent : class, IEvent
     {
         if (@event is null)
         {

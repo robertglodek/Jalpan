@@ -1,11 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
 	<PropertyGroup>
 		<Description>Jalpan.Tracing.OpenTelemetry</Description>
 		<Authors>Robert Głodek</Authors>
@@ -26,10 +20,10 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
-    <ProjectReference Include="..\..\..\Jalpan.Messaging.RabbitMQ\src\Jalpan.Messaging.RabbitMQ\Jalpan.Messaging.RabbitMQ.csproj" />
-    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
-  </ItemGroup>
+	 <ItemGroup>
+	    <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
+		<ProjectReference Include="..\..\..\Jalpan.Messaging.RabbitMQ\src\Jalpan.Messaging.RabbitMQ\Jalpan.Messaging.RabbitMQ.csproj" />
+		<ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	 </ItemGroup>
 
 </Project>

@@ -25,7 +25,7 @@ public static class Extensions
 
     private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
     {
-        defaultValueCache ??= new Dictionary<Type, object?>();
+        defaultValueCache ??= [];
 
         var type = instance.GetType();
 

@@ -1,6 +1,7 @@
 ﻿using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Jalpan.WebApi.Swagger;
@@ -50,7 +51,7 @@ public static class Extensions
 
     public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder builder)
     {
-        var options = builder.ApplicationServices.GetRequiredService<SwaggerOptions>();
+        var options = builder.ApplicationServices.GetRequiredService<IOptions<SwaggerOptions>>().Value;
         if (!options.Enabled)
         {
             return builder;
@@ -58,11 +59,10 @@ public static class Extensions
 
         var routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
 
-        builder.UseStaticFiles()
-            .UseSwagger(c =>
-            {
-                c.RouteTemplate = string.Concat(routePrefix, "/{documentName}/swagger.json");
-            });
+        builder.UseSwagger(c => 
+        {
+            c.RouteTemplate = string.Concat(routePrefix, "/{documentName}/swagger.json");
+        });
 
         return options.ReDocEnabled
             ? builder.UseReDoc(c =>

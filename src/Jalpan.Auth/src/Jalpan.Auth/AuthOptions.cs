@@ -20,7 +20,7 @@ public sealed class AuthOptions
         public string? Authority { get; set; }
         public string? Audience { get; set; }
         public string Challenge { get; set; } = "Bearer";
-        public string? MetadataAddress { get; set; }
+        public string MetadataAddress { get; set; } = string.Empty;
         public bool SaveToken { get; set; } = true;
         public bool SaveSigninToken { get; set; }
         public bool RequireAudience { get; set; } = true;

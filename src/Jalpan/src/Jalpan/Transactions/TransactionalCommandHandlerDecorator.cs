@@ -5,7 +5,8 @@ using Jalpan.Types;
 namespace Jalpan.Transactions;
 
 [Decorator]
-internal sealed class TransactionalCommandHandlerDecorator<TCommand, TResponse> : ICommandHandler<TCommand, TResponse> where TCommand : class, ICommand<TResponse>
+internal sealed class TransactionalCommandHandlerDecorator<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
+    where TCommand : class, ICommand<TResponse>
 {
     private readonly ICommandHandler<TCommand, TResponse> _handler;
     private readonly IUnitOfWork _unitOfWork;

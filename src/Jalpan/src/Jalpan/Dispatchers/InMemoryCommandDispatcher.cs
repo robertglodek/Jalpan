@@ -9,7 +9,9 @@ internal sealed class InMemoryCommandDispatcher : ICommandDispatcher
     private readonly IServiceProvider _serviceProvider;
 
     public InMemoryCommandDispatcher(IServiceProvider serviceProvider)
-        => _serviceProvider = serviceProvider;
+    {
+        _serviceProvider = serviceProvider;
+    }
 
     public async Task<TResult> SendAsync<TResult>(ICommand<TResult> command, CancellationToken cancellationToken = default)
     {
@@ -17,6 +19,7 @@ internal sealed class InMemoryCommandDispatcher : ICommandDispatcher
         {
             throw new InvalidOperationException("Command cannot be null.");
         }
+
 #pragma warning disable CS8600
 #pragma warning disable CS8602
         return await (Task<TResult>)GetType().GetMethods().First(x => x.Name == "SendAsync" && x.GetGenericArguments().Length == 2)

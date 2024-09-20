@@ -5,7 +5,8 @@ using Jalpan.Types;
 namespace Jalpan.Transactions;
 
 [Decorator]
-internal sealed class TransactionalEventHandlerDecorator<T> : IEventHandler<T> where T : class, IEvent
+internal sealed class TransactionalEventHandlerDecorator<T> : IEventHandler<T>
+    where T : class, IEvent
 {
     private readonly IEventHandler<T> _handler;
     private readonly IUnitOfWork _unitOfWork;

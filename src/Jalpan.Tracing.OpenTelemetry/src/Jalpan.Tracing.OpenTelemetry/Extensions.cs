@@ -1,7 +1,6 @@
 ﻿using Jalpan.Messaging.Brokers;
 using Jalpan.Messaging.RabbitMQ.Internals;
 using Jalpan.Tracing.OpenTelemetry.Decorators;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Resources;
@@ -13,26 +12,33 @@ internal static class Extensions
 {
     private const string ConsoleExporter = "console";
     private const string JaegerExporter = "jaeger";
+    private const string SectionName = "tracing";
+    private const string RegistryName = "tracing.openTelemetry";
 
-    public static OpenTelemetryBuilder AddTracing(this OpenTelemetryBuilder openTelemetry,
-        IServiceCollection services, IConfiguration configuration)
+    public static IJalpanBuilder AddTracing(this IJalpanBuilder builder, string sectionName = SectionName, string appSectionName = "app")
     {
-        var tracingSection = configuration.GetSection("tracing");
-        var tracingOptions = tracingSection.BindOptions<TracingOptions>();
-        services.Configure<TracingOptions>(tracingSection);
-
-        if (!tracingOptions.Enabled)
+        if (string.IsNullOrWhiteSpace(sectionName))
         {
-            return openTelemetry;
+            sectionName = SectionName;
         }
 
-        var appName = configuration.BindOptions<AppOptions>("app").Name;
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<TracingOptions>();
+        builder.Services.Configure<TracingOptions>(section);
+
+        if (!options.Enabled || !builder.TryRegister(RegistryName))
+        {
+            return builder;
+        }
+
+        var appName = builder.Configuration.BindOptions<AppOptions>(appSectionName).Name;
+
         if (string.IsNullOrWhiteSpace(appName))
         {
             throw new InvalidOperationException("Application name cannot be empty when using the tracing.");
         }
 
-        return openTelemetry
+        builder.Services.AddOpenTelemetry()
             .WithTracing(builder =>
             {
                 builder.SetResourceBuilder(ResourceBuilder.CreateDefault()
@@ -45,7 +51,7 @@ internal static class Extensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
 
-                switch (tracingOptions.Exporter.ToLowerInvariant())
+                switch (options.Exporter.ToLowerInvariant())
                 {
                     case ConsoleExporter:
                     {
@@ -54,7 +60,7 @@ internal static class Extensions
                     }
                     case JaegerExporter:
                     {
-                        var jaegerOptions = tracingOptions.Jaeger;
+                        var jaegerOptions = options.Jaeger;
                         builder.AddJaegerExporter(jaeger =>
                         {
                             jaeger.AgentHost = jaegerOptions.AgentHost;
@@ -72,6 +78,8 @@ internal static class Extensions
                     }
                 }
             });
+
+        return builder;
     }
 
     public static IServiceCollection AddMessagingTracingDecorators(this IServiceCollection services)
