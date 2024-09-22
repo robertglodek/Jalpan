@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace Jalpan.Security.Internals;
+namespace Jalpan.Security.Signing;
 
 internal sealed class Signer : ISigner
 {

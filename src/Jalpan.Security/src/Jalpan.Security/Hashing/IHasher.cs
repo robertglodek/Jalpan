@@ -1,4 +1,4 @@
-﻿namespace Jalpan.Security;
+﻿namespace Jalpan.Security.Hashing;
 
 public interface IHasher
 {

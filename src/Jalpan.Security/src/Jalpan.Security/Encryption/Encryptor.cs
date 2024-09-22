@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Jalpan.Security.Internals;
+namespace Jalpan.Security.Encryption;
 
 internal sealed class Encryptor : IEncryptor
 {
