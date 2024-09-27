@@ -6,21 +6,13 @@ using Microsoft.Extensions.Options;
 
 namespace Jalpan.Messaging.Idempotency.Outbox;
 
-internal sealed class OutboxSender : BackgroundService
+internal sealed class OutboxSender(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxSender> logger) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<OutboxSender> _logger;
-    private readonly TimeSpan _senderInterval;
-    private readonly bool _enabled;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly ILogger<OutboxSender> _logger = logger;
+    private readonly TimeSpan _senderInterval = options.Value.SenderInterval ?? TimeSpan.FromSeconds(5);
+    private readonly bool _enabled = options.Value.Enabled;
     private int _isProcessing;
-
-    public OutboxSender(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxSender> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-        _enabled = options.Value.Enabled;
-        _senderInterval = options.Value.SenderInterval ?? TimeSpan.FromSeconds(5);
-    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

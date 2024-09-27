@@ -2,61 +2,38 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace Jalpan.Security.Signing;
+namespace Jalpan.Security.Signers;
 
 internal sealed class Signer : ISigner
 {
     public string Sign(object data, X509Certificate2 certificate)
     {
-        if (data is null)
-        {
-            throw new ArgumentNullException(nameof(data), "Data to be signed cannot be null.");
-        }
+        ValidateInput(data, certificate);
 
-        if (certificate is null)
-        {
-            throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
-        }
+        var dataBytes = JsonSerializer.SerializeToUtf8Bytes(data);
+        var signatureBytes = Sign(dataBytes, certificate);
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(data);
-        var signature = Sign(bytes, certificate);
-
-        return BitConverter.ToString(signature).Replace("-", string.Empty);
+        return ConvertBytesToHex(signatureBytes);
     }
 
     public bool Verify(object data, X509Certificate2 certificate, string signature, bool throwException = false)
     {
-        if (data is null)
-        {
-            throw new ArgumentNullException(nameof(data), "Data to be verified cannot be null.");
-        }
-
-        if (certificate is null)
-        {
-            throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
-        }
+        ValidateInput(data, certificate);
 
         if (string.IsNullOrWhiteSpace(signature))
         {
             throw new ArgumentException("Signature cannot be empty.", nameof(signature));
         }
 
-        var bytes = JsonSerializer.SerializeToUtf8Bytes(data);
+        var dataBytes = JsonSerializer.SerializeToUtf8Bytes(data);
+        var signatureBytes = ConvertHexToBytes(signature);
 
-        return Verify(bytes, certificate, ToByteArray(signature), throwException);
+        return Verify(dataBytes, certificate, signatureBytes, throwException);
     }
 
     public byte[] Sign(byte[] data, X509Certificate2 certificate)
     {
-        if (data is null)
-        {
-            throw new ArgumentNullException(nameof(data), "Data to be signed cannot be null.");
-        }
-
-        if (certificate is null)
-        {
-            throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
-        }
+        ValidateInput(data, certificate);
 
         using var rsa = certificate.GetRSAPrivateKey();
 
@@ -67,19 +44,11 @@ internal sealed class Signer : ISigner
 
     public bool Verify(byte[] data, X509Certificate2 certificate, byte[] signature, bool throwException = false)
     {
-        if (data is null)
-        {
-            throw new ArgumentNullException(nameof(data), "Data to be verified cannot be null.");
-        }
+        ValidateInput(data, certificate);
 
         if (signature is null || signature.Length == 0)
         {
             throw new ArgumentException("Signature cannot be empty.", nameof(signature));
-        }
-
-        if (certificate is null)
-        {
-            throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
         }
 
         try
@@ -101,7 +70,23 @@ internal sealed class Signer : ISigner
         }
     }
 
-    private static byte[] ToByteArray(string hex)
+    private static void ValidateInput(object data, X509Certificate2 certificate)
+    {
+        if (data == null)
+        {
+            throw new ArgumentNullException(nameof(data), "Data cannot be null.");
+        }
+
+        if (certificate == null)
+        {
+            throw new ArgumentNullException(nameof(certificate), "Certificate cannot be null.");
+        }
+    }
+
+    private static string ConvertBytesToHex(byte[] bytes)
+        => BitConverter.ToString(bytes).Replace("-", string.Empty);
+    
+    private static byte[] ConvertHexToBytes(string hex)
     {
         var bytes = new byte[hex.Length / 2];
         for (var i = 0; i < hex.Length; i += 2)

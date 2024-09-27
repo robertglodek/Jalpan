@@ -4,16 +4,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Jalpan.Contexts.Providers;
 
-internal sealed class ContextProvider : IContextProvider
+internal sealed class ContextProvider(IHttpContextAccessor httpContextAccessor, IContextAccessor contextAccessor) : IContextProvider
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IContextAccessor _contextAccessor;
-
-    public ContextProvider(IHttpContextAccessor httpContextAccessor, IContextAccessor contextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-        _contextAccessor = contextAccessor;
-    }
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IContextAccessor _contextAccessor = contextAccessor;
 
     public IContext Current()
     {
@@ -22,18 +16,10 @@ internal sealed class ContextProvider : IContextProvider
             return _contextAccessor.Context;
         }
 
-        IContext context;
         var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext is not null)
-        {
-            var userId = httpContext.User.Identity?.Name;
-            context = new Context(Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString(), userId);
-        }
-        else
-        {
-            context = new Context(Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString());
-        }
-
+        var userId = httpContext?.User.Identity?.Name;
+        var activityId = Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString();
+        var context = new Context(activityId, userId);
         _contextAccessor.Context = context;
 
         return context;

@@ -1,24 +1,18 @@
 using System.Collections.Concurrent;
 using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Types;
 using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Messaging.Idempotency.Outbox;
 
-internal sealed class OutboxMessageBroker : IMessageBroker
+internal sealed class OutboxMessageBroker(IOutbox outbox, IContextProvider contextProvider, ILogger<OutboxMessageBroker> logger) : IMessageBroker
 {
     private readonly ConcurrentDictionary<Type, string> _names = new();
-    private readonly IOutbox _outbox;
-    private readonly IContextProvider _contextProvider;
-    private readonly ILogger<OutboxMessageBroker> _logger;
-
-    public OutboxMessageBroker(IOutbox outbox, IContextProvider contextProvider, ILogger<OutboxMessageBroker> logger)
-    {
-        _outbox = outbox;
-        _contextProvider = contextProvider;
-        _logger = logger;
-    }
+    private readonly IOutbox _outbox = outbox;
+    private readonly IContextProvider _contextProvider = contextProvider;
+    private readonly ILogger<OutboxMessageBroker> _logger = logger;
 
     public async Task SendAsync<T>(T message, CancellationToken cancellationToken = default) where T : IMessage
     {

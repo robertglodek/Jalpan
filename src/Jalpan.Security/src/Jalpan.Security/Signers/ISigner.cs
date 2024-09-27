@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Jalpan.Security.Signing;
+namespace Jalpan.Security.Signers;
 
 public interface ISigner
 {

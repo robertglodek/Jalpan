@@ -1,12 +1,11 @@
 using Jalpan.Secrets.Vault;
 using System.Collections.Concurrent;
 
-namespace Jalpan.Secrets.Internals.Vault;
+namespace Jalpan.Secrets.Valut.Services;
 
 internal sealed class LeaseService : ILeaseService
 {
-    private static readonly ConcurrentDictionary<string, LeaseData> Secrets =
-        new();
+    private static readonly ConcurrentDictionary<string, LeaseData> Secrets = new();
 
     public IReadOnlyDictionary<string, LeaseData> All => Secrets;
 

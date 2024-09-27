@@ -1,4 +1,6 @@
-namespace Jalpan.Secrets.Vault;
+using Jalpan.Secrets.Vault;
+
+namespace Jalpan.Secrets.Valut.Services;
 
 public interface ILeaseService
 {

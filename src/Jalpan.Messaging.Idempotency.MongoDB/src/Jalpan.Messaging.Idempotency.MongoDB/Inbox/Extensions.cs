@@ -6,33 +6,28 @@ namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 
 public static class Extensions
 {
-    private const string SectionName = "inbox:mongo";
-    private const string RegistryName = "messaging.inbox.mongo";
+    private const string DefaultSectionName = "inbox:mongo";
+    private const string RegistryKey = "messaging.inbox.mongo";
+    internal const string DefaultInboxCollectionName = "Inbox";
 
-    public static IMessageInboxConfigurator AddMongo(this IMessageInboxConfigurator configurator, string sectionName = SectionName)
+    public static IMessageInboxConfigurator AddMongo(this IMessageInboxConfigurator configurator, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
-
-        if (!configurator.Builder.TryRegister(RegistryName))
-        {
-            return configurator;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = configurator.Builder.Configuration.GetSection(sectionName);
         var mongoInboxOptions = section.BindOptions<MongoDbInboxOptions>();
         configurator.Builder.Services.Configure<MongoDbInboxOptions>(section);
 
-        var collection = string.IsNullOrWhiteSpace(mongoInboxOptions.Collection)
-            ? "inbox" 
-            : mongoInboxOptions.Collection;
+        if (!configurator.Builder.TryRegister(RegistryKey))
+        {
+            return configurator;
+        }
+
+        var collection = string.IsNullOrWhiteSpace(mongoInboxOptions.Collection) ? DefaultInboxCollectionName : mongoInboxOptions.Collection;
 
         configurator.Builder.AddMongoRepository<InboxMessage, string>(collection);
-        configurator.Builder.AddInitializer<MongoDbInboxInitializer>();
+        configurator.Builder.Services.AddTransient<IInitializer, MongoDbInboxInitializer>();
         configurator.Builder.Services.AddTransient<IInbox, MongoDbInbox>();
-        configurator.Builder.Services.AddTransient<MongoDbInboxInitializer>();
 
         return configurator;
     }

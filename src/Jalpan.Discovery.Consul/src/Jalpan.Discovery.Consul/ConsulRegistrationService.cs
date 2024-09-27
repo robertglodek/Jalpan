@@ -5,23 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Discovery.Consul;
 
-public class ConsulRegistrationService : IHostedService
+public class ConsulRegistrationService(IConsulClient client, ILogger<ConsulRegistrationService> logger,
+    AgentServiceRegistration agentServiceRegistration) : IHostedService
 {
-    private readonly IConsulClient _client;
-    private readonly ILogger<ConsulRegistrationService> _logger;
-    private readonly AgentServiceRegistration _agentServiceRegistration;
-    private readonly string _serviceIdentifier;
+    private readonly IConsulClient _client = client;
+    private readonly ILogger<ConsulRegistrationService> _logger = logger;
+    private readonly AgentServiceRegistration _agentServiceRegistration = agentServiceRegistration;
+    private readonly string _serviceIdentifier = agentServiceRegistration.ID;
 
-    public ConsulRegistrationService(IConsulClient client,
-        ILogger<ConsulRegistrationService> logger,
-        AgentServiceRegistration agentServiceRegistration)
-    {
-        _client = client;
-        _logger = logger;
-        _agentServiceRegistration = agentServiceRegistration;
-        _serviceIdentifier = _agentServiceRegistration.ID;
-    }
-    
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Registering a service: '{_serviceIdentifier}' in Consul...");
@@ -40,6 +31,7 @@ public class ConsulRegistrationService : IHostedService
     {
         _logger.LogInformation($"Deregistering a service: '{_serviceIdentifier}' in Consul...");
         var result = await _client.Agent.ServiceDeregister(_serviceIdentifier, cancellationToken);
+
         if (result.StatusCode == HttpStatusCode.OK)
         {
             _logger.LogInformation($"Deregistered a service: '{_serviceIdentifier}' in Consul.");

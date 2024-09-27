@@ -6,22 +6,19 @@ namespace Jalpan.Persistance.Postgres;
 
 public static class Extensions
 {
-    private const string SectionName = "postgres";
-    private const string RegistryName = "persistence.postgres";
+    private const string DefaultSectionName = "postgres";
+    private const string RegistryKey = "persistence.postgres";
 
-    public static IJalpanBuilder AddPostgres<T>(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddPostgres<T>(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
         where T : DbContext
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<PostgresOptions>();
         builder.Services.Configure<PostgresOptions>(section);
 
-        if (!builder.TryRegister(RegistryName))
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }

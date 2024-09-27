@@ -4,19 +4,12 @@ using MongoDB.Driver;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 
-internal sealed class MongoDbInboxInitializer : IInitializer
+internal sealed class MongoDbInboxInitializer(IMongoDatabase database,
+    IOptions<InboxOptions> inboxOptions, IOptions<MongoDbInboxOptions> inboxMongoOptions) : IInitializer
 {
-    private readonly IMongoDatabase _database;
-    private readonly InboxOptions _inboxOptions;
-    private readonly MongoDbInboxOptions _inboxMongoOptions;
-
-    public MongoDbInboxInitializer(IMongoDatabase database, 
-        IOptions<InboxOptions> inboxOptions, IOptions<MongoDbInboxOptions> inboxMongoOptions)
-    {
-        _database = database;
-        _inboxOptions = inboxOptions.Value;
-        _inboxMongoOptions = inboxMongoOptions.Value;
-    }
+    private readonly IMongoDatabase _database = database;
+    private readonly InboxOptions _inboxOptions = inboxOptions.Value;
+    private readonly MongoDbInboxOptions _inboxMongoOptions = inboxMongoOptions.Value;
 
     public async Task InitializeAsync()
     {
@@ -30,9 +23,7 @@ internal sealed class MongoDbInboxInitializer : IInitializer
             return;
         }
 
-        var collection = string.IsNullOrWhiteSpace(_inboxMongoOptions.Collection)
-           ? "inbox"
-           : _inboxMongoOptions.Collection;
+        var collection = string.IsNullOrWhiteSpace(_inboxMongoOptions.Collection) ? Extensions.DefaultInboxCollectionName : _inboxMongoOptions.Collection;
 
         var builder = Builders<InboxMessage>.IndexKeys;
         await _database.GetCollection<InboxMessage>(collection)

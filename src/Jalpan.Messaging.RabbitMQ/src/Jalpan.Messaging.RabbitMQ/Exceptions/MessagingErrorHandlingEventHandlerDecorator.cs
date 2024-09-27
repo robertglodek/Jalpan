@@ -1,5 +1,5 @@
 using Jalpan.Attributes;
-using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Handlers;
 using Jalpan.Messaging.Exceptions;
 using Jalpan.Types;
@@ -7,19 +7,12 @@ using Jalpan.Types;
 namespace Jalpan.Messaging.RabbitMQ.Exceptions;
 
 [Decorator]
-internal sealed class MessagingErrorHandlingEventHandlerDecorator<T> : IEventHandler<T> where T : class, IEvent
+internal sealed class MessagingErrorHandlingEventHandlerDecorator<T>(IEventHandler<T> handler, IContextProvider contextProvider,
+    IMessagingExceptionPolicyHandler messagingExceptionPolicyHandler) : IEventHandler<T> where T : class, IEvent
 {
-    private readonly IEventHandler<T> _handler;
-    private readonly IContextProvider _contextProvider;
-    private readonly IMessagingExceptionPolicyHandler _messagingExceptionPolicyHandler;
-
-    public MessagingErrorHandlingEventHandlerDecorator(IEventHandler<T> handler, IContextProvider contextProvider,
-        IMessagingExceptionPolicyHandler messagingExceptionPolicyHandler)
-    {
-        _handler = handler;
-        _contextProvider = contextProvider;
-        _messagingExceptionPolicyHandler = messagingExceptionPolicyHandler;
-    }
+    private readonly IEventHandler<T> _handler = handler;
+    private readonly IContextProvider _contextProvider = contextProvider;
+    private readonly IMessagingExceptionPolicyHandler _messagingExceptionPolicyHandler = messagingExceptionPolicyHandler;
 
     public Task HandleAsync(T @event, CancellationToken cancellationToken = default)
     {

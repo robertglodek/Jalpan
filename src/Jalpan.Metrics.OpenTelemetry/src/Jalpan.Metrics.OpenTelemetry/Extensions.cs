@@ -1,11 +1,10 @@
 ﻿using System.Reflection;
+using Jalpan.Exceptions;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Metrics.OpenTelemetry.Decorators;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 
 namespace Jalpan.Metrics.OpenTelemetry;
@@ -14,21 +13,23 @@ internal static class Extensions
 {
     private const string ConsoleExporter = "console";
     private const string PrometheusExporter = "prometheus";
+    private const string DefaultSectionName = "metrics";
+    private const string RegistryKey = "metrics.openTelemetry";
 
-    public static OpenTelemetryBuilder AddMetrics(this OpenTelemetryBuilder openTelemetry,
-        IServiceCollection services,
-        IConfiguration configuration)
+    public static IJalpanBuilder AddMetrics(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        var section = configuration.GetSection("metrics");
-        var options = section.BindOptions<MetricsOptions>();
-        services.Configure<MetricsOptions>(section);
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
-        if (!options.Enabled)
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<MetricsOptions>();
+        builder.Services.Configure<MetricsOptions>(section);
+
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
-            return openTelemetry;
+            return builder;
         }
 
-        return openTelemetry
+        builder.Services.AddOpenTelemetry()
             .WithMetrics(builder =>
             {
                 builder.AddAspNetCoreInstrumentation();
@@ -43,21 +44,33 @@ internal static class Extensions
                     }
                 }
 
-                switch (options.Exporter.ToLowerInvariant())
-                {
-                    case ConsoleExporter:
-                    {
-                        builder.AddConsoleExporter();
-                        break;
-                    }
-                    case PrometheusExporter:
-                    {
-                        var endpoint = options.Endpoint;
-                        builder.AddPrometheusExporter(prometheus => { prometheus.ScrapeEndpointPath = endpoint; });
-                        break;
-                    }
-                }
+                ConfigureExporter(builder, options);
             });
+
+        return builder;
+    }
+
+    private static void ConfigureExporter(MeterProviderBuilder builder, MetricsOptions options)
+    {
+        if(string.IsNullOrEmpty(options.Exporter))
+        {
+            throw new ConfigurationException("Metrics explorer cannot be empty.", nameof(options.Exporter));
+        }
+
+        switch (options.Exporter.ToLowerInvariant())
+        {
+            case ConsoleExporter:
+                builder.AddConsoleExporter();
+                break;
+            case PrometheusExporter:
+                builder.AddPrometheusExporter(prometheus =>
+                {
+                    prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint) ? prometheus.ScrapeEndpointPath : options.Endpoint;
+                });
+                break;
+            default:
+                throw new ConfigurationException($"Metrics explorer '{options.Exporter}' not configured.", options.Exporter);
+        }
     }
 
     public static IApplicationBuilder UseMetrics(this IApplicationBuilder app)
@@ -86,10 +99,10 @@ internal static class Extensions
             .Select(x => x.GetCustomAttribute<MeterAttribute>())
             .Where(x => x is not null);
     
-    public static IServiceCollection AddMessagingMetricsDecorators(this IServiceCollection services)
+    public static IJalpanBuilder AddMessagingMetricsDecorators(this IJalpanBuilder builder)
     {
-        services.TryDecorate<IMessageBroker, MessageBrokerMetricsDecorator>();
+        builder.Services.TryDecorate<IMessageBroker, MessageBrokerMetricsDecorator>();
 
-        return services;
+        return builder;
     }
 }

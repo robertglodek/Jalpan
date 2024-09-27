@@ -1,21 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Description>Jalpan.Persistance.Redis</Description>
-		<Authors>Robert Głodek</Authors>
-		<AssemblyName>Jalpan.Persistance.Redis</AssemblyName>
-		<Title>Jalpan.Persistance.Redis</Title>
-		<PackageId>Jalpan.Persistance.Redis</PackageId>
-		<PackageTags>Jalpan.Persistance.Redis</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-	
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+	<Description>Jalpan.Persistance.Redis</Description>
+	<Authors>Robert Głodek</Authors>
+	<AssemblyName>Jalpan.Persistance.Redis</AssemblyName>
+	<Title>Jalpan.Persistance.Redis</Title>
+	<PackageId>Jalpan.Persistance.Redis</PackageId>
+	<PackageTags>Jalpan.Persistance.Redis</PackageTags>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
 	
   <ItemGroup>

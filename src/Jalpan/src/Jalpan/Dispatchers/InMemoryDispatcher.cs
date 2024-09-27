@@ -3,21 +3,14 @@ using Jalpan.Handlers;
 
 namespace Jalpan.Dispatchers;
 
-public class InMemoryDispatcher : IDispatcher
+public class InMemoryDispatcher(
+    ICommandDispatcher commandDispatcher,
+    IEventDispatcher eventDispatcher,
+    IQueryDispatcher queryDispatcher) : IDispatcher
 {
-    private readonly ICommandDispatcher _commandDispatcher;
-    private readonly IEventDispatcher _eventDispatcher;
-    private readonly IQueryDispatcher _queryDispatcher;
-
-    public InMemoryDispatcher(
-        ICommandDispatcher commandDispatcher,
-        IEventDispatcher eventDispatcher,
-        IQueryDispatcher queryDispatcher)
-    {
-        _commandDispatcher = commandDispatcher;
-        _eventDispatcher = eventDispatcher;
-        _queryDispatcher = queryDispatcher;
-    }
+    private readonly ICommandDispatcher _commandDispatcher = commandDispatcher;
+    private readonly IEventDispatcher _eventDispatcher = eventDispatcher;
+    private readonly IQueryDispatcher _queryDispatcher = queryDispatcher;
 
     public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
         => await _queryDispatcher.QueryAsync(query, cancellationToken);

@@ -5,9 +5,9 @@ using System.Text.Json.Serialization;
 
 namespace Jalpan.Jobs.Quartz;
 
-public class SystemTextJsonObjectSerializer : IObjectSerializer
+public class SystemTextJsonObjectSerializer(ILogger<SystemTextJsonObjectSerializer> logger) : IObjectSerializer
 {
-    private readonly ILogger<SystemTextJsonObjectSerializer> _logger;
+    private readonly ILogger<SystemTextJsonObjectSerializer> _logger = logger;
 
     private readonly JsonSerializerOptions _options = new()
     {
@@ -16,11 +16,6 @@ public class SystemTextJsonObjectSerializer : IObjectSerializer
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
-
-    public SystemTextJsonObjectSerializer(ILogger<SystemTextJsonObjectSerializer> logger)
-    {
-        _logger = logger;
-    }
 
     public void Initialize()
     {

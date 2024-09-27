@@ -4,11 +4,11 @@ public sealed class AuthOptions
 {
     public string Algorithm { get; set; } = string.Empty;
     public CertificateOptions? Certificate { get; set; }
-    public JwtOptions? Jwt { get; set; }
+    public JwtOptions Jwt { get; set; } = new();
 
     public sealed class CertificateOptions
     {
-        public string Location { get; set; } = string.Empty;
+        public string? Location { get; set; }
         public string? RawData { get; set; }
         public string? Password { get; set; }
     }

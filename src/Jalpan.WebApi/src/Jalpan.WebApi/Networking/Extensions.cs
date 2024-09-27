@@ -11,7 +11,7 @@ namespace Jalpan.WebApi.Networking;
 
 public static class Extensions
 {
-    private const string SectionName = "networking";
+    private const string DefaultSectionName = "networking";
     private const string XForwardedFor = "X-Forwarded-For";
 
     private static readonly IPNetwork LoopbackIPv4 = new(IPAddress.Parse("127.0.0.0"), 8);
@@ -22,12 +22,9 @@ public static class Extensions
     private static readonly IPNetwork IPv6ULA = new(IPAddress.Parse("fd00::"), 8);
     private static readonly IPNetwork IPv6MappedIPv4 = new(IPAddress.Parse("::ffff:10.0.0.0"), 8);
 
-    public static IJalpanBuilder AddHeadersForwarding(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddHeadersForwarding(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if(string.IsNullOrEmpty(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         builder.Services.Configure<NetworkingOptions>(section);

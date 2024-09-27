@@ -6,20 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Messaging.RabbitMQ;
 
-internal sealed class RabbitMqBrokerClient : IMessageBrokerClient
+internal sealed class RabbitMqBrokerClient(IBus bus, IMessageContextAccessor messageContextAccessor,
+    ILogger<RabbitMqBrokerClient> logger) : IMessageBrokerClient
 {
     private readonly ConcurrentDictionary<Type, string> _names = new();
-    private readonly IBus _bus;
-    private readonly IMessageContextAccessor _messageContextAccessor;
-    private readonly ILogger<RabbitMqBrokerClient> _logger;
-
-    public RabbitMqBrokerClient(IBus bus, IMessageContextAccessor messageContextAccessor,
-        ILogger<RabbitMqBrokerClient> logger)
-    {
-        _bus = bus;
-        _messageContextAccessor = messageContextAccessor;
-        _logger = logger;
-    }
+    private readonly IBus _bus = bus;
+    private readonly IMessageContextAccessor _messageContextAccessor = messageContextAccessor;
+    private readonly ILogger<RabbitMqBrokerClient> _logger = logger;
 
     public async Task SendAsync<T>(MessageEnvelope<T> messageEnvelope, CancellationToken cancellationToken = default)
         where T : Types.IMessage

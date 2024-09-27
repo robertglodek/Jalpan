@@ -4,14 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Dispatchers;
 
-internal sealed class InMemoryQueryDispatcher : IQueryDispatcher
+internal sealed class InMemoryQueryDispatcher(IServiceProvider serviceProvider) : IQueryDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public InMemoryQueryDispatcher(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
     {

@@ -7,24 +7,15 @@ using System.Diagnostics;
 
 namespace Jalpan.Messaging.Idempotency.Inbox;
 
-internal sealed class InboxCleaner : BackgroundService
+internal sealed class InboxCleaner(IServiceProvider serviceProvider, IOptions<InboxOptions> options, IDateTime dateTime,
+    ILogger<InboxCleaner> logger) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IDateTime _dateTime;
-    private readonly ILogger<InboxCleaner> _logger;
-    private readonly TimeSpan _interval;
-    private readonly bool _enabled;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IDateTime _dateTime = dateTime;
+    private readonly ILogger<InboxCleaner> _logger = logger;
+    private readonly TimeSpan _interval = options.Value.CleanupInterval ?? TimeSpan.FromHours(1);
+    private readonly bool _enabled = options.Value.Enabled;
     private int _isProcessing;
-
-    public InboxCleaner(IServiceProvider serviceProvider, IOptions<InboxOptions> options, IDateTime dateTime,
-        ILogger<InboxCleaner> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _dateTime = dateTime;
-        _logger = logger;
-        _enabled = options.Value.Enabled;
-        _interval = options.Value.CleanupInterval ?? TimeSpan.FromHours(1);
-    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

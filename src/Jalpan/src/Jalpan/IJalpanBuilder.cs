@@ -7,5 +7,6 @@ public interface IJalpanBuilder
 {
     IServiceCollection Services { get; }
     IConfiguration Configuration { get; }
+    IHttpClientBuilder HttpClientBuilder { get; set; }
     bool TryRegister(string name);
 }

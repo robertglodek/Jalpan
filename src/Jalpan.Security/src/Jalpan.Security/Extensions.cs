@@ -1,6 +1,6 @@
-﻿using Jalpan.Security.Encryption;
-using Jalpan.Security.Hashing;
-using Jalpan.Security.Signing;
+﻿using Jalpan.Security.Encryptors;
+using Jalpan.Security.Hashers;
+using Jalpan.Security.Signers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Security;

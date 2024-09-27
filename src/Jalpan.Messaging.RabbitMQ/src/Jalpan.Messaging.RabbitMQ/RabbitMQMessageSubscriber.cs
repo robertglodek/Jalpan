@@ -9,19 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Messaging.RabbitMQ;
 
-internal sealed class RabbitMqMessageSubscriber : IMessageSubscriber
+internal sealed class RabbitMqMessageSubscriber(IMessageHandler messageHandler, IMessageTypeRegistry messageTypeRegistry, IBus bus) : IMessageSubscriber
 {
-    private readonly IMessageHandler _messageHandler;
-    private readonly IMessageTypeRegistry _messageTypeRegistry;
-    private readonly IBus _bus;
-
-    public RabbitMqMessageSubscriber(IMessageHandler messageHandler, IMessageTypeRegistry messageTypeRegistry, IBus bus)
-    {
-        _messageHandler = messageHandler;
-        _messageTypeRegistry = messageTypeRegistry;
-        _bus = bus;
-    }
-    
+    private readonly IMessageHandler _messageHandler = messageHandler;
+    private readonly IMessageTypeRegistry _messageTypeRegistry = messageTypeRegistry;
+    private readonly IBus _bus = bus;
 
     public IMessageSubscriber Event<T>() where T : class, IEvent
         => Message<T>((serviceProvider, @event, cancellationToken) =>

@@ -12,20 +12,17 @@ namespace Jalpan;
 
 public static class Extensions
 {
-    private const string SectionName = "app";
+    private const string DefaultSectionName = "app";
 
     public static IServiceCollection AddJalpan(
-        this IServiceCollection services, 
-        IConfiguration configuration, 
-        Action<IJalpanBuilder>? configure = null, 
-        string sectionName = SectionName)
+        this IServiceCollection services,
+        IConfiguration configuration,
+        Action<IJalpanBuilder>? configure = null,
+        string sectionName = DefaultSectionName)
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var builder = JalpanBuilder.Create(services, configuration);
 
@@ -60,7 +57,7 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddInitializer<T>(this IServiceCollection services) where T : class, IInitializer 
+    public static IServiceCollection AddInitializer<T>(this IServiceCollection services) where T : class, IInitializer
         => services.AddTransient<IInitializer, T>();
 
     public static T BindOptions<T>(this IConfiguration configuration, string sectionName) where T : new()

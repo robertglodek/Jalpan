@@ -5,11 +5,11 @@ namespace Jalpan.Transactions;
 
 public static class Extensions
 {
-    public static IServiceCollection AddTransactionalDecorators(this IServiceCollection services)
+    public static IJalpanBuilder AddTransactionalDecorators(this IJalpanBuilder builder)
     {
-        services.TryDecorate(typeof(ICommandHandler<,>), typeof(TransactionalCommandHandlerDecorator<,>));
-        services.TryDecorate(typeof(IEventHandler<>), typeof(TransactionalEventHandlerDecorator<>));
+        builder.Services.TryDecorate(typeof(ICommandHandler<,>), typeof(TransactionalCommandHandlerDecorator<,>));
+        builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(TransactionalEventHandlerDecorator<>));
 
-        return services;
+        return builder;
     }
 }

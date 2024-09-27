@@ -2,7 +2,6 @@
 
 namespace Jalpan.Jobs.Quartz.Exceptions;
 
-public class CronScheduleException : CustomException
+public class CronScheduleException(string message) : CustomException(message)
 {
-    public CronScheduleException(string message) : base(message) { }
 }

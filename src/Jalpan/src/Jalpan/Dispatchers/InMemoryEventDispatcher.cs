@@ -4,14 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Dispatchers;
 
-internal sealed class InMemoryEventDispatcher : IEventDispatcher
+internal sealed class InMemoryEventDispatcher(IServiceProvider serviceProvider) : IEventDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public InMemoryEventDispatcher(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task PublishAsync<TEvent>(TEvent @event, CancellationToken cancellationToken = default)
         where TEvent : class, IEvent

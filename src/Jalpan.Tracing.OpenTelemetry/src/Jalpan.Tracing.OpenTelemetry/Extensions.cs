@@ -12,21 +12,20 @@ internal static class Extensions
 {
     private const string ConsoleExporter = "console";
     private const string JaegerExporter = "jaeger";
-    private const string SectionName = "tracing";
-    private const string RegistryName = "tracing.openTelemetry";
+    private const string DefaultSectionName = "tracing";
+    private const string DefaultAppSectionName = "app";
+    private const string RegistryKey = "tracing.openTelemetry";
 
-    public static IJalpanBuilder AddTracing(this IJalpanBuilder builder, string sectionName = SectionName, string appSectionName = "app")
+    public static IJalpanBuilder AddTracing(this IJalpanBuilder builder, string sectionName = DefaultSectionName, string appSectionName = DefaultAppSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
+        appSectionName = string.IsNullOrWhiteSpace(appSectionName) ? DefaultAppSectionName : appSectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<TracingOptions>();
         builder.Services.Configure<TracingOptions>(section);
 
-        if (!options.Enabled || !builder.TryRegister(RegistryName))
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
             return builder;
         }
@@ -82,11 +81,11 @@ internal static class Extensions
         return builder;
     }
 
-    public static IServiceCollection AddMessagingTracingDecorators(this IServiceCollection services)
+    public static IJalpanBuilder AddMessagingTracingDecorators(this IJalpanBuilder builder)
     {
-        services.TryDecorate<IMessageBroker, MessageBrokerTracingDecorator>();
-        services.TryDecorate<IMessageHandler, MessageHandlerTracingDecorator>();
+        builder.Services.TryDecorate<IMessageBroker, MessageBrokerTracingDecorator>();
+        builder.Services.TryDecorate<IMessageHandler, MessageHandlerTracingDecorator>();
 
-        return services;
+        return builder;
     }
 }

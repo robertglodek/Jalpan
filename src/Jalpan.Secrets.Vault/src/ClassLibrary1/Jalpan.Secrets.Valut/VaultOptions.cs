@@ -9,7 +9,7 @@ public sealed class VaultOptions
     public int RenewalsInterval { get; set; }
     public KeyValueOptions KV { get; set; } = new();
     public PkiOptions PKI { get; set; } = new();
-    public Dictionary<string, LeaseOptions> Lease { get; set; } = new();
+    public Dictionary<string, LeaseOptions> Lease { get; set; } = [];
 
     public sealed class AuthenticationOptions
     {
@@ -45,7 +45,7 @@ public sealed class VaultOptions
         public string RoleName { get; set; } = string.Empty;
         public string MountPoint { get; set; } = string.Empty;
         public bool AutoRenewal { get; set; }
-        public Dictionary<string, string> Templates { get; set; } = new();
+        public Dictionary<string, string> Templates { get; set; } = [];
     }
 
     public sealed class PkiOptions

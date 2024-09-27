@@ -1,42 +1,40 @@
 ﻿using Jalpan.Attributes;
 using Jalpan.Handlers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Jalpan.Dispatchers;
 
 public static class Extensions
 {
-    public static IServiceCollection AddHandlers(this IServiceCollection services, string project)
+    public static IJalpanBuilder AddHandlers(this IJalpanBuilder builder)
     {
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-            .Where(x => x.FullName is not null && x.FullName.Contains(project))
-            .ToArray();
-        
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToArray();
 
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
+        RegisterHandler(builder, assemblies, typeof(ICommandHandler<,>));
+        RegisterHandler(builder, assemblies, typeof(IEventHandler<>));
+        RegisterHandler(builder, assemblies, typeof(IQueryHandler<,>));
 
-        services.Scan(s => s.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>))
-                .WithoutAttribute<DecoratorAttribute>())
-            .AsImplementedInterfaces()
-            .WithScopedLifetime());
-
-        return services;
+        return builder;
     }
 
-    public static IServiceCollection AddDispatchers(this IServiceCollection services)
-        => services
+    private static void RegisterHandler(IJalpanBuilder builder, Assembly[] assemblies, Type handlerType)
+    {
+        builder.Services.Scan(scan => scan.FromAssemblies(assemblies)
+            .AddClasses(classes => classes.AssignableTo(handlerType)
+                .WithoutAttribute<DecoratorAttribute>())
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+    }
+
+    public static IJalpanBuilder AddDispatchers(this IJalpanBuilder builder)
+    {
+        builder.Services
             .AddSingleton<IDispatcher, InMemoryDispatcher>()
             .AddSingleton<ICommandDispatcher, InMemoryCommandDispatcher>()
             .AddSingleton<IEventDispatcher, InMemoryEventDispatcher>()
             .AddSingleton<IQueryDispatcher, InMemoryQueryDispatcher>();
+
+        return builder;
+    }
 }

@@ -9,17 +9,14 @@ namespace Jalpan.Auth;
 
 public static class Extensions
 {
-    private const string SectionName = "jwt";
-    private const string RegistryName = "auth";
+    private const string DefaultSectionName = "jwt";
+    private const string RegistryKey = "auth";
 
-    public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
-
-        if (!builder.TryRegister(RegistryName))
+        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName; 
+       
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }
@@ -28,11 +25,96 @@ public static class Extensions
         var options = section.BindOptions<AuthOptions>();
         builder.Services.Configure<AppOptions>(section);
 
-        if (options.Jwt is null)
+        var tokenValidationParameters = CreateTokenValidationParameters(options);
+
+        var securityKey = GetSecurityKey(options, out string algorithm);
+
+        ConfigureJwtBearerAuthentication(builder, options, tokenValidationParameters);
+
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddSingleton(new SecurityKeyDetails(securityKey, algorithm));
+        builder.Services.AddSingleton<IJwtTokenManager, JwtTokenManager>();
+        builder.Services.AddSingleton(tokenValidationParameters);
+
+        return builder;
+    }
+
+    private static SecurityKey GetSecurityKey(AuthOptions options, out string algorithm)
+    {
+        algorithm = options.Algorithm ?? SecurityAlgorithms.HmacSha256;
+        SecurityKey? securityKey = null;
+
+        if (options.Certificate != null)
         {
-            throw new InvalidOperationException("JWT options cannot be null.");
+            securityKey = LoadCertificate(options);
         }
 
+        if (securityKey == null)
+        {
+            if (string.IsNullOrWhiteSpace(options.Jwt.IssuerSigningKey))
+            {
+                throw new InvalidOperationException("Missing issuer signing key.");
+            }
+
+            var rawKey = Encoding.UTF8.GetBytes(options.Jwt.IssuerSigningKey);
+            securityKey = new SymmetricSecurityKey(rawKey);
+        }
+
+        return securityKey;
+    }
+
+    private static X509SecurityKey? LoadCertificate(AuthOptions options)
+    {
+        var certificate = TryLoadCertificateFromLocation(options) ?? TryLoadCertificateFromRawData(options);
+
+        if(certificate != null) 
+        {
+            var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
+            Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
+            return new X509SecurityKey(certificate);
+        }
+
+        return null;
+    }
+
+    private static X509Certificate2? TryLoadCertificateFromLocation(AuthOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(options.Certificate!.Location))
+        {
+            return null;
+        }
+            
+        var password = options.Certificate.Password;
+        var certificate = string.IsNullOrWhiteSpace(password)
+            ? new X509Certificate2(options.Certificate.Location)
+            : new X509Certificate2(options.Certificate.Location, password);
+
+        var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
+        Console.WriteLine($"Loaded X.509 certificate from location: '{options.Certificate.Location}' {keyType}.");
+        return certificate;
+    }
+
+    private static X509Certificate2? TryLoadCertificateFromRawData(AuthOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(options.Certificate!.RawData))
+        {
+            return null;
+        }
+            
+        var rawData = Convert.FromBase64String(options.Certificate.RawData);
+        var password = options.Certificate.Password;
+        var certificate = string.IsNullOrWhiteSpace(password)
+            ? new X509Certificate2(rawData)
+            : new X509Certificate2(rawData, password);
+
+        var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
+        Console.WriteLine($"Loaded X.509 certificate from raw data {keyType}.");
+        return certificate;
+    }
+
+    private static TokenValidationParameters CreateTokenValidationParameters(AuthOptions options)
+    {
         var tokenValidationParameters = new TokenValidationParameters
         {
             RequireAudience = options.Jwt.RequireAudience,
@@ -52,66 +134,6 @@ public static class Extensions
             ClockSkew = TimeSpan.Zero
         };
 
-        var hasCertificate = false;
-        var algorithm = options.Algorithm;
-        SecurityKey? securityKey = null;
-        if (options.Certificate is not null)
-        {
-            X509Certificate2? certificate = null;
-            var password = options.Certificate.Password;
-            var hasPassword = !string.IsNullOrWhiteSpace(password);
-            if (!string.IsNullOrWhiteSpace(options.Certificate.Location))
-            {
-                certificate = hasPassword
-                    ? new X509Certificate2(options.Certificate.Location, password)
-                    : new X509Certificate2(options.Certificate.Location);
-                var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
-                Console.WriteLine($"Loaded X.509 certificate from location: '{options.Certificate.Location}' {keyType}.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(options.Certificate.RawData))
-            {
-                var rawData = Convert.FromBase64String(options.Certificate.RawData);
-                certificate = hasPassword
-                    ? new X509Certificate2(rawData, password)
-                    : new X509Certificate2(rawData);
-                var keyType = certificate.HasPrivateKey ? "with private key" : "with public key only";
-                Console.WriteLine($"Loaded X.509 certificate from raw data {keyType}.");
-            }
-
-            if (certificate is not null)
-            {
-                if (string.IsNullOrWhiteSpace(options.Algorithm))
-                {
-                    algorithm = SecurityAlgorithms.RsaSha256;
-                }
-
-                hasCertificate = true;
-                securityKey = new X509SecurityKey(certificate);
-                tokenValidationParameters.IssuerSigningKey = securityKey;
-                var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
-                Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
-            }
-        }
-
-        if (!hasCertificate)
-        {
-            if (string.IsNullOrWhiteSpace(options.Jwt.IssuerSigningKey))
-            {
-                throw new InvalidOperationException("Missing issuer signing key.");
-            }
-
-            if (string.IsNullOrWhiteSpace(options.Algorithm))
-            {
-                algorithm = SecurityAlgorithms.HmacSha256;
-            }
-
-            var rawKey = Encoding.UTF8.GetBytes(options.Jwt.IssuerSigningKey);
-            securityKey = new SymmetricSecurityKey(rawKey);
-            tokenValidationParameters.IssuerSigningKey = securityKey;
-            Console.WriteLine("Using symmetric encryption for issuing tokens.");
-        }
-
         if (!string.IsNullOrWhiteSpace(options.Jwt.AuthenticationType))
         {
             tokenValidationParameters.AuthenticationType = options.Jwt.AuthenticationType;
@@ -126,12 +148,18 @@ public static class Extensions
         {
             tokenValidationParameters.RoleClaimType = options.Jwt.RoleClaimType;
         }
-   
+
+        return tokenValidationParameters;
+    }
+
+
+    private static void ConfigureJwtBearerAuthentication(IJalpanBuilder builder, AuthOptions options, TokenValidationParameters tokenValidationParameters)
+    {
         builder.Services.AddAuthentication(o =>
         {
             o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(jwtBearerOptions => 
+        }).AddJwtBearer(jwtBearerOptions =>
         {
             jwtBearerOptions.Authority = options.Jwt.Authority;
             jwtBearerOptions.Audience = options.Jwt.Audience;
@@ -146,18 +174,5 @@ public static class Extensions
                 jwtBearerOptions.Challenge = options.Jwt.Challenge;
             }
         });
-
-        builder.Services.AddAuthorization();
-
-        if (securityKey is not null)
-        {
-            builder.Services.AddSingleton(new SecurityKeyDetails(securityKey, algorithm));
-            builder.Services.AddSingleton<IJwtTokenManager, JwtTokenManager>();
-        }
-
-        builder.Services.AddSingleton(options);
-        builder.Services.AddSingleton(tokenValidationParameters);
-
-        return builder;
     }
 }

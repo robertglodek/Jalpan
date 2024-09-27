@@ -7,24 +7,15 @@ using Microsoft.Extensions.Options;
 
 namespace Jalpan.Messaging.Idempotency.Outbox;
 
-internal sealed class OutboxCleaner : BackgroundService
+internal sealed class OutboxCleaner(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, IDateTime dateTime,
+    ILogger<OutboxCleaner> logger) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IDateTime _dateTime;
-    private readonly ILogger<OutboxCleaner> _logger;
-    private readonly TimeSpan _interval;
-    private readonly bool _enabled;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IDateTime _dateTime = dateTime;
+    private readonly ILogger<OutboxCleaner> _logger = logger;
+    private readonly TimeSpan _interval = options.Value.CleanupInterval ?? TimeSpan.FromHours(1);
+    private readonly bool _enabled = options.Value.Enabled;
     private int _isProcessing;
-
-    public OutboxCleaner(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, IDateTime dateTime,
-        ILogger<OutboxCleaner> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _dateTime = dateTime;
-        _logger = logger;
-        _enabled = options.Value.Enabled;
-        _interval = options.Value.CleanupInterval ?? TimeSpan.FromHours(1);
-    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

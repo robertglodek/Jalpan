@@ -7,7 +7,7 @@ using VaultSharp;
 using VaultSharp.V1.SecretsEngines;
 using VaultSharp.V1.SecretsEngines.PKI;
 
-namespace Jalpan.Secrets.Internals.Vault;
+namespace Jalpan.Secrets.Valut.Issuers;
 
 internal sealed class CertificatesIssuer : ICertificatesIssuer
 {

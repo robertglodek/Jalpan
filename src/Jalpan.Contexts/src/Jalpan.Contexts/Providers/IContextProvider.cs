@@ -1,4 +1,4 @@
-namespace Jalpan.Contexts;
+namespace Jalpan.Contexts.Providers;
 
 public interface IContextProvider
 {

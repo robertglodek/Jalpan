@@ -7,21 +7,18 @@ namespace Jalpan.Persistance.MongoDB;
 
 public static class Extensions
 {
-    private const string SectionName = "mongo";
-    private const string RegistryName = "persistence.mongoDb";
+    private const string DefaultSectionName = "mongo";
+    private const string RegistryKey = "persistence.mongoDb";
 
-    public static IJalpanBuilder AddMongo(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddMongo(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<MongoDbOptions>();
         builder.Services.Configure<MongoDbOptions>(section);
 
-        if (!builder.TryRegister(RegistryName))
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }

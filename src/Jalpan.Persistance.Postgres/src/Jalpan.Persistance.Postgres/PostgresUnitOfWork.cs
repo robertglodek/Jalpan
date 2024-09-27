@@ -2,14 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Jalpan.Persistance.Postgres;
 
-internal sealed class PostgresUnitOfWork : IUnitOfWork
+internal sealed class PostgresUnitOfWork(DbContext dbContext) : IUnitOfWork
 {
-    private readonly DbContext _dbContext;
-
-    public PostgresUnitOfWork(DbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly DbContext _dbContext = dbContext;
 
     public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
     {

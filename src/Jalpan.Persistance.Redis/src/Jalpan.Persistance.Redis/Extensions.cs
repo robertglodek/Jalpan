@@ -1,21 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Jalpan.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
 namespace Jalpan.Persistance.Redis;
 
 public static class Extensions
 {
-    private const string SectionName = "redis";
-    private const string RegistryName = "persistence.redis";
+    private const string DefaultSectionName = "redis";
+    private const string RegistryKey = "persistence.redis";
 
-    public static IJalpanBuilder AddRedis(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddRedis(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
-        if (!builder.TryRegister(RegistryName))
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }
@@ -23,6 +21,11 @@ public static class Extensions
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<RedisOptions>();
         builder.Services.Configure<RedisOptions>(section);
+
+        if(string.IsNullOrEmpty(options.ConnectionString))
+        {
+            throw new ConfigurationException("Redis connection string cannot be empty.", nameof(options.ConnectionString));
+        }
 
         builder.Services
             .AddSingleton(options)

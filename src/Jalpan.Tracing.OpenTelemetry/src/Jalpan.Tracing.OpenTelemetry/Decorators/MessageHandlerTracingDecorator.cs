@@ -1,24 +1,18 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Messaging.RabbitMQ.Internals;
 using Jalpan.Types;
 
 namespace Jalpan.Tracing.OpenTelemetry.Decorators;
 
-internal sealed class MessageHandlerTracingDecorator : IMessageHandler
+internal sealed class MessageHandlerTracingDecorator(IMessageHandler messageHandler, IContextProvider contextProvider) : IMessageHandler
 {
     public const string ActivitySourceName = "message_handler";
     private static readonly ActivitySource ActivitySource = new(ActivitySourceName);
     private static readonly ConcurrentDictionary<Type, string> Names = new();
-    private readonly IMessageHandler _messageHandler;
-    private readonly IContextProvider _contextProvider;
-
-    public MessageHandlerTracingDecorator(IMessageHandler messageHandler, IContextProvider contextProvider)
-    {
-        _messageHandler = messageHandler;
-        _contextProvider = contextProvider;
-    }
+    private readonly IMessageHandler _messageHandler = messageHandler;
+    private readonly IContextProvider _contextProvider = contextProvider;
 
     public async Task HandleAsync<T>(Func<IServiceProvider, T, CancellationToken, Task> handler, T message,
         CancellationToken cancellationToken = default) where T : IMessage

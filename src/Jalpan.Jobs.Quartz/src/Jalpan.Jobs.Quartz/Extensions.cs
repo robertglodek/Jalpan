@@ -7,17 +7,14 @@ namespace Jalpan.Jobs.Quartz;
 
 public static class Extensions
 {
-    private const string SectionName = "quartz";
-    private const string RegistryName = "jobs.quartz";
+    private const string DefaultSectionName = "quartz";
+    private const string RegistryKey = "jobs.quartz";
 
-    public static IJalpanBuilder AddQuartz(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddQuartz(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
 
-        if (!builder.TryRegister(RegistryName))
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }

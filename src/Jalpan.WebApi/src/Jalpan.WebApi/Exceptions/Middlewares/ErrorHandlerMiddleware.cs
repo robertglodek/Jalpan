@@ -5,18 +5,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan.WebApi.Exceptions.Middlewares;
 
-internal sealed class ErrorHandlerMiddleware : IMiddleware
+internal sealed class ErrorHandlerMiddleware(
+    IExceptionToResponseMapper exceptionToResponseMapper,
+    ILogger<ErrorHandlerMiddleware> logger) : IMiddleware
 {
-    private readonly IExceptionToResponseMapper _exceptionToResponseMapper;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger;
-
-    public ErrorHandlerMiddleware(
-        IExceptionToResponseMapper exceptionToResponseMapper,
-        ILogger<ErrorHandlerMiddleware> logger)
-    {
-        _exceptionToResponseMapper = exceptionToResponseMapper;
-        _logger = logger;
-    }
+    private readonly IExceptionToResponseMapper _exceptionToResponseMapper = exceptionToResponseMapper;
+    private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {

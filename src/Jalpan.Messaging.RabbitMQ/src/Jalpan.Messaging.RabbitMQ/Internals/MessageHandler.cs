@@ -3,16 +3,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Messaging.RabbitMQ.Internals;
 
-internal sealed class MessageHandler : IMessageHandler
+internal sealed class MessageHandler(IServiceProvider serviceProvider, ILogger<MessageHandler> logger) : IMessageHandler
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<MessageHandler> _logger;
-
-    public MessageHandler(IServiceProvider serviceProvider, ILogger<MessageHandler> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly ILogger<MessageHandler> _logger = logger;
 
     public async Task HandleAsync<T>(Func<IServiceProvider, T, CancellationToken, Task> handler, T message,
         CancellationToken cancellationToken = default) where T : IMessage

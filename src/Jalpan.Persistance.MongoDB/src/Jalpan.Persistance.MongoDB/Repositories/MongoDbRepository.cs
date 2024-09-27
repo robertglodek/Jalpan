@@ -6,13 +6,10 @@ using System.Linq.Expressions;
 
 namespace Jalpan.Persistance.MongoDB.Repositories;
 
-internal class MongoDbRepository<TEntity, TIdentifiable> : IMongoDbRepository<TEntity, TIdentifiable>
+internal class MongoDbRepository<TEntity, TIdentifiable>(IMongoDatabase database, string collectionName) : IMongoDbRepository<TEntity, TIdentifiable>
     where TEntity : IIdentifiable<TIdentifiable>
 {
-    public MongoDbRepository(IMongoDatabase database, string collectionName)
-        => Collection = database.GetCollection<TEntity>(collectionName);
-
-    public IMongoCollection<TEntity> Collection { get; }
+    public IMongoCollection<TEntity> Collection { get; } = database.GetCollection<TEntity>(collectionName);
 
     public Task<TEntity> GetAsync(TIdentifiable id, CancellationToken cancellationToken = default)
         => GetAsync(e => e.Id!.Equals(id), cancellationToken);

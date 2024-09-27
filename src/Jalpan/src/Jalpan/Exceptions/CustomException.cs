@@ -1,8 +1,5 @@
 ﻿namespace Jalpan.Exceptions;
 
-public abstract class CustomException : Exception
+public abstract class CustomException(string message) : Exception(message)
 {
-    protected CustomException(string message) : base(message)
-    {
-    }
 }

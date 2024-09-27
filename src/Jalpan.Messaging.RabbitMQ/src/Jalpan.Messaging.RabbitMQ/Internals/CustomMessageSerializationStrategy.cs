@@ -7,25 +7,17 @@ using Jalpan.Contexts.Accessors;
 
 namespace Jalpan.Messaging.RabbitMQ.Internals;
 
-internal sealed class CustomMessageSerializationStrategy : IMessageSerializationStrategy
+internal sealed class CustomMessageSerializationStrategy(IMessageTypeRegistry messageTypeRegistry, ISerializer serializer,
+    IMessageContextAccessor messageContextAccessor, IContextAccessor contextAccessor) : IMessageSerializationStrategy
 {
     private const string ActivityIdKey = "activity-id";
     private const string UserIdKey = "user-id";
     
     private readonly ConcurrentDictionary<Type, string> _typeNames = new();
-    private readonly IMessageTypeRegistry _messageTypeRegistry;
-    private readonly ISerializer _serializer;
-    private readonly IMessageContextAccessor _messageContextAccessor;
-    private readonly IContextAccessor _contextAccessor;
-
-    public CustomMessageSerializationStrategy(IMessageTypeRegistry messageTypeRegistry, ISerializer serializer,
-        IMessageContextAccessor messageContextAccessor, IContextAccessor contextAccessor)
-    {
-        _messageTypeRegistry = messageTypeRegistry;
-        _serializer = serializer;
-        _messageContextAccessor = messageContextAccessor;
-        _contextAccessor = contextAccessor;
-    }
+    private readonly IMessageTypeRegistry _messageTypeRegistry = messageTypeRegistry;
+    private readonly ISerializer _serializer = serializer;
+    private readonly IMessageContextAccessor _messageContextAccessor = messageContextAccessor;
+    private readonly IContextAccessor _contextAccessor = contextAccessor;
 
     public SerializedMessage SerializeMessage(IMessage message)
     {
@@ -68,12 +60,7 @@ internal sealed class CustomMessageSerializationStrategy : IMessageSerialization
 
     public IMessage DeserializeMessage(MessageProperties properties, in ReadOnlyMemory<byte> body)
     {
-        var type = _messageTypeRegistry.Resolve(properties.Type);
-        if (type is null)
-        {
-            throw new Exception($"Message was not registered for type: '{properties.Type}'.");
-        }
-
+        var type = _messageTypeRegistry.Resolve(properties.Type) ?? throw new Exception($"Message was not registered for type: '{properties.Type}'.");
         var activityId = GetHeaderValue(properties, ActivityIdKey);
         var userId = GetHeaderValue(properties, UserIdKey);
 

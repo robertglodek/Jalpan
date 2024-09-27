@@ -1,6 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 
-namespace Jalpan.Secrets.Vault;
+namespace Jalpan.Secrets.Valut.Issuers;
 
 public interface ICertificatesIssuer
 {

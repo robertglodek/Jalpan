@@ -2,14 +2,9 @@
 
 namespace Jalpan.Persistance.MongoDB;
 
-internal class MongoDbUnitOfWork : IUnitOfWork
+internal class MongoDbUnitOfWork(IMongoClient mongoClient) : IUnitOfWork
 {
-    private readonly IMongoClient _mongoClient;
-
-    public MongoDbUnitOfWork(IMongoClient mongoClient)
-    {
-        _mongoClient = mongoClient;
-    }
+    private readonly IMongoClient _mongoClient = mongoClient;
 
     public async Task ExecuteAsync(Func<Task> action, CancellationToken cancellationToken = default)
     {

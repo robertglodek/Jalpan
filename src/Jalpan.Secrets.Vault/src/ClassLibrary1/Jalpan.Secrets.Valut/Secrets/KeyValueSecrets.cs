@@ -1,22 +1,19 @@
+using Jalpan.Secrets.Valut.Exceptions;
 using Jalpan.Secrets.Vault;
 using Jalpan.Serialization;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 
-namespace Jalpan.Secrets.Internals.Vault;
+namespace Jalpan.Secrets.Valut.Secrets;
 
-internal sealed class KeyValueSecrets : IKeyValueSecrets
+internal sealed class KeyValueSecrets(
+    IVaultClient client,
+    IOptions<VaultOptions> options,
+    IJsonSerializer jsonSerializer) : IKeyValueSecrets
 {
-    private readonly IVaultClient _client;
-    private readonly VaultOptions _options;
-    private readonly IJsonSerializer _jsonSerializer;
-
-    public KeyValueSecrets(IVaultClient client, IOptions<VaultOptions> options, IJsonSerializer jsonSerializer)
-    {
-        _client = client;
-        _options = options.Value;
-        _jsonSerializer = jsonSerializer;
-    }
+    private readonly IVaultClient _client = client;
+    private readonly VaultOptions _options = options.Value;
+    private readonly IJsonSerializer _jsonSerializer = jsonSerializer;
 
     public async Task<T> GetAsync<T>(string path)
         => _jsonSerializer.Deserialize<T>(_jsonSerializer.Serialize(await GetAsync(path)))!;

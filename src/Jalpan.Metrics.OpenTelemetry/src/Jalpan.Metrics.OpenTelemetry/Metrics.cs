@@ -2,16 +2,10 @@
 
 namespace Jalpan.Metrics.OpenTelemetry;
 
-internal sealed class Metrics : IMetrics
+internal sealed class Metrics(string name) : IMetrics
 {
-    private readonly string _name;
-    private readonly Meter _meter;
-
-    public Metrics(string name)
-    {
-        _name = name;
-        _meter = new Meter(name);
-    }
+    private readonly string _name = name;
+    private readonly Meter _meter = new(name);
 
     public Counter<T> Counter<T>(string name) where T : struct => _meter.CreateCounter<T>(Key(name));
         

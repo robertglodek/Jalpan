@@ -4,16 +4,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan;
 
-internal sealed class StartupInitializer : IHostedService
+internal sealed class StartupInitializer(IServiceProvider serviceProvider, ILogger<StartupInitializer> logger) : IHostedService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<StartupInitializer> _logger;
-
-    public StartupInitializer(IServiceProvider serviceProvider, ILogger<StartupInitializer> logger)
-    {
-        _serviceProvider = serviceProvider;
-        _logger = logger;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly ILogger<StartupInitializer> _logger = logger;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {

@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Jalpan.Attributes;
-using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Handlers;
 using Jalpan.Types;
 using Microsoft.Extensions.Logging;
@@ -8,20 +8,13 @@ using Microsoft.Extensions.Logging;
 namespace Jalpan.Logging.Serilog.Decorators;
 
 [Decorator]
-internal sealed class LoggingEventHandlerDecorator<T> : IEventHandler<T> where T : class, IEvent
+internal sealed class LoggingEventHandlerDecorator<T>(IEventHandler<T> handler, IContextProvider contextProvider,
+    ILogger<LoggingEventHandlerDecorator<T>> logger) : IEventHandler<T> where T : class, IEvent
 {
     private static readonly ConcurrentDictionary<Type, string> Names = new();
-    private readonly IEventHandler<T> _handler;
-    private readonly IContextProvider _contextProvider;
-    private readonly ILogger<LoggingEventHandlerDecorator<T>> _logger;
-
-    public LoggingEventHandlerDecorator(IEventHandler<T> handler, IContextProvider contextProvider,
-        ILogger<LoggingEventHandlerDecorator<T>> logger)
-    {
-        _handler = handler;
-        _contextProvider = contextProvider;
-        _logger = logger;
-    }
+    private readonly IEventHandler<T> _handler = handler;
+    private readonly IContextProvider _contextProvider = contextProvider;
+    private readonly ILogger<LoggingEventHandlerDecorator<T>> _logger = logger;
 
     public async Task HandleAsync(T @event, CancellationToken cancellationToken = default)
     {

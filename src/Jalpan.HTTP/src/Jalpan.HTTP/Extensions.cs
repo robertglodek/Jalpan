@@ -11,17 +11,14 @@ namespace Jalpan.HTTP;
 
 public static class Extensions
 {
-    private const string SectionName = "httpClient";
-    private const string RegistryName = "http.client";
+    private const string DefaultSectionName = "httpClient";
+    private const string RegistryKey = "http.client";
 
-    public static IJalpanBuilder AddHttpClient(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddHttpClient(this IJalpanBuilder builder, string sectionName = DefaultSectionName, Action<IHttpClientBuilder>? configureHttpClient = null)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
 
-        if (!builder.TryRegister(RegistryName))
+        if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }
@@ -60,6 +57,8 @@ public static class Extensions
         {
             builder.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpLoggingFilter>());
         }
+
+        configureHttpClient?.Invoke(httpClientbuilder);
 
         return builder;
     }

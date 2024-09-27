@@ -3,14 +3,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Messaging.Clients;
 
-internal sealed class DefaultMessageBrokerClient : IMessageBrokerClient
+internal sealed class DefaultMessageBrokerClient(ILogger<DefaultMessageBrokerClient> logger) : IMessageBrokerClient
 {
-    private readonly ILogger<DefaultMessageBrokerClient> _logger;
-
-    public DefaultMessageBrokerClient(ILogger<DefaultMessageBrokerClient> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<DefaultMessageBrokerClient> _logger = logger;
 
     public Task SendAsync<T>(MessageEnvelope<T> message, CancellationToken cancellationToken = default)
         where T : IMessage

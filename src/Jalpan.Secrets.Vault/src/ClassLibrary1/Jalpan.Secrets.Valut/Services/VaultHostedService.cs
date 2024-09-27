@@ -1,32 +1,23 @@
+using Jalpan.Secrets.Valut.Issuers;
+using Jalpan.Secrets.Valut.Stores;
 using Jalpan.Secrets.Vault;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 
-namespace Jalpan.Secrets.Internals.Vault;
+namespace Jalpan.Secrets.Valut.Services;
 
-internal sealed class VaultHostedService : BackgroundService
+internal sealed class VaultHostedService(IVaultClient client, ILeaseService leaseService, ICertificatesIssuer certificatesIssuer,
+    ICertificatesStore certificatesStore, IOptions<VaultOptions> options, ILogger<VaultHostedService> logger) : BackgroundService
 {
-    private readonly IVaultClient _client;
-    private readonly ILeaseService _leaseService;
-    private readonly ICertificatesIssuer _certificatesIssuer;
-    private readonly ICertificatesStore _certificatesStore;
-    private readonly VaultOptions _options;
-    private readonly ILogger<VaultHostedService> _logger;
-    private readonly int _interval;
-
-    public VaultHostedService(IVaultClient client, ILeaseService leaseService, ICertificatesIssuer certificatesIssuer,
-        ICertificatesStore certificatesStore, IOptions<VaultOptions> options, ILogger<VaultHostedService> logger)
-    {
-        _client = client;
-        _leaseService = leaseService;
-        _certificatesIssuer = certificatesIssuer;
-        _certificatesStore = certificatesStore;
-        _options = options.Value;
-        _logger = logger;
-        _interval = _options.RenewalsInterval <= 0 ? 10 : _options.RenewalsInterval;
-    }
+    private readonly IVaultClient _client = client;
+    private readonly ILeaseService _leaseService = leaseService;
+    private readonly ICertificatesIssuer _certificatesIssuer = certificatesIssuer;
+    private readonly ICertificatesStore _certificatesStore = certificatesStore;
+    private readonly VaultOptions _options = options.Value;
+    private readonly ILogger<VaultHostedService> _logger = logger;
+    private readonly int _interval = options.Value.RenewalsInterval <= 0 ? 10 : options.Value.RenewalsInterval;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -75,7 +66,7 @@ internal sealed class VaultHostedService : BackgroundService
 
                 _logger.LogInformation($"Renewing a lease with ID: '{lease.Id}', for: '{key}', " +
                                        $"duration: {lease.Duration} s.");
-                    
+
                 var beforeRenew = DateTime.UtcNow;
                 var renewedLease = await _client.V1.System.RenewLeaseAsync(lease.Id, lease.Duration);
                 lease.Refresh(renewedLease.LeaseDurationSeconds - (lease.ExpiryAt - beforeRenew).TotalSeconds);

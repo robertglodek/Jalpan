@@ -1,7 +1,6 @@
-using Jalpan.Secrets.Vault;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Jalpan.Secrets.Internals.Vault;
+namespace Jalpan.Secrets.Valut.Issuers;
 
 public class EmptyCertificatesIssuer : ICertificatesIssuer
 {

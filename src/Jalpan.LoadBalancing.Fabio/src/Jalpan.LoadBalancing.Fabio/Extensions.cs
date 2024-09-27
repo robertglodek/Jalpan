@@ -1,32 +1,26 @@
 using Consul;
-using Micro.HTTP.ServiceDiscovery;
+using Jalpan.Discovery;
+using Jalpan.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.LoadBalancing.Fabio;
 
 public static class Extensions
 {
-    private const string SectionName = "fabio";
+    private const string DefaultSectionName = "fabio";
+    private const string DefaultConsulSectionName = "consul";
     private const string RegistryName = "loadBalancing.fabio";
 
-    public static IJalpanBuilder AddFabio(this IJalpanBuilder builder, string sectionName = SectionName, string consulSectionName = "consul")
+    public static IJalpanBuilder AddFabio(this IJalpanBuilder builder, string sectionName = DefaultSectionName, string consulSectionName = DefaultConsulSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
+        consulSectionName = string.IsNullOrEmpty(consulSectionName) ? DefaultConsulSectionName : consulSectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<FabioOptions>();
         builder.Services.Configure<FabioOptions>(section);
 
-        return builder.AddFabio(options, b => b.AddConsul(consulSectionName));
-    }
-
-    private static IJalpanBuilder AddFabio(this IJalpanBuilder builder, FabioOptions options, Action<IJalpanBuilder> registerConsul)
-    {
-        registerConsul(builder);
-        builder.Services.AddSingleton(options);
+        builder.AddConsul(consulSectionName);
 
         if (!options.Enabled || !builder.TryRegister(RegistryName))
         {
@@ -35,7 +29,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(options.Url))
         {
-            throw new ArgumentException("Fabio URL cannot be empty.", nameof(options.Url));
+            throw new ConfigurationException("Fabio URL cannot be empty.", nameof(options.Url));
         }
 
         builder.Services.AddTransient<FabioHttpHandler>();

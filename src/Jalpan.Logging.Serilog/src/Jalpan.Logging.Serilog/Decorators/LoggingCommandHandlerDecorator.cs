@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Jalpan.Attributes;
-using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Handlers;
 using Jalpan.Types;
 using Microsoft.Extensions.Logging;
@@ -8,20 +8,13 @@ using Microsoft.Extensions.Logging;
 namespace Jalpan.Logging.Serilog.Decorators;
 
 [Decorator]
-internal sealed class LoggingCommandHandlerDecorator<TCommand, TResponse> : ICommandHandler<TCommand, TResponse> where TCommand : class, ICommand<TResponse>
+internal sealed class LoggingCommandHandlerDecorator<TCommand, TResponse>(ICommandHandler<TCommand, TResponse> handler, IContextProvider contextProvider,
+    ILogger<LoggingCommandHandlerDecorator<TCommand, TResponse>> logger) : ICommandHandler<TCommand, TResponse> where TCommand : class, ICommand<TResponse>
 {
     private static readonly ConcurrentDictionary<Type, string> Names = new();
-    private readonly ICommandHandler<TCommand, TResponse> _handler;
-    private readonly IContextProvider _contextProvider;
-    private readonly ILogger<LoggingCommandHandlerDecorator<TCommand, TResponse>> _logger;
-
-    public LoggingCommandHandlerDecorator(ICommandHandler<TCommand, TResponse> handler, IContextProvider contextProvider,
-        ILogger<LoggingCommandHandlerDecorator<TCommand, TResponse>> logger)
-    {
-        _handler = handler;
-        _contextProvider = contextProvider;
-        _logger = logger;
-    }
+    private readonly ICommandHandler<TCommand, TResponse> _handler = handler;
+    private readonly IContextProvider _contextProvider = contextProvider;
+    private readonly ILogger<LoggingCommandHandlerDecorator<TCommand, TResponse>> _logger = logger;
 
     public async Task<TResponse> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {

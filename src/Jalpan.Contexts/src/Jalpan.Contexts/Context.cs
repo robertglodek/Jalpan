@@ -13,7 +13,7 @@ public sealed class Context : IContext
         ActivityId = Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString();
     }
 
-    public Context(string activityId, string? userId = default, string? messageId = default)
+    public Context(string activityId, string? userId = null, string? messageId = null)
     {
         ActivityId = activityId;
         UserId = userId;

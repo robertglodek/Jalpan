@@ -15,9 +15,9 @@
 	<ItemGroup>
 		<PackageReference Include="Consul" Version="1.6.10.9" />
 	</ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Jalpan.HTTP\src\Jalpan.HTTP\Jalpan.HTTP.csproj" />
-  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
 
 </Project>

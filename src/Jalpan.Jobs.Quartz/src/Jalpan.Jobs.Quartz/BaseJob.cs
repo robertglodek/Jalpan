@@ -4,16 +4,10 @@ using Quartz;
 
 namespace Jalpan.Jobs.Quartz;
 
-public abstract class BaseJob : IJob
+public abstract class BaseJob(ILogger logger, IDateTime dateTime) : IJob
 {
-    protected readonly ILogger _logger;
-    protected readonly IDateTime _dateTime;
-
-    protected BaseJob(ILogger logger, IDateTime dateTime)
-    {
-        _logger = logger;
-        _dateTime = dateTime;
-    }
+    protected readonly ILogger _logger = logger;
+    protected readonly IDateTime _dateTime = dateTime;
 
     protected virtual int MaxRetryCount => 0;
     protected virtual int RetryIntervalInSeconds => 30;

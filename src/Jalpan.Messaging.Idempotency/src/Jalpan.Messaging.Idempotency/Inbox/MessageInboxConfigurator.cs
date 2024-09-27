@@ -1,13 +1,7 @@
 ﻿namespace Jalpan.Messaging.Idempotency.Inbox;
 
-internal sealed class MessageInboxConfigurator : IMessageInboxConfigurator
+internal sealed class MessageInboxConfigurator(IJalpanBuilder builder, InboxOptions options) : IMessageInboxConfigurator
 {
-    public IJalpanBuilder Builder { get; }
-    public InboxOptions Options { get; }
-
-    public MessageInboxConfigurator(IJalpanBuilder builder, InboxOptions options)
-    {
-        Builder = builder;
-        Options = options;
-    }
+    public IJalpanBuilder Builder { get; } = builder;
+    public InboxOptions Options { get; } = options;
 }

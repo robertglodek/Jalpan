@@ -8,21 +8,14 @@ using RabbitMQ.Stream.Client.Reliable;
 
 namespace Jalpan.Messaging.RabbitMQ.Streams.Publishers;
 
-internal sealed class RabbitMQStreamPublisher : IStreamPublisher
+internal sealed class RabbitMQStreamPublisher(RabbitStreamManager streamManager, IStreamSerializer serializer,
+    ILogger<RabbitMQStreamPublisher> logger) : IStreamPublisher
 {
     private readonly ConcurrentDictionary<Type, string> _names = new();
-    private readonly RabbitStreamManager _streamManager;
-    private readonly IStreamSerializer _serializer;
+    private readonly RabbitStreamManager _streamManager = streamManager;
+    private readonly IStreamSerializer _serializer = serializer;
     private readonly ConcurrentDictionary<string, Producer> _producers = new();
-    private readonly ILogger<RabbitMQStreamPublisher> _logger;
-
-    public RabbitMQStreamPublisher(RabbitStreamManager streamManager, IStreamSerializer serializer,
-        ILogger<RabbitMQStreamPublisher> logger)
-    {
-        _streamManager = streamManager;
-        _serializer = serializer;
-        _logger = logger;
-    }
+    private readonly ILogger<RabbitMQStreamPublisher> _logger = logger;
 
     public async Task PublishAsync<T>(string stream, T message, CancellationToken cancellationToken = default)
         where T : IMessage

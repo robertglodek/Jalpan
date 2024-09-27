@@ -6,22 +6,14 @@ using Microsoft.Extensions.Options;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 
-internal class MongoDbInbox : IInbox
+internal class MongoDbInbox(IMongoDbRepository<InboxMessage, string> inboxRepository, IOptions<InboxOptions> options,
+    ILogger<MongoDbInbox> logger, IDateTime dateTime) : IInbox
 {
-    private readonly IMongoDbRepository<InboxMessage, string> _inboxRepository;
-    private readonly ILogger<MongoDbInbox> _logger;
-    private readonly IDateTime _dateTime;
+    private readonly IMongoDbRepository<InboxMessage, string> _inboxRepository = inboxRepository;
+    private readonly ILogger<MongoDbInbox> _logger = logger;
+    private readonly IDateTime _dateTime = dateTime;
 
-    public MongoDbInbox(IMongoDbRepository<InboxMessage, string> inboxRepository, IOptions<InboxOptions> options,
-        ILogger<MongoDbInbox> logger, IDateTime dateTime)
-    {
-        _inboxRepository = inboxRepository;
-        _logger = logger;
-        _dateTime = dateTime;
-        Enabled = options.Value.Enabled;
-    }
-
-    public bool Enabled { get; }
+    public bool Enabled { get; } = options.Value.Enabled;
 
     public async Task HandleAsync(string messageId, string messageName, Func<Task> handler, CancellationToken cancellationToken = default)
     {
@@ -66,7 +58,7 @@ internal class MongoDbInbox : IInbox
 
         _logger.LogInformation($"Found {inboxMessages.Count} received messages in inbox till: {dateTo}, cleaning up...");
 
-        await _inboxRepository.DeleteAsync(n => inboxMessages.Any(x => x.Id == n.Id));
+        await _inboxRepository.DeleteAsync(n => inboxMessages.Any(x => x.Id == n.Id), cancellationToken);
         _logger.LogInformation($"Removed {inboxMessages.Count} received messages from inbox till: {dateTo}.");
     }
 }

@@ -1,18 +1,13 @@
 using Jalpan.Contexts;
+using Jalpan.Contexts.Providers;
 using Jalpan.Messaging.Clients;
 using Jalpan.Types;
 namespace Jalpan.Messaging.Brokers;
 
-internal sealed class MessageBroker : IMessageBroker
+internal sealed class MessageBroker(IMessageBrokerClient client, IContextProvider contextProvider) : IMessageBroker
 {
-    private readonly IMessageBrokerClient _client;
-    private readonly IContextProvider _contextProvider;
-
-    public MessageBroker(IMessageBrokerClient client, IContextProvider contextProvider)
-    {
-        _client = client;
-        _contextProvider = contextProvider;
-    }
+    private readonly IMessageBrokerClient _client = client;
+    private readonly IContextProvider _contextProvider = contextProvider;
 
     public async Task SendAsync<T>(T message, CancellationToken cancellationToken = default) where T : IMessage
     {

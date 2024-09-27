@@ -4,14 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Jalpan.Persistance.Postgres;
 
-internal sealed class DatabaseInitializer<T> : IHostedService where T : DbContext
+internal sealed class DatabaseInitializer<T>(IServiceProvider serviceProvider) : IHostedService where T : DbContext
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    public DatabaseInitializer(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {

@@ -7,22 +7,19 @@ namespace Jalpan.WebApi.CORS;
 
 public static class Extensions
 {
-    private const string SectionName = "cors";
-    private const string RegistryName = "webApi.cors";
+    private const string DefaultSectionName = "cors";
+    private const string RegistryKey = "webApi.cors";
     private const string PolicyName = "cors";
 
-    public static IJalpanBuilder AddCorsPolicy(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddCorsPolicy(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<CorsOptions>();
         builder.Services.Configure<CorsOptions>(section);
 
-        if (!options.Enabled || !builder.TryRegister(RegistryName))
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
             return builder;
         }

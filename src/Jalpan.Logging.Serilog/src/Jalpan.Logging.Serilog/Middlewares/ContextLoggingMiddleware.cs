@@ -1,17 +1,12 @@
-﻿using Jalpan.Contexts;
+﻿using Jalpan.Contexts.Providers;
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
 namespace Jalpan.Logging.Serilog.Middlewares;
 
-internal sealed class ContextLoggingMiddleware : IMiddleware
+internal sealed class ContextLoggingMiddleware(IContextProvider contextProvider) : IMiddleware
 {
-    private readonly IContextProvider _contextProvider;
-
-    public ContextLoggingMiddleware(IContextProvider contextProvider)
-    {
-        _contextProvider = contextProvider;
-    }
+    private readonly IContextProvider _contextProvider = contextProvider;
 
     public async Task InvokeAsync(HttpContext httpContext, RequestDelegate next)
     {

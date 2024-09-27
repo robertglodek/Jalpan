@@ -1,34 +1,31 @@
 using Consul;
-using Jalpan;
 using Jalpan.Discovery.Consul;
+using Jalpan.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Micro.HTTP.ServiceDiscovery;
+namespace Jalpan.Discovery;
 
 public static class Extensions
 {
-    private const string SectionName = "consul";
-    private const string RegistryName = "discovery.consul";
+    private const string DefaultSectionName = "consul";
+    private const string RegistryKey = "discovery.consul";
 
-    public static IJalpanBuilder AddConsul(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddConsul(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
+        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<ConsulOptions>();
-        builder.Services.Configure<AppOptions>(section);
+        builder.Services.Configure<ConsulOptions>(section);
 
-        if (!options.Enabled || !builder.TryRegister(RegistryName))
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
             return builder;
         }
 
         if (string.IsNullOrWhiteSpace(options.Url))
         {
-            throw new ArgumentException("Consul URL cannot be empty.", nameof(options.Url));
+            throw new ConfigurationException("Consul URL cannot be empty.", nameof(options.Url));
         }
 
         builder.Services.AddTransient<ConsulHttpHandler>();
@@ -47,12 +44,12 @@ public static class Extensions
     {
         if (string.IsNullOrWhiteSpace(options.Service.Url))
         {
-            throw new ArgumentException("Service URL cannot be empty.", nameof(options.Service.Url));
+            throw new ConfigurationException("Service URL cannot be empty.", nameof(options.Service.Url));
         }
 
         if (string.IsNullOrWhiteSpace(options.Service.Name))
         {
-            throw new ArgumentException("Service name cannot be empty.", nameof(options.Service.Name));
+            throw new ConfigurationException("Service name cannot be empty.", nameof(options.Service.Name));
         }
 
         string serviceId;

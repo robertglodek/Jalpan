@@ -1,4 +1,4 @@
-﻿namespace Jalpan.Security.Encryption;
+﻿namespace Jalpan.Security.Encryptors;
 
 public interface IEncryptor
 {

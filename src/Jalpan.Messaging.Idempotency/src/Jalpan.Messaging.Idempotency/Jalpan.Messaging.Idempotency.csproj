@@ -12,15 +12,9 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
-    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
+		<ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -1,6 +1,9 @@
-using Jalpan.Secrets.Internals.Vault;
+using Jalpan.Secrets.Valut.Exceptions;
+using Jalpan.Secrets.Valut.Issuers;
+using Jalpan.Secrets.Valut.Secrets;
+using Jalpan.Secrets.Valut.Services;
+using Jalpan.Secrets.Valut.Stores;
 using Jalpan.Serializers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,46 +18,47 @@ namespace Jalpan.Secrets.Vault;
 
 public static class Extensions
 {
-    private const string SectionName = "vault";
+    private const string DefaultSectionName = "vault";
+    private const string RegistryKey = "secrets.valut";
     private static readonly ILeaseService LeaseService = new LeaseService();
     private static readonly ICertificatesStore CertificatesStore = new CertificatesStore();
-    
-    public static WebApplicationBuilder AddVault(this WebApplicationBuilder builder)
+
+    public static IJalpanBuilder AddVault(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        var section = builder.Configuration.GetSection(SectionName);
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
+
+        var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<VaultOptions>();
         builder.Services.Configure<VaultOptions>(section);
-        
-        if (!options.Enabled)
+
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
             return builder;
         }
-        
-        VerifyOptions(options);
-        builder.Services.AddVault(options);
-        builder.Configuration.AddVaultAsync(options).GetAwaiter().GetResult();
-        
-        return builder;
-    }
 
-    private static void AddVault(this IServiceCollection services, VaultOptions options)
-    {
+        VerifyOptions(options);
+
         var (client, settings) = GetClientAndSettings(options);
-        services.AddTransient<IKeyValueSecrets, KeyValueSecrets>();
-        services.AddSingleton(settings);
-        services.AddSingleton(client);
-        services.AddSingleton(LeaseService);
-        services.AddSingleton(CertificatesStore);
-        services.AddHostedService<VaultHostedService>();
-        
+        builder.Services.AddTransient<IKeyValueSecrets, KeyValueSecrets>();
+        builder.Services.AddSingleton(settings);
+        builder.Services.AddSingleton(client);
+        builder.Services.AddSingleton(LeaseService);
+        builder.Services.AddSingleton(CertificatesStore);
+        builder.Services.AddHostedService<VaultHostedService>();
+
         if (options.PKI.Enabled)
         {
-            services.AddSingleton<ICertificatesIssuer, CertificatesIssuer>();
+            builder.Services.AddSingleton<ICertificatesIssuer, CertificatesIssuer>();
         }
         else
         {
-            services.AddSingleton<ICertificatesIssuer, EmptyCertificatesIssuer>();
+            builder.Services.AddSingleton<ICertificatesIssuer, EmptyCertificatesIssuer>();
         }
+
+
+        builder.Configuration.AddVaultAsync(options).GetAwaiter().GetResult();
+        
+        return builder;
     }
 
     private static void VerifyOptions(VaultOptions options)
@@ -92,7 +96,7 @@ public static class Extensions
             var parser = new JsonParser();
             var json = jsonSerializer.Serialize(secret);
             var data = parser.Parse(json);
-            var source = new MemoryConfigurationSource {InitialData = data!};
+            var source = new MemoryConfigurationSource { InitialData = data! };
             builder.Add(source);
         }
 
@@ -102,7 +106,7 @@ public static class Extensions
             await SetPkiSecretsAsync(client, options);
         }
 
-        if (!options.Lease.Any())
+        if (options.Lease.Count == 0)
         {
             return;
         }
@@ -119,7 +123,7 @@ public static class Extensions
             await InitLeaseAsync(key, client, lease, configuration);
         }
 
-        if (configuration.Any())
+        if (configuration.Count > 0)
         {
             var source = new MemoryConfigurationSource {InitialData = configuration!};
             builder.Add(source);
@@ -244,7 +248,7 @@ public static class Extensions
     private static void SetTemplates(string key, VaultOptions.LeaseOptions lease,
         IDictionary<string, string> configuration, IDictionary<string, string> values)
     {
-        if (!lease.Templates.Any())
+        if (lease.Templates.Count == 0)
         {
             return;
         }
@@ -279,10 +283,9 @@ public static class Extensions
         };
     }
     
-    public static IHttpClientBuilder AddVaultCertificatesHandler(this IHttpClientBuilder builder,
-        IConfiguration configuration)
+    public static IHttpClientBuilder AddVaultCertificatesHandler(this IHttpClientBuilder builder, IConfiguration configuration)
     {
-        var section = configuration.GetSection(SectionName);
+        var section = configuration.GetSection(DefaultSectionName);
         var options = section.BindOptions<VaultOptions>();
         if (!options.Enabled || !options.PKI.Enabled || !options.PKI.HttpHandler.Enabled)
         {
@@ -296,16 +299,13 @@ public static class Extensions
         }
 
         var certificate = CertificatesStore.Get(certificateName);
-        if (certificate is null)
-        {
-            throw new VaultException($"PKI HTTP handler certificate: '{certificateName}' was not found.");
-        }
-        
-        return builder.ConfigurePrimaryHttpMessageHandler(() =>
-        {
-            var handler = new HttpClientHandler();
-            handler.ClientCertificates.Add(certificate);
-            return handler;
-        });
+        return certificate is null 
+            ? throw new VaultException($"PKI HTTP handler certificate: '{certificateName}' was not found.") 
+            : builder.ConfigurePrimaryHttpMessageHandler(() => 
+            {
+                var handler = new HttpClientHandler();
+                handler.ClientCertificates.Add(certificate);
+                return handler;
+            });
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 
-public class MongoDbInboxOptions
+public sealed class MongoDbInboxOptions
 {
     public int Expiry { get; set; }
 

@@ -15,17 +15,15 @@ internal sealed class JwtTokenManager : IJwtTokenManager
     private readonly IDateTime _dateTime;
     private readonly SigningCredentials _signingCredentials;
     private readonly string? _audience;
+    private readonly TimeSpan DefaultExpiry = TimeSpan.FromHours(1);
 
     public JwtTokenManager(IOptions<AuthOptions> options, SecurityKeyDetails securityKeyDetails, IDateTime dateTime)
     {
-        if (options.Value?.Jwt is null)
-        {
-            throw new InvalidOperationException("Missing JWT options.");
-        }
+        var jwtOptions = options.Value?.Jwt!;
 
-        _audience = options.Value.Jwt.Audience;
-        _issuer = options.Value.Jwt.Issuer;
-        _expiry = options.Value.Jwt.Expiry ?? TimeSpan.FromHours(1);
+        _audience = jwtOptions.Audience;
+        _issuer = jwtOptions.Issuer;
+        _expiry = jwtOptions.Expiry ?? DefaultExpiry;
         _dateTime = dateTime;
         _signingCredentials = new SigningCredentials(securityKeyDetails.Key, securityKeyDetails.Algorithm);
     }
@@ -36,8 +34,15 @@ internal sealed class JwtTokenManager : IJwtTokenManager
         string? role = null,
         IDictionary<string, IEnumerable<string>>? claims = null)
     {
+        if(_signingCredentials.Key is X509SecurityKey x509Key && x509Key.PrivateKeyStatus == PrivateKeyStatus.DoesNotExist)
+        {
+            throw new InvalidOperationException("Cannot create JWT: The X509SecurityKey does not contain a private key required for signing.");
+        }
+
         var now = _dateTime.Now;
-        var jwtClaims = new List<Claim> { 
+
+        var jwtClaims = new List<Claim> 
+        { 
             new(JwtRegisteredClaimNames.Sub, userId),
             new(JwtRegisteredClaimNames.UniqueName, userId) 
         };
@@ -59,19 +64,16 @@ internal sealed class JwtTokenManager : IJwtTokenManager
 
         if (claims?.Any() is true)
         {
-            var customClaims = new List<Claim>();
             foreach (var (claim, values) in claims)
             {
-                customClaims.AddRange(values.Select(value => new Claim(claim, value)));
+                jwtClaims.AddRange(values.Select(value => new Claim(claim, value)));
             }
-
-            jwtClaims.AddRange(customClaims);
         }
 
         var expires = now.Add(_expiry);
 
         var jwt = new JwtSecurityToken(
-            _issuer,
+            issuer: _issuer,
             claims: jwtClaims,
             notBefore: now,
             expires: expires,

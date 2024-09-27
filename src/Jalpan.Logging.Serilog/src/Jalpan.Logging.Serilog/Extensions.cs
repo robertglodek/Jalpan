@@ -10,30 +10,26 @@ using Microsoft.AspNetCore.Routing;
 using Jalpan.Handlers;
 using Jalpan.Logging.Serilog.Middlewares;
 using Jalpan.Logging.Serilog.Decorators;
-using Serilog.Sinks.Elasticsearch;
-using System.Reflection;
 using Elastic.Serilog.Sinks;
-using Elastic.Channels;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Transport;
+using Jalpan.Exceptions;
+using Elastic.CommonSchema;
 
 namespace Jalpan.Logging.Serilog;
 
 public static class Extensions
 {
-    private const string LoggerSectionName = "logger";
-    private const string AppSectionName = "app";
+    private const string DefaultSectionName = "logger";
+    private const string DefaultAppSectionName = "app";
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
     private const string ConsoleOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}";
     private const string FileOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] ({SourceContext}.{Method}) {Message}{NewLine}{Exception}";
 
-    public static IJalpanBuilder AddLogger(this IJalpanBuilder builder, string loggerSectionName = LoggerSectionName)
+    public static IJalpanBuilder AddLogger(this IJalpanBuilder builder, string loggerSectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(loggerSectionName))
-        {
-            loggerSectionName = LoggerSectionName;
-        }
+        loggerSectionName = string.IsNullOrWhiteSpace(loggerSectionName) ? DefaultSectionName : loggerSectionName;
 
         var section = builder.Configuration.GetSection(loggerSectionName);
         builder.Services.Configure<LoggerOptions>(section);
@@ -50,20 +46,13 @@ public static class Extensions
 
     public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
         Action<HostBuilderContext, LoggerConfiguration>? configure = null,
-        string loggerSectionName = LoggerSectionName,
-        string appSectionName = AppSectionName) => hostBuilder
+        string loggerSectionName = DefaultSectionName,
+        string appSectionName = DefaultAppSectionName) => hostBuilder
             .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
             .UseSerilog((context, loggerConfiguration) =>
             {
-                if (string.IsNullOrWhiteSpace(loggerSectionName))
-                {
-                    loggerSectionName = LoggerSectionName;
-                }
-
-                if (string.IsNullOrWhiteSpace(appSectionName))
-                {
-                    appSectionName = AppSectionName;
-                }
+                loggerSectionName = string.IsNullOrWhiteSpace(loggerSectionName) ? DefaultSectionName : loggerSectionName;
+                appSectionName = string.IsNullOrWhiteSpace(appSectionName) ? DefaultAppSectionName : appSectionName;
 
                 var appOptions = context.Configuration.BindOptions<AppOptions>(appSectionName);
                 var loggerOptions = context.Configuration.BindOptions<LoggerOptions>(loggerSectionName);
@@ -155,6 +144,16 @@ public static class Extensions
             {
                 if (elkOptions.BasicAuthEnabled)
                 {
+                    if(string.IsNullOrEmpty(elkOptions.Username))
+                    {
+                        throw new ConfigurationException("When Basic Authentication enabled, username must not be empty.", nameof(elkOptions.Username));
+                    }
+
+                    if (string.IsNullOrEmpty(elkOptions.Password))
+                    {
+                        throw new ConfigurationException("When Basic Authentication enabled, password must not be empty.", nameof(elkOptions.Password));
+                    }
+
                     transport.Authentication(new BasicAuthentication(elkOptions.Username, elkOptions.Password));
                 }
             });

@@ -5,16 +5,10 @@ using Jalpan.Types;
 namespace Jalpan.Messaging.Idempotency.Outbox;
 
 [Decorator]
-internal sealed class OutboxInstantSenderEventHandlerDecorator<T> : IEventHandler<T> where T : class, IEvent
+internal sealed class OutboxInstantSenderEventHandlerDecorator<T>(IEventHandler<T> handler, IOutbox outbox) : IEventHandler<T> where T : class, IEvent
 {
-    private readonly IEventHandler<T> _handler;
-    private readonly IOutbox _outbox;
-
-    public OutboxInstantSenderEventHandlerDecorator(IEventHandler<T> handler, IOutbox outbox)
-    {
-        _handler = handler;
-        _outbox = outbox;
-    }
+    private readonly IEventHandler<T> _handler = handler;
+    private readonly IOutbox _outbox = outbox;
 
     public async Task HandleAsync(T @event, CancellationToken cancellationToken = default)
     {

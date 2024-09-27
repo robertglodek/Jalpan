@@ -6,33 +6,28 @@ namespace Jalpan.Messaging.Idempotency.MongoDB.Outbox;
 
 public static class Extensions
 {
-    private const string SectionName = "outbox:mongo";
-    private const string RegistryName = "messaging.outbox.mongo";
+    private const string DefaultSectionName = "outbox:mongo";
+    private const string RegistryKey = "messaging.outbox.mongo";
+    internal const string DefaultOutboxCollectionName = "Outbox";
 
-    public static IMessageOutboxConfigurator AddMongo(this IMessageOutboxConfigurator configurator, string sectionName = SectionName)
+    public static IMessageOutboxConfigurator AddMongo(this IMessageOutboxConfigurator configurator, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
-
-        if (!configurator.Builder.TryRegister(RegistryName))
-        {
-            return configurator;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = configurator.Builder.Configuration.GetSection(sectionName);
         var mongoOutboxOptions = section.BindOptions<MongoDbOutboxOptions>();
         configurator.Builder.Services.Configure<MongoDbOutboxOptions>(section);
 
-        var collection = string.IsNullOrWhiteSpace(mongoOutboxOptions.Collection)
-            ? "Outbox"
-            : mongoOutboxOptions.Collection;
+        if (!configurator.Builder.TryRegister(RegistryKey))
+        {
+            return configurator;
+        }
+
+        var collection = string.IsNullOrWhiteSpace(mongoOutboxOptions.Collection) ? DefaultOutboxCollectionName : mongoOutboxOptions.Collection;
 
         configurator.Builder.AddMongoRepository<OutboxMessage, string>(collection);
-        configurator.Builder.AddInitializer<MongoDbOutboxInitializer>();
         configurator.Builder.Services.AddTransient<IOutbox, MongoDbOutbox>();
-        configurator.Builder.Services.AddTransient<MongoDbOutboxInitializer>();
+        configurator.Builder.Services.AddTransient<IInitializer, MongoDbOutboxInitializer>();
 
         return configurator;
     }

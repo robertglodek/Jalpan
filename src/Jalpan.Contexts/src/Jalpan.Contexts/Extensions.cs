@@ -15,7 +15,7 @@ public static class Extensions
         return builder;
     }
 
-    public static IApplicationBuilder UseEnsureActivity(this IApplicationBuilder app,
-       string headerName = "/traceparent")
-       => app.UseMiddleware<EnsureActivityMiddleware>(string.IsNullOrWhiteSpace(headerName) ? "/traceparent": headerName);
+    public static IApplicationBuilder UseRequestActivity(this IApplicationBuilder app,
+        string parentActivityIdHeaderName = "traceparent", string activityName = "Service.HttpRequestIn", bool overrideWhenExisting = false)
+        => app.UseMiddleware<RequestActivityMiddleware>(parentActivityIdHeaderName, activityName, overrideWhenExisting);
 }

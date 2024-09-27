@@ -6,26 +6,18 @@ namespace Jalpan.Messaging.Idempotency.Outbox;
 
 public static class Extensions
 {
-    private const string SectionName = "outbox";
-    private const string RegistryName = "messaging.outbox";
+    private const string DefaultSectionName = "outbox";
+    private const string RegistryKey = "messaging.outbox";
 
-    public static IJalpanBuilder AddOutbox(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddOutbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
-
-        if (!builder.TryRegister(RegistryName))
-        {
-            return builder;
-        }
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<OutboxOptions>();
         builder.Services.Configure<OutboxOptions>(section);
-        
-        if (!options.Enabled)
+
+        if (!builder.TryRegister(RegistryKey) && !options.Enabled)
         {
             return builder;
         }

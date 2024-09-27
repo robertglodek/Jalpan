@@ -5,26 +5,18 @@ namespace Jalpan.Messaging.Idempotency.Inbox;
 
 public static class Extensions
 {
-    private const string SectionName = "inbox";
-    private const string RegistryName = "messaging.inbox";
+    private const string DefaultSectionName = "inbox";
+    private const string RegistryKey = "messaging.inbox";
 
-    public static IJalpanBuilder AddInbox(this IJalpanBuilder builder, string sectionName = SectionName)
+    public static IJalpanBuilder AddInbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        if (string.IsNullOrWhiteSpace(sectionName))
-        {
-            sectionName = SectionName;
-        }
-
-        if (!builder.TryRegister(RegistryName))
-        {
-            return builder;
-        }
-
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
+        
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<InboxOptions>();
         builder.Services.Configure<InboxOptions>(section);
 
-        if (!options.Enabled)
+        if (!builder.TryRegister(RegistryKey) && !options.Enabled)
         {
             return builder;
         }

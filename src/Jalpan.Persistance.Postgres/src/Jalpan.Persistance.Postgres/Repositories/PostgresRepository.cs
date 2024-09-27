@@ -5,21 +5,21 @@ using System.Linq.Expressions;
 
 namespace Jalpan.Persistance.Postgres.Repositories;
 
-public class PostgresRepository<TEntity, TIdentifiable> : IPostgresRepository<TEntity, TIdentifiable> where TEntity : class
+public class PostgresRepository<TEntity, TIdentifiable>(DbContext context) : IPostgresRepository<TEntity, TIdentifiable> where TEntity : class
 {
-    private readonly DbContext _context;
-    private readonly DbSet<TEntity> _dbSet;
+    private readonly DbContext _context = context;
+    private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
 
-    public PostgresRepository(DbContext context)
-    {
-        _context = context;
-        _dbSet = context.Set<TEntity>();
-    }
-
-    public async Task<TEntity?> GetAsync(TIdentifiable id, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetAsync(
+        TIdentifiable id,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        CancellationToken cancellationToken = default)
         => await GetAsync(e => EF.Property<TIdentifiable>(e, "Id")!.Equals(id), include, cancellationToken);
 
-    public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> GetAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = _dbSet.Where(predicate);
 
@@ -31,7 +31,10 @@ public class PostgresRepository<TEntity, TIdentifiable> : IPostgresRepository<TE
         return await query.SingleOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TEntity>> FindAsync(
+        Expression<Func<TEntity, bool>> predicate,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<TEntity> query = _dbSet.Where(predicate);
 
@@ -43,7 +46,11 @@ public class PostgresRepository<TEntity, TIdentifiable> : IPostgresRepository<TE
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(Expression<Func<TEntity, bool>> predicate, TQuery pagedQuery, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null, CancellationToken cancellationToken = default) where TQuery : IPagedQuery
+    public async Task<PagedResult<TEntity>> BrowseAsync<TQuery>(
+        Expression<Func<TEntity, bool>> predicate,
+        TQuery pagedQuery, Func<IQueryable<TEntity>,
+            IIncludableQueryable<TEntity, object>>? include = null,
+        CancellationToken cancellationToken = default) where TQuery : IPagedQuery
     {
         IQueryable<TEntity> query = _dbSet.Where(predicate);
 

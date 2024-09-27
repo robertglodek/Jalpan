@@ -12,8 +12,8 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Jalpan.Discovery.Consul\src\Jalpan.Discovery.Consul\Jalpan.Discovery.Consul.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Jalpan.Discovery.Consul\src\Jalpan.Discovery.Consul\Jalpan.Discovery.Consul.csproj" />
+	</ItemGroup>
 
 </Project>

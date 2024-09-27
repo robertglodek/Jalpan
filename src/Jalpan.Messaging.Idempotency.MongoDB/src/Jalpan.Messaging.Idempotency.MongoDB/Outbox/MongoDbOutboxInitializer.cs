@@ -4,19 +4,12 @@ using MongoDB.Driver;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Outbox;
 
-internal sealed class MongoDbOutboxInitializer : IInitializer
+internal sealed class MongoDbOutboxInitializer(IMongoDatabase database,
+    IOptions<OutboxOptions> outboxOptions, IOptions<MongoDbOutboxOptions> outboxMongoOptions) : IInitializer
 {
-    private readonly IMongoDatabase _database;
-    private readonly OutboxOptions _outboxOptions;
-    private readonly MongoDbOutboxOptions _outboxMongoOptions;
-
-    public MongoDbOutboxInitializer(IMongoDatabase database,
-        IOptions<OutboxOptions> outboxOptions, IOptions<MongoDbOutboxOptions> outboxMongoOptions)
-    {
-        _database = database;
-        _outboxOptions = outboxOptions.Value;
-        _outboxMongoOptions = outboxMongoOptions.Value;
-    }
+    private readonly IMongoDatabase _database = database;
+    private readonly OutboxOptions _outboxOptions = outboxOptions.Value;
+    private readonly MongoDbOutboxOptions _outboxMongoOptions = outboxMongoOptions.Value;
 
     public async Task InitializeAsync()
     {
@@ -30,9 +23,7 @@ internal sealed class MongoDbOutboxInitializer : IInitializer
             return;
         }
 
-        var collection = string.IsNullOrWhiteSpace(_outboxMongoOptions.Collection)
-           ? "outbox"
-           : _outboxMongoOptions.Collection;
+        var collection = string.IsNullOrWhiteSpace(_outboxMongoOptions.Collection) ? Extensions.DefaultOutboxCollectionName : _outboxMongoOptions.Collection;
 
         var builder = Builders<OutboxMessage>.IndexKeys;
         await _database.GetCollection<OutboxMessage>(collection)

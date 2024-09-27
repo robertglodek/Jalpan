@@ -11,7 +11,7 @@ public sealed class MeterAttribute : Attribute
         {
             throw new InvalidOperationException("Observability key cannot be empty.");
         }
-            
+ 
         Key = key;
     }
 }

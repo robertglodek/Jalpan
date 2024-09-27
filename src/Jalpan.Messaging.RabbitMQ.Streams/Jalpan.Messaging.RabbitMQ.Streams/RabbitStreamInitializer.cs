@@ -2,11 +2,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace Jalpan.Messaging.RabbitMQ.Streams;
 
-internal sealed class RabbitStreamInitializer : IHostedService
+internal sealed class RabbitStreamInitializer(RabbitStreamManager streamManager) : IHostedService
 {
-    private readonly RabbitStreamManager _streamManager;
-
-    public RabbitStreamInitializer(RabbitStreamManager streamManager) => _streamManager = streamManager;
+    private readonly RabbitStreamManager _streamManager = streamManager;
 
     public Task StartAsync(CancellationToken cancellationToken) => _streamManager.InitAsync();
 

@@ -4,28 +4,17 @@ using Microsoft.Extensions.Options;
 
 namespace Jalpan.HTTP.Logging;
 
-internal sealed class LoggingScopeHttpMessageHandler : DelegatingHandler
+internal sealed class LoggingScopeHttpMessageHandler(ILogger logger, IOptions<HttpClientOptions> options) : DelegatingHandler
 {
-    private readonly ILogger _logger;
-    private readonly HashSet<string> _maskedUrlParts;
-    private readonly string _maskTemplate;
-
-    public LoggingScopeHttpMessageHandler(ILogger logger, IOptions<HttpClientOptions> options)
-    {
-        _logger = logger;
-        _maskedUrlParts = new HashSet<string>(options.Value.RequestMasking.UrlParts);
-        _maskTemplate = string.IsNullOrWhiteSpace(options.Value.RequestMasking.MaskTemplate)
+    private readonly ILogger _logger = logger;
+    private readonly HashSet<string> _maskedUrlParts = new(options.Value.RequestMasking.UrlParts);
+    private readonly string _maskTemplate = string.IsNullOrWhiteSpace(options.Value.RequestMasking.MaskTemplate)
             ? "*****"
             : options.Value.RequestMasking.MaskTemplate;
-    }
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-        CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        if (request is null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         using (Log.BeginRequestPipelineScope(_logger, request, _maskedUrlParts, _maskTemplate))
         {

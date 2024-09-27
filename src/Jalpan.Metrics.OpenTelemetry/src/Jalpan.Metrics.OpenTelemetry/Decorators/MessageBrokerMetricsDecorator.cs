@@ -6,18 +6,13 @@ using System.Diagnostics.Metrics;
 namespace Jalpan.Metrics.OpenTelemetry.Decorators;
 
 [Meter(MetricsKey)]
-internal sealed class MessageBrokerMetricsDecorator : IMessageBroker
+internal sealed class MessageBrokerMetricsDecorator(IMessageBroker messageBroker) : IMessageBroker
 {
     private const string MetricsKey = "message_broker";
     private static readonly ConcurrentDictionary<Type, string> Names = new();
-    private readonly IMessageBroker _messageBroker;
+    private readonly IMessageBroker _messageBroker = messageBroker;
     private static readonly Meter Meter = new(MetricsKey);
     private static readonly Counter<long> PublishedMessagesCounter = Meter.CreateCounter<long>("published_messages");
-
-    public MessageBrokerMetricsDecorator(IMessageBroker messageBroker)
-    {
-        _messageBroker = messageBroker;
-    }
 
     public async Task SendAsync<T>(T message, CancellationToken cancellationToken = default) where T : IMessage
     {

@@ -1,25 +1,14 @@
 namespace Jalpan.Secrets.Vault;
 
-public class LeaseData
+public class LeaseData(string type, string id, int duration, bool autoRenewal, DateTime createdAt, object data)
 {
-    public string Type { get; }
-    public string Id { get; }
-    public int Duration { get; }
-    public bool AutoRenewal { get; }
-    public DateTime CreatedAt { get; }
-    public DateTime ExpiryAt { get; private set; }
-    public object Data { get; }
-
-    public LeaseData(string type, string id, int duration, bool autoRenewal, DateTime createdAt, object data)
-    {
-        Type = type;
-        Id = id;
-        Duration = duration;
-        AutoRenewal = autoRenewal;
-        CreatedAt = createdAt;
-        ExpiryAt = CreatedAt.AddSeconds(duration);
-        Data = data;
-    }
+    public string Type { get; } = type;
+    public string Id { get; } = id;
+    public int Duration { get; } = duration;
+    public bool AutoRenewal { get; } = autoRenewal;
+    public DateTime CreatedAt { get; } = createdAt;
+    public DateTime ExpiryAt { get; private set; } = createdAt.AddSeconds(duration);
+    public object Data { get; } = data;
 
     public void Refresh(double duration)
     {
