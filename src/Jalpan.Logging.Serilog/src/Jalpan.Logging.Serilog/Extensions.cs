@@ -15,25 +15,31 @@ using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Transport;
 using Jalpan.Exceptions;
-using Elastic.CommonSchema;
 
 namespace Jalpan.Logging.Serilog;
 
 public static class Extensions
 {
+    internal static LoggingLevelSwitch LoggingLevelSwitch = new();
     private const string DefaultSectionName = "logger";
     private const string DefaultAppSectionName = "app";
-    internal static LoggingLevelSwitch LoggingLevelSwitch = new();
     private const string ConsoleOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}";
     private const string FileOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] ({SourceContext}.{Method}) {Message}{NewLine}{Exception}";
+    private const string RegistryKey = "logging.serilog";
 
-    public static IJalpanBuilder AddLogger(this IJalpanBuilder builder, string loggerSectionName = DefaultSectionName)
+    public static IJalpanBuilder AddLogger(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        loggerSectionName = string.IsNullOrWhiteSpace(loggerSectionName) ? DefaultSectionName : loggerSectionName;
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
-        var section = builder.Configuration.GetSection(loggerSectionName);
+        var section = builder.Configuration.GetSection(sectionName);
         builder.Services.Configure<LoggerOptions>(section);
 
+        if (!builder.TryRegister(RegistryKey))
+        {
+            return builder;
+        }
+
+        builder.Services.AddSingleton<ILoggingService, LoggingService>();
         builder.Services.AddSingleton<ContextLoggingMiddleware>();
         builder.Services.TryDecorate(typeof(ICommandHandler<,>), typeof(LoggingCommandHandlerDecorator<,>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(LoggingEventHandlerDecorator<>));
@@ -41,14 +47,10 @@ public static class Extensions
         return builder;
     }
 
-    public static IApplicationBuilder UseContextLogger(this IApplicationBuilder app)
-       => app.UseMiddleware<ContextLoggingMiddleware>();
-
     public static IHostBuilder UseLogging(this IHostBuilder hostBuilder,
-        Action<HostBuilderContext, LoggerConfiguration>? configure = null,
         string loggerSectionName = DefaultSectionName,
-        string appSectionName = DefaultAppSectionName) => hostBuilder
-            .ConfigureServices(services => services.AddSingleton<ILoggingService, LoggingService>())
+        string appSectionName = DefaultAppSectionName,
+        Action<HostBuilderContext, LoggerConfiguration>? configure = null) => hostBuilder
             .UseSerilog((context, loggerConfiguration) =>
             {
                 loggerSectionName = string.IsNullOrWhiteSpace(loggerSectionName) ? DefaultSectionName : loggerSectionName;
@@ -60,7 +62,10 @@ public static class Extensions
                 MapOptions(loggerOptions, appOptions, loggerConfiguration, context.HostingEnvironment.EnvironmentName);
                 configure?.Invoke(context, loggerConfiguration);
             });
-    private static void MapOptions(LoggerOptions loggerOptions, AppOptions appOptions,
+
+    private static void MapOptions(
+        LoggerOptions loggerOptions,
+        AppOptions appOptions,
         LoggerConfiguration loggerConfiguration,
         string environmentName)
     {
@@ -134,7 +139,7 @@ public static class Extensions
             });
         }
 
-        if(elkOptions.Enabled)
+        if (elkOptions.Enabled)
         {
             loggerConfiguration.WriteTo.Elasticsearch([new Uri(elkOptions.Url)], opts =>
             {
@@ -144,7 +149,7 @@ public static class Extensions
             {
                 if (elkOptions.BasicAuthEnabled)
                 {
-                    if(string.IsNullOrEmpty(elkOptions.Username))
+                    if (string.IsNullOrEmpty(elkOptions.Username))
                     {
                         throw new ConfigurationException("When Basic Authentication enabled, username must not be empty.", nameof(elkOptions.Username));
                     }
@@ -159,6 +164,9 @@ public static class Extensions
             });
         }
     }
+
+    public static IApplicationBuilder UseContextLogger(this IApplicationBuilder app)
+       => app.UseMiddleware<ContextLoggingMiddleware>();
 
     public static IEndpointConventionBuilder MapLogLevelHandler(this IEndpointRouteBuilder builder,
         string endpointRoute = "~/logging/level")

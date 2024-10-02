@@ -14,14 +14,14 @@ public static class Extensions
     {
         sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
 
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<QuartzOptions>();
+        builder.Services.Configure<QuartzOptions>(section);
+
         if (!builder.TryRegister(RegistryKey))
         {
             return builder;
         }
-
-        var section = builder.Configuration.GetSection(sectionName);
-        var options = section.BindOptions<QuartzOptions>();
-        builder.Services.Configure<QuartzOptions>(section);
 
         builder.Services.AddQuartz(q =>
         {

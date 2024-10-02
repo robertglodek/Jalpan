@@ -1,6 +1,6 @@
 ﻿namespace Jalpan.WebApi.Swagger;
 
-public class SwaggerOptions
+public sealed class SwaggerOptions
 {
     public bool Enabled { get; set; } = true;
     public bool ReDocEnabled { get; set; } = false;

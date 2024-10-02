@@ -1,6 +1,6 @@
 ﻿namespace Jalpan.Logging.Serilog;
 
-public class LoggerOptions
+public sealed class LoggerOptions
 {
     public string? Level { get; set; }
     public ConsoleOptions? Console { get; set; }
@@ -41,7 +41,7 @@ public class LoggerOptions
         public string? ApiKey { get; set; }
     }
 
-    public class ElkOptions
+    public sealed class ElkOptions
     {
         public bool Enabled { get; set; }
         public string Url { get; set; } = string.Empty;

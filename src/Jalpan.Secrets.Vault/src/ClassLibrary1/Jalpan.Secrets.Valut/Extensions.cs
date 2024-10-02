@@ -1,3 +1,4 @@
+using Jalpan.Exceptions;
 using Jalpan.Secrets.Valut.Exceptions;
 using Jalpan.Secrets.Valut.Issuers;
 using Jalpan.Secrets.Valut.Secrets;
@@ -7,6 +8,7 @@ using Jalpan.Serializers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VaultSharp;
 using VaultSharp.V1.AuthMethods;
@@ -23,6 +25,19 @@ public static class Extensions
     private static readonly ILeaseService LeaseService = new LeaseService();
     private static readonly ICertificatesStore CertificatesStore = new CertificatesStore();
 
+    public static IHostBuilder UseVault(this IHostBuilder builder, string sectionName = DefaultSectionName)
+        => builder.ConfigureAppConfiguration((ctx, cfg) =>
+        {
+            sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
+
+            var options = cfg.Build().BindOptions<VaultOptions>(sectionName);
+            if (!options.Enabled)
+            {
+                return;
+            }
+            cfg.AddVaultAsync(options).GetAwaiter().GetResult();
+        });
+
     public static IJalpanBuilder AddVault(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
@@ -36,8 +51,14 @@ public static class Extensions
             return builder;
         }
 
-        VerifyOptions(options);
+        VerifyEngineVersion(options);
+        RegisterServices(builder, options);
 
+        return builder;
+    }
+
+    private static void RegisterServices(IJalpanBuilder builder, VaultOptions options)
+    {
         var (client, settings) = GetClientAndSettings(options);
         builder.Services.AddTransient<IKeyValueSecrets, KeyValueSecrets>();
         builder.Services.AddSingleton(settings);
@@ -54,21 +75,19 @@ public static class Extensions
         {
             builder.Services.AddSingleton<ICertificatesIssuer, EmptyCertificatesIssuer>();
         }
-
-
-        builder.Configuration.AddVaultAsync(options).GetAwaiter().GetResult();
-        
-        return builder;
     }
 
-    private static void VerifyOptions(VaultOptions options)
+    private static void VerifyEngineVersion(VaultOptions options)
     {
-        options.KV.EngineVersion = options.KV.EngineVersion switch
+        if(string.IsNullOrWhiteSpace(options.KV.EngineVersion))
         {
-            > 2 or < 0 => throw new VaultException($"Invalid KV engine version: {options.KV.EngineVersion} (available: 1 or 2)."),
-            0 => 2,
-            _ => options.KV.EngineVersion
-        };
+            throw new ConfigurationException("Vault engine version must not be empty.", nameof(options.KV.EngineVersion));
+        }
+
+        if (!new string[] { "V1", "V2" }.Contains(options.KV.EngineVersion))
+        {
+            throw new VaultException($"Invalid KV engine version: {options.KV.EngineVersion}. Available versions are: V1 or V2).");
+        }
     }
 
     private static async Task AddVaultAsync(this IConfigurationBuilder builder, VaultOptions options)
@@ -82,12 +101,12 @@ public static class Extensions
             {
                 throw new VaultException("KV path is missing.");
             }
-            
+
             if (string.IsNullOrWhiteSpace(mountPoint))
             {
                 throw new VaultException("KV mount point is missing.");
             }
-            
+
             Console.WriteLine($"Loading settings from Vault: '{options.Url}', KV path: '{mountPoint}/{kvPath}'...");
             var jsonSerializer = new SystemTextJsonSerializer();
             var keyValueSecrets = new KeyValueSecrets(client, new OptionsWrapper<VaultOptions>(options),
@@ -125,12 +144,15 @@ public static class Extensions
 
         if (configuration.Count > 0)
         {
-            var source = new MemoryConfigurationSource {InitialData = configuration!};
+            var source = new MemoryConfigurationSource { InitialData = configuration! };
             builder.Add(source);
         }
     }
 
-    private static Task InitLeaseAsync(string key, IVaultClient client, VaultOptions.LeaseOptions options,
+    private static Task InitLeaseAsync(
+        string key,
+        IVaultClient client,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
         => options.Type.ToLowerInvariant() switch
         {
@@ -142,8 +164,11 @@ public static class Extensions
             _ => Task.CompletedTask
         };
 
-    private static async Task SetActiveDirectorySecretsAsync(string key, IVaultClient client,
-        VaultOptions.LeaseOptions options, IDictionary<string, string> configuration)
+    private static async Task SetActiveDirectorySecretsAsync(
+        string key,
+        IVaultClient client,
+        VaultOptions.LeaseOptions options,
+        IDictionary<string, string> configuration)
     {
         const string name = SecretsEngineMountPoints.Defaults.ActiveDirectory;
         var mountPoint = string.IsNullOrWhiteSpace(options.MountPoint) ? name : options.MountPoint;
@@ -157,7 +182,9 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetAzureSecretsAsync(string key, IVaultClient client,
+    private static async Task SetAzureSecretsAsync(
+        string key,
+        IVaultClient client,
         VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
@@ -172,7 +199,9 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetConsulSecretsAsync(string key, IVaultClient client,
+    private static async Task SetConsulSecretsAsync(
+        string key,
+        IVaultClient client,
         VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
@@ -186,7 +215,9 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static async Task SetDatabaseSecretsAsync(string key, IVaultClient client,
+    private static async Task SetDatabaseSecretsAsync(
+        string key,
+        IVaultClient client,
         VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
@@ -211,7 +242,9 @@ public static class Extensions
         }
     }
 
-    private static async Task SetRabbitMqSecretsAsync(string key, IVaultClient client,
+    private static async Task SetRabbitMqSecretsAsync(
+        string key,
+        IVaultClient client,
         VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration)
     {
@@ -226,7 +259,9 @@ public static class Extensions
         }, credentials.LeaseId, credentials.LeaseDurationSeconds, credentials.Renewable));
     }
 
-    private static void SetSecrets(string key, VaultOptions.LeaseOptions options,
+    private static void SetSecrets(
+        string key,
+        VaultOptions.LeaseOptions options,
         IDictionary<string, string> configuration, string name,
         Func<(object, Dictionary<string, string>, string, int, bool)> lease)
     {
@@ -245,8 +280,11 @@ public static class Extensions
         return (client, settings);
     }
 
-    private static void SetTemplates(string key, VaultOptions.LeaseOptions lease,
-        IDictionary<string, string> configuration, IDictionary<string, string> values)
+    private static void SetTemplates(
+        string key,
+        VaultOptions.LeaseOptions lease,
+        IDictionary<string, string> configuration,
+        IDictionary<string, string> values)
     {
         if (lease.Templates.Count == 0)
         {
@@ -273,7 +311,7 @@ public static class Extensions
         {
             throw new VaultException("Vault authentication type is empty.");
         }
-        
+
         return options.Type.ToLowerInvariant() switch
         {
             "token" => new TokenAuthMethodInfo(options.Token.Token),
@@ -282,7 +320,7 @@ public static class Extensions
                                                               "is not supported.", options.Type)
         };
     }
-    
+
     public static IHttpClientBuilder AddVaultCertificatesHandler(this IHttpClientBuilder builder, IConfiguration configuration)
     {
         var section = configuration.GetSection(DefaultSectionName);
@@ -299,9 +337,9 @@ public static class Extensions
         }
 
         var certificate = CertificatesStore.Get(certificateName);
-        return certificate is null 
-            ? throw new VaultException($"PKI HTTP handler certificate: '{certificateName}' was not found.") 
-            : builder.ConfigurePrimaryHttpMessageHandler(() => 
+        return certificate is null
+            ? throw new VaultException($"PKI HTTP handler certificate: '{certificateName}' was not found.")
+            : builder.ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = new HttpClientHandler();
                 handler.ClientCertificates.Add(certificate);

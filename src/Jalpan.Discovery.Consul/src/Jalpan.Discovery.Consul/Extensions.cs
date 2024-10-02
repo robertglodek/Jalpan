@@ -12,7 +12,7 @@ public static class Extensions
 
     public static IJalpanBuilder AddConsul(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<ConsulOptions>();

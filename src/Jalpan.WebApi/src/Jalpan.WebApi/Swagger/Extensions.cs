@@ -1,4 +1,5 @@
 ﻿using Jalpan.Exceptions;
+using Jalpan.Helpers;
 using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +27,7 @@ public static class Extensions
             return builder;
         }
 
-        ValidateSwaggerOptions(options);
+        ValidateSwaggerOptions(options, sectionName);
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
@@ -47,7 +48,7 @@ public static class Extensions
 
         var routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
 
-        builder.UseSwagger(c => 
+        builder.UseSwagger(c =>
         {
             c.RouteTemplate = $"{routePrefix}/{{documentName}}/swagger.json";
         });
@@ -84,24 +85,23 @@ public static class Extensions
         }
     }
 
-    private static void ValidateSwaggerOptions(SwaggerOptions options)
+    private static void ValidateSwaggerOptions(SwaggerOptions options, string sectionName)
     {
         if (string.IsNullOrWhiteSpace(options.Name))
         {
-            throw new ConfigurationException("Name cannot be null or whitespace.", nameof(options.Name));
+            throw new ConfigurationException("Name cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Name)));
         }
 
         if (string.IsNullOrWhiteSpace(options.Title))
         {
-            throw new ConfigurationException("Title cannot be null or whitespace.", nameof(options.Title));
+            throw new ConfigurationException("Title cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Title)));
         }
-            
+
         if (string.IsNullOrWhiteSpace(options.Version))
         {
-            throw new ConfigurationException("Version cannot be null or whitespace.", nameof(options.Version));
-        }      
+            throw new ConfigurationException("Version cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Version)));
+        }
     }
 
-    private static string FormatEmptyRoutePrefix(this string route)
-        => route.Replace("//", "/");
+    private static string FormatEmptyRoutePrefix(this string route) => route.Replace("//", "/");
 }

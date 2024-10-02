@@ -44,17 +44,18 @@ internal static class Extensions
                     }
                 }
 
-                ConfigureExporter(builder, options);
+                ConfigureExporter(builder, sectionName, options);
             });
 
         return builder;
     }
 
-    private static void ConfigureExporter(MeterProviderBuilder builder, MetricsOptions options)
+    private static void ConfigureExporter(MeterProviderBuilder builder, string sectionName, MetricsOptions options)
     {
         if(string.IsNullOrEmpty(options.Exporter))
         {
-            throw new ConfigurationException("Metrics explorer cannot be empty.", nameof(options.Exporter));
+            throw new ConfigurationException("Metrics explorer cannot be empty.",
+                Helpers.Extensions.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
         }
 
         switch (options.Exporter.ToLowerInvariant())
@@ -64,12 +65,11 @@ internal static class Extensions
                 break;
             case PrometheusExporter:
                 builder.AddPrometheusExporter(prometheus =>
-                {
-                    prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint) ? prometheus.ScrapeEndpointPath : options.Endpoint;
-                });
+                    prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint) ? prometheus.ScrapeEndpointPath : options.Endpoint);
                 break;
             default:
-                throw new ConfigurationException($"Metrics explorer '{options.Exporter}' not configured.", options.Exporter);
+                throw new ConfigurationException($"Metrics explorer '{options.Exporter}' not configured.",
+                    Helpers.Extensions.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
         }
     }
 

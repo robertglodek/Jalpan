@@ -1,4 +1,6 @@
-﻿using Jalpan.Messaging.Brokers;
+﻿using Jalpan.Exceptions;
+using Jalpan.Helpers;
+using Jalpan.Messaging.Brokers;
 using Jalpan.Messaging.RabbitMQ.Internals;
 using Jalpan.Tracing.OpenTelemetry.Decorators;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,11 +32,11 @@ internal static class Extensions
             return builder;
         }
 
-        var appName = builder.Configuration.BindOptions<AppOptions>(appSectionName).Name;
+        var appOptions = builder.Configuration.BindOptions<AppOptions>(appSectionName); ;
 
-        if (string.IsNullOrWhiteSpace(appName))
+        if (string.IsNullOrWhiteSpace(appOptions.Name))
         {
-            throw new InvalidOperationException("Application name cannot be empty when using the tracing.");
+            throw new ConfigurationException("Application name cannot be empty when using the tracing.", PropertyPathHelper.GetOptionsPropertyPath(appSectionName, nameof(appOptions.Name));
         }
 
         builder.Services.AddOpenTelemetry()
@@ -43,8 +45,8 @@ internal static class Extensions
                 builder.SetResourceBuilder(ResourceBuilder.CreateDefault()
                         .AddTelemetrySdk()
                         .AddEnvironmentVariableDetector()
-                        .AddService(appName))
-                    .AddSource(appName)
+                        .AddService(appOptions.Name))
+                    .AddSource(appOptions.Name)
                     .AddSource(MessageBrokerTracingDecorator.ActivitySourceName)
                     .AddSource(MessageHandlerTracingDecorator.ActivitySourceName)
                     .AddAspNetCoreInstrumentation()

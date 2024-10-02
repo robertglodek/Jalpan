@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace Jalpan.Helpers;
 
-public static class Extensions
+public static class DefaultInstanceHelper
 {
     public static object? GetDefaultInstance(this Type type)
     {

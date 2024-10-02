@@ -6,10 +6,7 @@ using VaultSharp;
 
 namespace Jalpan.Secrets.Valut.Secrets;
 
-internal sealed class KeyValueSecrets(
-    IVaultClient client,
-    IOptions<VaultOptions> options,
-    IJsonSerializer jsonSerializer) : IKeyValueSecrets
+internal sealed class KeyValueSecrets(IVaultClient client, IOptions<VaultOptions> options, IJsonSerializer jsonSerializer) : IKeyValueSecrets
 {
     private readonly IVaultClient _client = client;
     private readonly VaultOptions _options = options.Value;
@@ -29,11 +26,11 @@ internal sealed class KeyValueSecrets(
         {
             switch (_options.KV.EngineVersion)
             {
-                case 1:
+                case "V1":
                     var secretV1 = await _client.V1.Secrets.KeyValue.V1.ReadSecretAsync(path,
                         _options.KV.MountPoint);
                     return secretV1.Data;
-                case 2:
+                case "V2":
                     var secretV2 = await _client.V1.Secrets.KeyValue.V2.ReadSecretAsync(path,
                         _options.KV.Version, _options.KV.MountPoint);
                     return secretV2.Data.Data;

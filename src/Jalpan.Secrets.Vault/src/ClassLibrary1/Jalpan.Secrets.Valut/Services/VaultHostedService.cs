@@ -32,7 +32,7 @@ internal sealed class VaultHostedService(IVaultClient client, ILeaseService leas
             return;
         }
 
-        _logger.LogInformation($"Vault lease renewals will be processed every {_interval} s.");
+        _logger.LogInformation("Vault lease renewals will be processed every {Interval} seconds.", _interval);
         var interval = TimeSpan.FromSeconds(_interval);
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -48,7 +48,7 @@ internal sealed class VaultHostedService(IVaultClient client, ILeaseService leas
                         continue;
                     }
 
-                    _logger.LogInformation($"Issuing a certificate for: '{role}'.");
+                    _logger.LogInformation("Issuing a certificate for: '{Role}'.", role);
                     var certificate = await _certificatesIssuer.IssueAsync();
                     if (certificate is not null)
                     {
@@ -64,8 +64,7 @@ internal sealed class VaultHostedService(IVaultClient client, ILeaseService leas
                     continue;
                 }
 
-                _logger.LogInformation($"Renewing a lease with ID: '{lease.Id}', for: '{key}', " +
-                                       $"duration: {lease.Duration} s.");
+                _logger.LogInformation("Renewing a lease with ID: '{LeaseId}', for: '{Key}', duration: {Duration} seconds.", lease.Id, key, lease.Duration);
 
                 var beforeRenew = DateTime.UtcNow;
                 var renewedLease = await _client.V1.System.RenewLeaseAsync(lease.Id, lease.Duration);
@@ -82,7 +81,7 @@ internal sealed class VaultHostedService(IVaultClient client, ILeaseService leas
 
         foreach (var (key, lease) in _leaseService.All)
         {
-            _logger.LogInformation($"Revoking a lease with ID: '{lease.Id}', for: '{key}'.");
+            _logger.LogInformation("Revoking a lease with ID: '{LeaseId}', for: '{Key}'.", lease.Id, key);
             await _client.V1.System.RevokeLeaseAsync(lease.Id);
         }
     }

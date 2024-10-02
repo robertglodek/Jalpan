@@ -8,14 +8,12 @@ using System.Text.Json;
 
 namespace Jalpan.WebApi.Contracts;
 
-public class PublicContractsMiddleware
+public sealed class PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType, bool attributeRequired)
 {
-    private static int _initialized;
-    private readonly string _endpoint;
-    private readonly RequestDelegate _next;
-    private readonly bool _attributeRequired;
-    private static string _serializedContracts = null!;
-    private readonly JsonSerializerOptions _options = new()
+    private readonly string _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
+    private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
+    private readonly Lazy<string> _serializedContracts = new(() => LoadContracts(attributeType, attributeRequired), isThreadSafe: true);
+    private static readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -23,42 +21,23 @@ public class PublicContractsMiddleware
         Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
     };
     
-
-    public PublicContractsMiddleware(
-        RequestDelegate next,
-        string endpoint,
-        Type attributeType,
-        bool attributeRequired)
-    {
-        _next = next;
-        _endpoint = endpoint;
-        _attributeRequired = attributeRequired;
-
-        Load(attributeType);
-    }
-
     public async Task InvokeAsync(HttpContext context)
     {
         if (context.Request.Path == _endpoint)
         {
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            await context.Response.WriteAsync(_serializedContracts);
+            await context.Response.WriteAsync(_serializedContracts.Value);
             return;
         }
 
         await _next(context);
     }
 
-    private void Load(Type attributeType)
+    private static string LoadContracts(Type attributeType, bool attributeRequired)
     {
-        if (Interlocked.Exchange(ref _initialized, 1) == 1)
-        {
-            return;
-        }
-
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var types = assemblies.SelectMany(a => a.GetTypes())
-            .Where(t => (!_attributeRequired || t.GetCustomAttribute(attributeType) is not null) && !t.IsInterface)
+            .Where(t => (!attributeRequired || t.GetCustomAttribute(attributeType) is not null) && !t.IsInterface)
             .ToArray();
 
         var contracts = new ContractTypes();
@@ -76,7 +55,7 @@ public class PublicContractsMiddleware
             contracts.Events[name] = instance;
         }
 
-        _serializedContracts = JsonSerializer.Serialize(contracts, _options);
+        return JsonSerializer.Serialize(contracts, _options);
     }
 
     private class ContractTypes

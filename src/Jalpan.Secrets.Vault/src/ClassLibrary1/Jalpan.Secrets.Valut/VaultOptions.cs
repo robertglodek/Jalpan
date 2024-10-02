@@ -32,7 +32,7 @@ public sealed class VaultOptions
     public sealed class KeyValueOptions
     {
         public bool Enabled { get; set; }
-        public int EngineVersion { get; set; } = 2;
+        public string EngineVersion { get; set; } = "V1";
         public string MountPoint { get; set; } = "secret";
         public string Path { get; set; } = string.Empty;
         public int? Version { get; set; }

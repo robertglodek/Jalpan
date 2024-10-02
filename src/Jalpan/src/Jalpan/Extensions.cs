@@ -14,8 +14,7 @@ public static class Extensions
 {
     private const string DefaultSectionName = "app";
 
-    public static IServiceCollection AddJalpan(
-        this IServiceCollection services,
+    public static IServiceCollection AddJalpan(this IServiceCollection services,
         IConfiguration configuration,
         Action<IJalpanBuilder>? configure = null,
         string sectionName = DefaultSectionName)
@@ -57,8 +56,8 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddInitializer<T>(this IServiceCollection services) where T : class, IInitializer
-        => services.AddTransient<IInitializer, T>();
+    public static IServiceCollection AddInitializer<T>(this IJalpanBuilder builder) where T : class, IInitializer
+        => builder.Services.AddTransient<IInitializer, T>();
 
     public static T BindOptions<T>(this IConfiguration configuration, string sectionName) where T : new()
         => BindOptions<T>(configuration.GetSection(sectionName));

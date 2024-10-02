@@ -17,12 +17,12 @@ internal sealed class StartupInitializer(IServiceProvider serviceProvider, ILogg
         {
             try
             {
-                _logger.LogInformation($"Running the initializer: {initializer.GetType().Name}...");
+                _logger.LogInformation("Running the initializer: {InitializerType}", initializer.GetType().Name);
                 await initializer.InitializeAsync();
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, exception.Message);
+                _logger.LogError(exception, "An error occurred while processing: {ErrorMessage}", exception.Message);
             }
         }
     }

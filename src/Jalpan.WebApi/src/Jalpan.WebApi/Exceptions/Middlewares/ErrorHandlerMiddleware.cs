@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using Jalpan.WebApi.Exceptions.Mappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -11,6 +13,13 @@ internal sealed class ErrorHandlerMiddleware(
 {
     private readonly IExceptionToResponseMapper _exceptionToResponseMapper = exceptionToResponseMapper;
     private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
+    private readonly JsonSerializerOptions _options = new()
+    {
+        PropertyNameCaseInsensitive = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -20,7 +29,7 @@ internal sealed class ErrorHandlerMiddleware(
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
+            _logger.LogError(exception, "An error occurred while processing the request. Error: {Message}.", exception.Message);
             await HandleErrorAsync(context, exception);
         }
     }
@@ -35,6 +44,6 @@ internal sealed class ErrorHandlerMiddleware(
             return;
         }
 
-        await context.Response.WriteAsJsonAsync(exceptionResponse!.Response);
+        await context.Response.WriteAsJsonAsync(exceptionResponse!.Response, _options);
     }
 }

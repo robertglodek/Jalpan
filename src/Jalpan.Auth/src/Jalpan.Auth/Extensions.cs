@@ -14,8 +14,8 @@ public static class Extensions
 
     public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName; 
-       
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
+
         if (!builder.TryRegister(RegistryKey))
         {
             return builder;
@@ -29,7 +29,7 @@ public static class Extensions
 
         var securityKey = GetSecurityKey(options, out string algorithm);
 
-        ConfigureJwtBearerAuthentication(builder, options, tokenValidationParameters);
+        ConfigureJwtBearerAuthentication(builder.Services, options, tokenValidationParameters);
 
         builder.Services.AddAuthorization();
 
@@ -68,7 +68,7 @@ public static class Extensions
     {
         var certificate = TryLoadCertificateFromLocation(options) ?? TryLoadCertificateFromRawData(options);
 
-        if(certificate != null) 
+        if (certificate != null)
         {
             var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
             Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
@@ -84,7 +84,7 @@ public static class Extensions
         {
             return null;
         }
-            
+
         var password = options.Certificate.Password;
         var certificate = string.IsNullOrWhiteSpace(password)
             ? new X509Certificate2(options.Certificate.Location)
@@ -101,7 +101,7 @@ public static class Extensions
         {
             return null;
         }
-            
+
         var rawData = Convert.FromBase64String(options.Certificate.RawData);
         var password = options.Certificate.Password;
         var certificate = string.IsNullOrWhiteSpace(password)
@@ -153,9 +153,9 @@ public static class Extensions
     }
 
 
-    private static void ConfigureJwtBearerAuthentication(IJalpanBuilder builder, AuthOptions options, TokenValidationParameters tokenValidationParameters)
+    private static void ConfigureJwtBearerAuthentication(IServiceCollection services, AuthOptions options, TokenValidationParameters tokenValidationParameters)
     {
-        builder.Services.AddAuthentication(o =>
+        services.AddAuthentication(o =>
         {
             o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;

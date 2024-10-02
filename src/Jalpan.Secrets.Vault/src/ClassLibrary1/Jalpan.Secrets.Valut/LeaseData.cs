@@ -9,9 +9,5 @@ public class LeaseData(string type, string id, int duration, bool autoRenewal, D
     public DateTime CreatedAt { get; } = createdAt;
     public DateTime ExpiryAt { get; private set; } = createdAt.AddSeconds(duration);
     public object Data { get; } = data;
-
-    public void Refresh(double duration)
-    {
-        ExpiryAt = ExpiryAt.AddSeconds(duration);
-    }
+    public void Refresh(double duration) => ExpiryAt = ExpiryAt.AddSeconds(duration);
 }
