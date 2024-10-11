@@ -1,4 +1,5 @@
-﻿using Jalpan.Auth.Services;
+﻿using Jalpan.Auth.Accessors;
+using Jalpan.Auth.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,7 @@ public static class Extensions
 
         builder.Services.AddAuthorization();
 
+        builder.Services.AddScoped<IUserAccessor, UserAccessor>();
         builder.Services.AddSingleton(new SecurityKeyDetails(securityKey, algorithm));
         builder.Services.AddSingleton<IJwtTokenManager, JwtTokenManager>();
         builder.Services.AddSingleton(tokenValidationParameters);

@@ -30,6 +30,7 @@ public static class Extensions
         services.Configure<AppOptions>(section);
 
         services.AddMemoryCache();
+        services.AddHttpContextAccessor();
         services.AddSingleton<IServiceId, ServiceId>();
         services.AddSingleton<IDateTime, UtcDateTime>();
         services.AddSingleton<IJsonSerializer, SystemTextJsonSerializer>();

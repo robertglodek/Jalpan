@@ -21,7 +21,7 @@ namespace Jalpan.Logging.Serilog;
 public static class Extensions
 {
     internal static LoggingLevelSwitch LoggingLevelSwitch = new();
-    private const string DefaultSectionName = "logger";
+    private const string DefaultSectionName = "serilog";
     private const string DefaultAppSectionName = "app";
     private const string ConsoleOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] {Message}{NewLine}{Exception}";
     private const string FileOutputTemplate = "{Timestamp:HH:mm:ss} [{Level:u3}] ({SourceContext}.{Method}) {Message}{NewLine}{Exception}";

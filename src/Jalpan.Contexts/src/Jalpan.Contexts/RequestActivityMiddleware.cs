@@ -69,7 +69,7 @@ public sealed class RequestActivityMiddleware
     {
         activity.AddTag("http.method", context.Request.Method);
         activity.AddTag("http.url", context.Request.Path);
-        activity.AddTag("http.user_agent", context.Request.Headers["User-Agent"].ToString());
+        activity.AddTag("http.user_agent", context.Request.Headers.UserAgent.ToString());
         activity.AddTag("http.client_ip", context.Connection.RemoteIpAddress?.ToString());
         activity.AddTag("http.host", context.Request.Host.Value);
         activity.AddTag("http.query_string", context.Request.QueryString.ToString());
