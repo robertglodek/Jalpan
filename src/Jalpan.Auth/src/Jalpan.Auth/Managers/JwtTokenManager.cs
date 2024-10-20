@@ -15,7 +15,6 @@ internal sealed class JwtTokenManager : IJwtTokenManager
     private readonly IDateTime _dateTime;
     private readonly SigningCredentials _signingCredentials;
     private readonly string? _audience;
-    private readonly TimeSpan DefaultExpiry = TimeSpan.FromHours(1);
 
     public JwtTokenManager(IOptions<AuthOptions> options, SecurityKeyDetails securityKeyDetails, IDateTime dateTime)
     {
@@ -23,7 +22,7 @@ internal sealed class JwtTokenManager : IJwtTokenManager
 
         _audience = jwtOptions.Audience;
         _issuer = jwtOptions.Issuer;
-        _expiry = jwtOptions.Expiry ?? DefaultExpiry;
+        _expiry = jwtOptions.Expiry;
         _dateTime = dateTime;
         _signingCredentials = new SigningCredentials(securityKeyDetails.Key, securityKeyDetails.Algorithm);
     }

@@ -1,0 +1,6 @@
+@Taskly.Services.Notification.Api_HostAddress = http://localhost:5142
+
+GET {{Taskly.Services.Notification.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

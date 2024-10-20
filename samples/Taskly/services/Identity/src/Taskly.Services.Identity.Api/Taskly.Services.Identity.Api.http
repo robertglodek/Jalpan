@@ -1,0 +1,11 @@
+@Taskly.Services.Identity.Api_HostAddress = http://localhost:5239
+
+# Ping endpoint
+GET {{Taskly.Services.Identity.Api_HostAddress}}/api/SystemEndpoints/ping
+Accept: application/json, text/plain
+
+###
+
+# About endpoint
+GET {{Taskly.Services.Identity.Api_HostAddress}}/api/SystemEndpoints/about
+Accept: application/json, text/plain

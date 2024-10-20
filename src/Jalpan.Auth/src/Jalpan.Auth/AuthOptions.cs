@@ -27,7 +27,7 @@ public sealed class AuthOptions
         public bool RequireHttpsMetadata { get; set; } = true;
         public bool RequireExpirationTime { get; set; } = true;
         public bool RequireSignedTokens { get; set; } = true;
-        public TimeSpan? Expiry { get; set; }
+        public TimeSpan Expiry { get; set; } = TimeSpan.FromHours(1);
         public string? ValidAudience { get; set; }
         public IEnumerable<string>? ValidAudiences { get; set; }
         public string? ValidIssuer { get; set; }

@@ -62,7 +62,7 @@ public static class Extensions
             : builder.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = routePrefix;
-                c.SwaggerEndpoint($"/{routePrefix}/{options.Name}/swagger.json".FormatEmptyRoutePrefix(), options.Title);
+                c.SwaggerEndpoint($"/{routePrefix}/{options.Name}/swagger.json".Replace("//", "/"), options.Title);
             });
     }
 
@@ -102,6 +102,4 @@ public static class Extensions
             throw new ConfigurationException("Version cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Version)));
         }
     }
-
-    private static string FormatEmptyRoutePrefix(this string route) => route.Replace("//", "/");
 }

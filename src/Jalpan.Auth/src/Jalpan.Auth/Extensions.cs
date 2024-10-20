@@ -1,6 +1,9 @@
 ﻿using Jalpan.Auth.Accessors;
+using Jalpan.Auth.Managers;
+using Jalpan.Auth.Middlewares;
 using Jalpan.Auth.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
@@ -34,10 +37,11 @@ public static class Extensions
 
         builder.Services.AddAuthorization();
 
-        builder.Services.AddScoped<IUserAccessor, UserAccessor>();
         builder.Services.AddSingleton(new SecurityKeyDetails(securityKey, algorithm));
         builder.Services.AddSingleton<IJwtTokenManager, JwtTokenManager>();
         builder.Services.AddSingleton(tokenValidationParameters);
+        builder.Services.AddSingleton<IAccessTokenManager, InMemoryAccessTokenManager>();
+        builder.Services.AddTransient<AccessTokenValidatonMiddleware>();
 
         return builder;
     }
@@ -154,7 +158,6 @@ public static class Extensions
         return tokenValidationParameters;
     }
 
-
     private static void ConfigureJwtBearerAuthentication(IServiceCollection services, AuthOptions options, TokenValidationParameters tokenValidationParameters)
     {
         services.AddAuthentication(o =>
@@ -177,4 +180,13 @@ public static class Extensions
             }
         });
     }
+
+    public static IJalpanBuilder AddDistributedAccessTokenValidator(this IJalpanBuilder builder)
+    {
+        builder.Services.AddSingleton<IAccessTokenManager, DistributedAccessTokenManager>();
+        return builder;
+    }
+
+    public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app) 
+        => app.UseMiddleware<AccessTokenValidatonMiddleware>();
 }

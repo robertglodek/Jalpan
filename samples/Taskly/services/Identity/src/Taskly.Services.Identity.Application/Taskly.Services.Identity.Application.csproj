@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Ardalis.GuardClauses" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Auth\src\Jalpan.Auth\Jalpan.Auth.csproj" />
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Contexts\src\Jalpan.Contexts\Jalpan.Contexts.csproj" />
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan\src\Jalpan\Jalpan.csproj" />
+		<ProjectReference Include="..\Taskly.Services.Identity.Domain\Taskly.Services.Identity.Domain.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Services\" />
+	</ItemGroup>
+
+</Project>
