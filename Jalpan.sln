@@ -67,7 +67,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Messaging", "Jalpan.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9DD65BBD-49A8-4411-88F1-FC8EE9F63B29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Messaging", "src\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj", "{15FF328D-FF38-4D1B-803A-5E4DC3400E70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Messaging", "src\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj", "{15FF328D-FF38-4D1B-803A-5E4DC3400E70}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.LoadBalancing.Fabio", "Jalpan.LoadBalancing.Fabio", "{1CC0BFC3-052A-4715-887E-D4DEB3A54620}"
 EndProject
@@ -109,7 +109,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Secrets.Vault", "Jal
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A2FB4A1C-6E7C-48DD-B597-AA863CD7FDE5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Secrets.Valut", "src\Jalpan.Secrets.Vault\src\ClassLibrary1\Jalpan.Secrets.Valut\Jalpan.Secrets.Valut.csproj", "{21E9A92A-C92D-4C25-AA59-2C946D755F52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Secrets.Valut", "src\Jalpan.Secrets.Vault\src\Jalpan.Secrets.Valut\Jalpan.Secrets.Valut.csproj", "{21E9A92A-C92D-4C25-AA59-2C946D755F52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Messaging.Idempotency", "Jalpan.Messaging.Idempotency", "{2F1BACA1-B0CA-4CA8-82A5-B152B2462039}"
 EndProject
