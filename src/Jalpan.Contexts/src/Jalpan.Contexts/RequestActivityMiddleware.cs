@@ -43,8 +43,6 @@ public sealed class RequestActivityMiddleware
 
             await _next(context);
 
-            var responseTime = DateTime.UtcNow - startTime;
-
             AddResponseTags(activity, context, startTime);
         }
         else
@@ -73,8 +71,6 @@ public sealed class RequestActivityMiddleware
         activity.AddTag("http.client_ip", context.Connection.RemoteIpAddress?.ToString());
         activity.AddTag("http.host", context.Request.Host.Value);
         activity.AddTag("http.query_string", context.Request.QueryString.ToString());
-        activity.AddTag("app.name", "YourApplicationName");
-        activity.AddTag("app.environment", "Production");
         activity.AddTag("correlation_id", context.TraceIdentifier);
     }
 

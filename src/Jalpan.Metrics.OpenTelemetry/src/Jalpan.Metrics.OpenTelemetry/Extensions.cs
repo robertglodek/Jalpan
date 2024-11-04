@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Jalpan.Exceptions;
+using Jalpan.Helpers;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Metrics.OpenTelemetry.Decorators;
 using Microsoft.AspNetCore.Builder;
@@ -55,7 +56,7 @@ internal static class Extensions
         if(string.IsNullOrEmpty(options.Exporter))
         {
             throw new ConfigurationException("Metrics explorer cannot be empty.",
-                Helpers.Extensions.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
+                PropertyPathHelper.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
         }
 
         switch (options.Exporter.ToLowerInvariant())
@@ -69,7 +70,7 @@ internal static class Extensions
                 break;
             default:
                 throw new ConfigurationException($"Metrics explorer '{options.Exporter}' not configured.",
-                    Helpers.Extensions.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
+                    PropertyPathHelper.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
         }
     }
 

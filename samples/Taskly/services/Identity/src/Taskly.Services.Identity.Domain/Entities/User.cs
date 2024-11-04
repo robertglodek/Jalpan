@@ -10,7 +10,7 @@ public sealed class User : AggregateRoot
     public string Password { get; private set; }
     public DateTime? LastModifiedAt { get; set; }
 
-    public User(Guid id, string email, string password, Role role, DateTime createdAt, DateTime? lastModifiedAt)
+    public User(Guid id, string email, string password, Role role, DateTime createdAt, DateTime? lastModifiedAt = null)
     {
         if (string.IsNullOrWhiteSpace(email))
         {

@@ -32,11 +32,11 @@ internal static class Extensions
             return builder;
         }
 
-        var appOptions = builder.Configuration.BindOptions<AppOptions>(appSectionName); ;
+        var appOptions = builder.Configuration.BindOptions<AppOptions>(appSectionName);
 
         if (string.IsNullOrWhiteSpace(appOptions.Name))
         {
-            throw new ConfigurationException("Application name cannot be empty when using the tracing.", PropertyPathHelper.GetOptionsPropertyPath(appSectionName, nameof(appOptions.Name));
+            throw new ConfigurationException("Application name cannot be empty when using the tracing.", PropertyPathHelper.GetOptionsPropertyPath(appSectionName, nameof(appOptions.Name)));
         }
 
         builder.Services.AddOpenTelemetry()

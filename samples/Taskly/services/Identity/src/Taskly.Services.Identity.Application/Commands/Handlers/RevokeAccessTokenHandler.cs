@@ -1,4 +1,4 @@
-﻿using Jalpan.Auth.Managers;
+﻿using Jalpan.Auth.Jwt.Managers;
 
 namespace Taskly.Services.Identity.Application.Commands.Handlers;
 

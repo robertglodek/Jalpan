@@ -11,11 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{320D9ECF-16E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan", "src\Jalpan\src\Jalpan\Jalpan.csproj", "{39863508-4402-41E1-8FF8-578BCA871695}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Auth", "Jalpan.Auth", "{19C1978F-7794-4DD3-B51E-DDB3C5F2F3C9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Auth.Jwt", "Jalpan.Auth.Jwt", "{19C1978F-7794-4DD3-B51E-DDB3C5F2F3C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F7A71D95-A7D5-455F-B962-D0FD85E8A5E1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Auth", "src\Jalpan.Auth\src\Jalpan.Auth\Jalpan.Auth.csproj", "{1576A739-73F3-4C61-8187-A8B68B3073B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Auth.Jwt", "src\Jalpan.Auth.Jwt\src\Jalpan.Auth.Jwt\Jalpan.Auth.Jwt.csproj", "{1576A739-73F3-4C61-8187-A8B68B3073B4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.HTTP", "Jalpan.HTTP", "{E969DC73-55DD-4805-B6B5-4B429B62DBFB}"
 EndProject
@@ -181,21 +181,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{07E7A29B-914
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EFE0BBC6-6684-4C70-8D49-1DC6C51842E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Report.Api", "samples\Taskly\services\Report\src\Taskly.Services.Report.Api\Taskly.Services.Report.Api.csproj", "{8AA9C06B-220D-4E9D-B983-2BA67BB81A97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Report.Api", "samples\Taskly\services\Report\src\Taskly.Services.Report.Api\Taskly.Services.Report.Api.csproj", "{8AA9C06B-220D-4E9D-B983-2BA67BB81A97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Report.Application", "samples\Taskly\services\Report\src\Taskly.Services.Report.Application\Taskly.Services.Report.Application.csproj", "{133E9B13-C74C-4664-B65B-EA6FF1362D03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Report.Application", "samples\Taskly\services\Report\src\Taskly.Services.Report.Application\Taskly.Services.Report.Application.csproj", "{133E9B13-C74C-4664-B65B-EA6FF1362D03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Report.Domain", "samples\Taskly\services\Report\src\Taskly.Services.Report.Domain\Taskly.Services.Report.Domain.csproj", "{A6982DF8-7CD8-4E8E-975B-2FAF7266D5BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Report.Domain", "samples\Taskly\services\Report\src\Taskly.Services.Report.Domain\Taskly.Services.Report.Domain.csproj", "{A6982DF8-7CD8-4E8E-975B-2FAF7266D5BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Report.Infrastructure", "samples\Taskly\services\Report\src\Taskly.Services.Report.Infrastructure\Taskly.Services.Report.Infrastructure.csproj", "{97B5F3EF-E63D-4C5D-8C09-C7B9B9216D0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Report.Infrastructure", "samples\Taskly\services\Report\src\Taskly.Services.Report.Infrastructure\Taskly.Services.Report.Infrastructure.csproj", "{97B5F3EF-E63D-4C5D-8C09-C7B9B9216D0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Notification.Domain", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Domain\Taskly.Services.Notification.Domain.csproj", "{DD0E63AF-5608-4139-9BAC-115944644011}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Domain", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Domain\Taskly.Services.Notification.Domain.csproj", "{DD0E63AF-5608-4139-9BAC-115944644011}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Notification.Application", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Application\Taskly.Services.Notification.Application.csproj", "{92E95202-00E2-4157-8B0E-DFEF17E96F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Application", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Application\Taskly.Services.Notification.Application.csproj", "{92E95202-00E2-4157-8B0E-DFEF17E96F0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Notification.Infrastructure", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Infrastructure\Taskly.Services.Notification.Infrastructure.csproj", "{DEBA9B74-B77A-4475-AF90-8ACD6CDE8516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Infrastructure", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Infrastructure\Taskly.Services.Notification.Infrastructure.csproj", "{DEBA9B74-B77A-4475-AF90-8ACD6CDE8516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Notification.Api", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Api\Taskly.Services.Notification.Api.csproj", "{605F3688-FDC8-4C47-B621-9D6C2B684288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Api", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Api\Taskly.Services.Notification.Api.csproj", "{605F3688-FDC8-4C47-B621-9D6C2B684288}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

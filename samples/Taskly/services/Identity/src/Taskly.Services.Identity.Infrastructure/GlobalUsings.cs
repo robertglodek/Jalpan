@@ -4,4 +4,4 @@ global using Jalpan;
 global using Jalpan.Logging.Serilog;
 global using Jalpan.Persistance.MongoDB;
 global using Jalpan.Contexts;
-global using Jalpan.Auth;
+global using Jalpan.Auth.Jwt;
