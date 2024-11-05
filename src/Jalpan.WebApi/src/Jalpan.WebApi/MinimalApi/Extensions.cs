@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Routing;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,20 +11,16 @@ public static class Extensions
     {
         var groupName = group.GetType().Name;
 
-        return app
-            .MapGroup($"/{prefix}/{groupName}".Replace("//", "/").ToLower())
-            .WithTags(groupName)
-            .WithOpenApi();
+        return app.MapGroup($"/{prefix}/{groupName}".Replace("//", "/").ToLower())
+                  .WithTags(groupName)
+                  .WithOpenApi();
     }
 
     public static WebApplication MapEndpoints(this WebApplication app)
     {
         var endpointGroupType = typeof(EndpointGroupBase);
-
-        var assembly = Assembly.GetCallingAssembly();
-
-        var endpointGroupTypes = assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(endpointGroupType));
+        var endpointGroupTypes = Assembly.GetCallingAssembly().GetTypes()
+                                         .Where(t => t.IsSubclassOf(endpointGroupType));
 
         foreach (var type in endpointGroupTypes)
         {
@@ -38,69 +33,72 @@ public static class Extensions
         return app;
     }
 
-    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder, Delegate handler, string name = "", [StringSyntax("Route")] string pattern = "")
+    private static IEndpointRouteBuilder MapWithMethod(this IEndpointRouteBuilder builder,
+        Delegate handler,
+        string method,
+        string name = "",
+        string pattern = "",
+        Action<IEndpointConventionBuilder>? config = null)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        name = string.IsNullOrWhiteSpace(name) ? GetHandlerName(handler) : name;
+        var routeBuilder = method switch
         {
-            AnonymousMethod(handler);
-            name = handler.Method.Name;
-        }
+            "get" => builder.MapGet(pattern, handler),
+            "post" => builder.MapPost(pattern, handler),
+            "put" => builder.MapPut(pattern, handler),
+            "delete" => builder.MapDelete(pattern, handler),
+            "patch" => builder.MapPatch(pattern, handler),
+            _ => throw new ArgumentException("Invalid HTTP method.")
+        };
 
-        builder.MapGet(pattern, handler).WithName(name);
-
+        config?.Invoke(routeBuilder.WithName(name));
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder, Delegate handler, string name = "", [StringSyntax("Route")] string pattern = "")
+    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder,
+        Delegate handler,
+        string name = "",
+        string pattern = "",
+        Action<IEndpointConventionBuilder>? config = null)
+        => builder.MapWithMethod(handler, "get", name, pattern, config);
+
+    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder,
+        Delegate handler,
+        string name = "",
+        string pattern = "",
+        Action<IEndpointConventionBuilder>? config = null)
+        => builder.MapWithMethod(handler, "post", name, pattern, config);
+
+    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder,
+        Delegate handler,
+        string name = "",
+        string pattern = "",
+        Action<IEndpointConventionBuilder>? config = null)
+        => builder.MapWithMethod(handler, "put", name, pattern, config);
+
+    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder,
+        Delegate handler,
+        string name = "",
+        string pattern = "",
+        Action<IEndpointConventionBuilder>? config = null)
+        => builder.MapWithMethod(handler, "delete", name, pattern, config);
+
+    public static IEndpointRouteBuilder MapPatch(this IEndpointRouteBuilder builder,
+       Delegate handler,
+       string name = "",
+       string pattern = "",
+       Action<IEndpointConventionBuilder>? config = null)
+       => builder.MapWithMethod(handler, "patch", name, pattern, config);
+
+    private static string GetHandlerName(Delegate handler)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (handler.Method.IsAnonymous())
         {
-            AnonymousMethod(handler);
-            name = handler.Method.Name;
+            throw new ArgumentException("When using anonymous handlers, the 'name' parameter must be provided.");
         }
-
-        builder.MapPost(pattern, handler).WithName(name);
-
-        return builder;
-    }
-
-    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder, Delegate handler, string name = "", [StringSyntax("Route")] string pattern = "")
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            AnonymousMethod(handler);
-            name = handler.Method.Name;
-        }
-
-        builder.MapPut(pattern, handler).WithName(name);
-
-        return builder;
-    }
-
-    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder, Delegate handler, string name = "", [StringSyntax("Route")] string pattern = "")
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            AnonymousMethod(handler);
-            name = handler.Method.Name;
-        }
-
-        builder.MapDelete(pattern, handler).WithName(name);
-
-        return builder;
+        return handler.Method.Name;
     }
 
     public static bool IsAnonymous(this MethodInfo method)
-    {
-        var invalidChars = new[] { '<', '>' };
-        return method.Name.Any(invalidChars.Contains);
-    }
-
-    public static void AnonymousMethod(Delegate input)
-    {
-        if (input.Method.IsAnonymous())
-        {
-            throw new ArgumentException("When using anonymous handlers 'name' parameter must be provided.");
-        }
-    }
+        => method.Name.Any(c => c == '<' || c == '>');
 }
