@@ -1,5 +1,5 @@
 ﻿using Jalpan.Messaging.Idempotency.Inbox;
-using Jalpan.Persistance.MongoDB;
+using Jalpan.Persistence.MongoDB;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;

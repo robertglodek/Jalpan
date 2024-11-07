@@ -1,7 +1,7 @@
 namespace Jalpan.Messaging.RabbitMQ;
 
-public sealed class RabbitMQOptions
+public sealed class RabbitMqOptions
 {
-    public bool Enabled { get; set; }
-    public string ConnectionString { get; set; } = string.Empty;
+    public bool Enabled { get; init; }
+    public string ConnectionString { get; init; } = string.Empty;
 }

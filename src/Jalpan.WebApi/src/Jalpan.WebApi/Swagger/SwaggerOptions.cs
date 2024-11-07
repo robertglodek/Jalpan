@@ -2,11 +2,11 @@
 
 public sealed class SwaggerOptions
 {
-    public bool Enabled { get; set; } = true;
-    public bool ReDocEnabled { get; set; } = false;
-    public string Name { get; set; } = "v1";
-    public string Title { get; set; } = "API Documentation";
-    public string Version { get; set; } = "1.0";
-    public string? RoutePrefix { get; set; }
-    public bool IncludeSecurity { get; set; } = false;
+    public bool Enabled { get; init; } = true;
+    public bool ReDocEnabled { get; init; }
+    public string Name { get; init; } = "v1";
+    public string Title { get; init; } = "API Documentation";
+    public string Version { get; init; } = "1.0";
+    public string? RoutePrefix { get; init; }
+    public bool IncludeSecurity { get; init; }
 }

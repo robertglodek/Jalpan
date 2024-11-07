@@ -1,10 +1,9 @@
-﻿using Jalpan.Time;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Jalpan.Time;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Jalpan.Auth.Jwt.Services;
+namespace Jalpan.Auth.Jwt.Managers;
 
 internal sealed class JwtTokenManager : IJwtTokenManager
 {
@@ -33,7 +32,7 @@ internal sealed class JwtTokenManager : IJwtTokenManager
         string? role = null,
         IDictionary<string, IEnumerable<string>>? claims = null)
     {
-        if(_signingCredentials.Key is X509SecurityKey x509Key && x509Key.PrivateKeyStatus == PrivateKeyStatus.DoesNotExist)
+        if(_signingCredentials.Key is X509SecurityKey { PrivateKeyStatus: PrivateKeyStatus.DoesNotExist })
         {
             throw new InvalidOperationException("Cannot create JWT: The X509SecurityKey does not contain a private key required for signing.");
         }

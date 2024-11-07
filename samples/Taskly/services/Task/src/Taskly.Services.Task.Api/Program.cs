@@ -1,5 +1,6 @@
 using Jalpan;
 using Jalpan.Logging.Serilog;
+using Taskly.Services.Task.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseLogging();

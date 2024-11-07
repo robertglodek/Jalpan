@@ -2,16 +2,12 @@
 
 public class QuartzOptions
 {
-    /// <summary>
-    /// Dictionary containing jobs' names and its' cron schedules
-    /// </summary>
-    public Dictionary<string, string> Schedules { get; set; } = [];
-
-    public PostgresPersistencyOptions? PostgresPersistency { get; set; }
+    public Dictionary<string, string> Schedules { get; init; } = [];
+    public PostgresPersistencyOptions? PostgresPersistency { get; init; }
 
     public class PostgresPersistencyOptions
     {
-        public bool Enabled { get; set; }
-        public string ConnectionString { get; set; } = string.Empty;
+        public bool Enabled { get; init; }
+        public string ConnectionString { get; init; } = string.Empty;
     }
 }

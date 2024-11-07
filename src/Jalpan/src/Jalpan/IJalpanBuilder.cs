@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Jalpan;
+﻿namespace Jalpan;
 
 public interface IJalpanBuilder
 {

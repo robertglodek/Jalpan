@@ -1,7 +1,5 @@
 ﻿using Jalpan.Attributes;
 using Jalpan.Handlers;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Jalpan.Dispatchers;
 

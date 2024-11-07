@@ -1,7 +1,5 @@
-﻿using Jalpan.Auth.Jwt.Accessors;
-using Jalpan.Auth.Jwt.Managers;
+﻿using Jalpan.Auth.Jwt.Managers;
 using Jalpan.Auth.Jwt.Middlewares;
-using Jalpan.Auth.Jwt.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +29,7 @@ public static class Extensions
 
         var tokenValidationParameters = CreateTokenValidationParameters(options);
 
-        var securityKey = GetSecurityKey(options, out string algorithm);
+        var securityKey = GetSecurityKey(options, out var algorithm);
 
         ConfigureJwtBearerAuthentication(builder.Services, options, tokenValidationParameters);
 
@@ -41,14 +39,15 @@ public static class Extensions
         builder.Services.AddSingleton<IJwtTokenManager, JwtTokenManager>();
         builder.Services.AddSingleton(tokenValidationParameters);
         builder.Services.AddSingleton<IAccessTokenManager, InMemoryAccessTokenManager>();
-        builder.Services.AddTransient<AccessTokenValidatonMiddleware>();
+        builder.Services.AddTransient<AccessTokenValidationMiddleware>();
 
         return builder;
     }
 
     private static SecurityKey GetSecurityKey(AuthOptions options, out string algorithm)
     {
-        algorithm = options.Algorithm ?? SecurityAlgorithms.HmacSha256;
+        algorithm = options.Algorithm;
+        
         SecurityKey? securityKey = null;
 
         if (options.Certificate != null)
@@ -56,15 +55,27 @@ public static class Extensions
             securityKey = LoadCertificate(options);
         }
 
-        if (securityKey == null)
+        if (securityKey != null)
         {
-            if (string.IsNullOrWhiteSpace(options.Jwt.IssuerSigningKey))
+            if (string.IsNullOrWhiteSpace(algorithm))
             {
-                throw new InvalidOperationException("Missing issuer signing key.");
+                algorithm = SecurityAlgorithms.RsaSha256;
             }
+            
+            return securityKey;
+        }
+        
+        if (string.IsNullOrWhiteSpace(options.Jwt.IssuerSigningKey))
+        {
+            throw new InvalidOperationException("Missing issuer signing key.");
+        }
 
-            var rawKey = Encoding.UTF8.GetBytes(options.Jwt.IssuerSigningKey);
-            securityKey = new SymmetricSecurityKey(rawKey);
+        var rawKey = Encoding.UTF8.GetBytes(options.Jwt.IssuerSigningKey);
+        securityKey = new SymmetricSecurityKey(rawKey);
+            
+        if (string.IsNullOrWhiteSpace(algorithm))
+        {
+            algorithm = SecurityAlgorithms.HmacSha256;
         }
 
         return securityKey;
@@ -74,14 +85,11 @@ public static class Extensions
     {
         var certificate = TryLoadCertificateFromLocation(options) ?? TryLoadCertificateFromRawData(options);
 
-        if (certificate != null)
-        {
-            var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
-            Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
-            return new X509SecurityKey(certificate);
-        }
+        if (certificate == null) return null;
+        var actionType = certificate.HasPrivateKey ? "issuing" : "validating";
+        Console.WriteLine($"Using X.509 certificate for {actionType} tokens.");
+        return new X509SecurityKey(certificate);
 
-        return null;
     }
 
     private static X509Certificate2? TryLoadCertificateFromLocation(AuthOptions options)
@@ -188,5 +196,5 @@ public static class Extensions
     }
 
     public static IApplicationBuilder UseAccessTokenValidator(this IApplicationBuilder app) 
-        => app.UseMiddleware<AccessTokenValidatonMiddleware>();
+        => app.UseMiddleware<AccessTokenValidationMiddleware>();
 }

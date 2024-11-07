@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\Jalpan.Messaging.Idempotency\src\Jalpan.Messaging.Idempotency\Jalpan.Messaging.Idempotency.csproj" />
-		<ProjectReference Include="..\..\..\Jalpan.Persistance.MongoDB\src\Jalpan.Persistance.MongoDB\Jalpan.Persistance.MongoDB.csproj" />
+		<ProjectReference Include="..\..\..\Jalpan.Persistance.MongoDB\src\Jalpan.Persistence.MongoDB\Jalpan.Persistence.MongoDB.csproj" />
 	</ItemGroup>
 
 </Project>

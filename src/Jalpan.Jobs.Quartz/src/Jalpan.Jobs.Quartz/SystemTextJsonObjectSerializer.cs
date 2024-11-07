@@ -7,8 +7,6 @@ namespace Jalpan.Jobs.Quartz;
 
 public class SystemTextJsonObjectSerializer(ILogger<SystemTextJsonObjectSerializer> logger) : IObjectSerializer
 {
-    private readonly ILogger<SystemTextJsonObjectSerializer> _logger = logger;
-
     private readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -19,7 +17,7 @@ public class SystemTextJsonObjectSerializer(ILogger<SystemTextJsonObjectSerializ
 
     public void Initialize()
     {
-        _logger.LogInformation("Quartz SystemTextJsonObjectSerializer initialized with options: {Options}", _options);
+        logger.LogInformation("Quartz SystemTextJsonObjectSerializer initialized with options: {Options}", _options);
     }
 
     public T? DeSerialize<T>(byte[] data) where T : class => JsonSerializer.Deserialize<T>(data, _options);

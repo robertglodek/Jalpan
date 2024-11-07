@@ -6,12 +6,11 @@ namespace Jalpan.Jobs.Quartz;
 
 public abstract class BaseJob(ILogger logger, IDateTime dateTime) : IJob
 {
-    protected readonly ILogger _logger = logger;
-    protected readonly IDateTime _dateTime = dateTime;
+    protected readonly ILogger Logger = logger;
+    protected readonly IDateTime DateTime = dateTime;
 
     protected virtual int MaxRetryCount => 0;
     protected virtual int RetryIntervalInSeconds => 30;
-    protected virtual TimeSpan LockTimeout => TimeSpan.FromMinutes(1);
 
     public async Task Execute(IJobExecutionContext context)
     {
@@ -21,14 +20,14 @@ public abstract class BaseJob(ILogger logger, IDateTime dateTime) : IJob
 
         try
         {
-            _logger.LogInformation("Job {JobName} started at {StartTime}", jobName, _dateTime.Now);
+            Logger.LogInformation("Job {JobName} started at {StartTime}", jobName, DateTime.Now);
             await ExecuteJob(context); 
-            _logger.LogInformation("Job {JobName} finished at {EndTime}", jobName, _dateTime.Now);
+            Logger.LogInformation("Job {JobName} finished at {EndTime}", jobName, DateTime.Now);
             context.JobDetail.JobDataMap.Put("RetryCount", 0);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Job {JobName} failed on attempt {RetryCount} at {ErrorTime} with error: {ErrorMessage}", jobName, retryCount, _dateTime.Now, ex.Message);
+            Logger.LogError(ex, "Job {JobName} failed on attempt {RetryCount} at {ErrorTime} with error: {ErrorMessage}", jobName, retryCount, DateTime.Now, ex.Message);
             retryCount++;
             context.JobDetail.JobDataMap.Put("RetryCount", retryCount);
 
@@ -38,7 +37,7 @@ public abstract class BaseJob(ILogger logger, IDateTime dateTime) : IJob
             }
             else
             {
-                _logger.LogCritical("Max retry attempts reached. Job will not be retried.");
+                Logger.LogCritical("Max retry attempts reached. Job will not be retried.");
                 HandleMaxRetriesExceeded(context, ex);
             }
         }

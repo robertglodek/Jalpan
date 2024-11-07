@@ -16,6 +16,8 @@ public static class Extensions
     }
 
     public static IApplicationBuilder UseRequestActivity(this IApplicationBuilder app,
-        string parentActivityIdHeaderName = "traceparent", string activityName = "Service.HttpRequestIn", bool overrideWhenExisting = false)
+        string parentActivityIdHeaderName = "traceparent",
+        string activityName = "Service.HttpRequestIn",
+        bool overrideWhenExisting = false)
         => app.UseMiddleware<RequestActivityMiddleware>(parentActivityIdHeaderName, activityName, overrideWhenExisting);
 }

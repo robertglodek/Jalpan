@@ -6,20 +6,18 @@ using Jalpan.Types;
 namespace Jalpan.Validation;
 
 [Decorator]
-internal sealed class ValidationCommandHandlerDecorator<TCommand, TResponse>(ICommandHandler<TCommand, TResponse> handler,
-    IEnumerable<IValidator<TCommand>> validators) : ICommandHandler<TCommand, TResponse> where TCommand : class, ICommand<TResponse>
+internal sealed class ValidationCommandHandlerDecorator<TCommand, TResponse>(
+    ICommandHandler<TCommand, TResponse> handler, IEnumerable<IValidator<TCommand>> validators)
+    : ICommandHandler<TCommand, TResponse> where TCommand : class, ICommand<TResponse>
 {
-    private readonly ICommandHandler<TCommand, TResponse> _handler = handler;
-    private readonly IEnumerable<IValidator<TCommand>> _validators = validators;
-
     public async Task<TResponse> HandleAsync(TCommand command, CancellationToken cancellationToken = default)
     {
-        if (_validators.Any())
+        if (validators.Any())
         {
             var context = new ValidationContext<TCommand>(command);
 
             var validationResults =
-                await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+                await Task.WhenAll(validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
             var failures = validationResults.Where(r => r.Errors.Count != 0)
                 .SelectMany(r => r.Errors).ToList();
@@ -30,7 +28,7 @@ internal sealed class ValidationCommandHandlerDecorator<TCommand, TResponse>(ICo
             }
         }
 
-        var result = await _handler.HandleAsync(command, cancellationToken);
+        var result = await handler.HandleAsync(command, cancellationToken);
 
         return result;
     }

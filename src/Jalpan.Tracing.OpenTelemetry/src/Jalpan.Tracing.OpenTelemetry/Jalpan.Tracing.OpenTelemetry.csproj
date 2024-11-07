@@ -23,6 +23,7 @@
 	 <ItemGroup>
 	    <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\Jalpan.Messaging.RabbitMQ\src\Jalpan.Messaging.RabbitMQ\Jalpan.Messaging.RabbitMQ.csproj" />
+		<ProjectReference Include="..\..\..\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
 	 </ItemGroup>
 

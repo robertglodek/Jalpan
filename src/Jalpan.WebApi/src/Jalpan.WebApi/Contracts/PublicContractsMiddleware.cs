@@ -8,12 +8,16 @@ using System.Text.Json;
 
 namespace Jalpan.WebApi.Contracts;
 
-public sealed class PublicContractsMiddleware(RequestDelegate next, string endpoint, Type attributeType, bool attributeRequired)
+public sealed class PublicContractsMiddleware(
+    RequestDelegate next,
+    string endpoint,
+    Type attributeType,
+    bool attributeRequired)
 {
     private readonly string _endpoint = endpoint ?? throw new ArgumentNullException(nameof(endpoint));
     private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof(next));
     private readonly Lazy<string> _serializedContracts = new(() => LoadContracts(attributeType, attributeRequired), isThreadSafe: true);
-    private static readonly JsonSerializerOptions _options = new()
+    private static readonly JsonSerializerOptions Options = new()
     {
         PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -47,15 +51,13 @@ public sealed class PublicContractsMiddleware(RequestDelegate next, string endpo
             var instance = @event.GetDefaultInstance();
             var name = instance!.GetType().Name;
 
-            if (contracts.Events.ContainsKey(name))
+            if (!contracts.Events.TryAdd(name, instance))
             {
                 throw new InvalidOperationException($"Event: '{name}' already exists.");
             }
-
-            contracts.Events[name] = instance;
         }
 
-        return JsonSerializer.Serialize(contracts, _options);
+        return JsonSerializer.Serialize(contracts, Options);
     }
 
     private class ContractTypes

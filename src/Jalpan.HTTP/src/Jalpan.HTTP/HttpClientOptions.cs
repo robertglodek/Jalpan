@@ -2,29 +2,30 @@ namespace Jalpan.HTTP;
 
 public sealed class HttpClientOptions
 {
-    public string Name { get; set; } = string.Empty;
-    public CertificateOptions? Certificate { get; set; }
-    public ResiliencyOptions Resiliency { get; set; } = new();
-    public RequestMaskingOptions RequestMasking { get; set; } = new();
-    public Dictionary<string, string> Services { get; set; } = [];
+    public string Name { get; init; } = string.Empty;
+    public CertificateOptions? Certificate { get; init; }
+    public ResiliencyOptions Resiliency { get; init; } = new();
+    public RequestMaskingOptions RequestMasking { get; init; } = new();
+    
+    public Dictionary<string, string> Services { get; init; } = [];
 
     public sealed class CertificateOptions
     {
-        public string Location { get; set; } = string.Empty;
-        public string? Password { get; set; }
+        public string Location { get; init; } = string.Empty;
+        public string? Password { get; init; }
     }
 
     public sealed class ResiliencyOptions
     {
-        public int Retries { get; set; } = 3;
-        public TimeSpan? RetryInterval { get; set; }
-        public bool Exponential { get; set; }
+        public int Retries { get; init; } = 3;
+        public TimeSpan? RetryInterval { get; init; }
+        public bool Exponential { get; init; }
     }
 
     public class RequestMaskingOptions
     {
-        public bool Enabled { get; set; }
-        public List<string> UrlParts { get; set; } = [];
-        public string? MaskTemplate { get; set; }
+        public bool Enabled { get; init; }
+        public List<string> UrlParts { get; init; } = [];
+        public string? MaskTemplate { get; init; }
     }
 }

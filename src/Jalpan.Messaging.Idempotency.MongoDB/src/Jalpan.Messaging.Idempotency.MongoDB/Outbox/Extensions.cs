@@ -1,5 +1,5 @@
 ﻿using Jalpan.Messaging.Idempotency.Outbox;
-using Jalpan.Persistance.MongoDB;
+using Jalpan.Persistence.MongoDB;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Outbox;
@@ -23,7 +23,8 @@ public static class Extensions
             return configurator;
         }
 
-        var collection = string.IsNullOrWhiteSpace(mongoOutboxOptions.Collection) ? DefaultOutboxCollectionName : mongoOutboxOptions.Collection;
+        var collection = string.IsNullOrWhiteSpace(mongoOutboxOptions.Collection)
+            ? DefaultOutboxCollectionName : mongoOutboxOptions.Collection;
 
         configurator.Builder.AddMongoRepository<OutboxMessage, string>(collection);
         configurator.Builder.Services.AddTransient<IOutbox, MongoDbOutbox>();

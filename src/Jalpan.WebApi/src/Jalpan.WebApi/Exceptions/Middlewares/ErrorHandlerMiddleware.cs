@@ -11,8 +11,6 @@ internal sealed class ErrorHandlerMiddleware(
     IExceptionToResponseMapper exceptionToResponseMapper,
     ILogger<ErrorHandlerMiddleware> logger) : IMiddleware
 {
-    private readonly IExceptionToResponseMapper _exceptionToResponseMapper = exceptionToResponseMapper;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
     private readonly JsonSerializerOptions _options = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -29,14 +27,14 @@ internal sealed class ErrorHandlerMiddleware(
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "An error occurred while processing the request. Error: {Message}.", exception.Message);
+            logger.LogError(exception, "An error occurred while processing the request. Error: {Message}.", exception.Message);
             await HandleErrorAsync(context, exception);
         }
     }
 
     private async Task HandleErrorAsync(HttpContext context, Exception exception)
     {
-        var exceptionResponse = _exceptionToResponseMapper.Map(exception);
+        var exceptionResponse = exceptionToResponseMapper.Map(exception);
         context.Response.StatusCode = (int)(exceptionResponse?.StatusCode ?? HttpStatusCode.InternalServerError);
         if (exceptionResponse?.Response is null)
         {

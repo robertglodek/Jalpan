@@ -14,19 +14,13 @@ internal sealed class Rng : IRng
         rng.GetBytes(bytes);
         var result = Convert.ToBase64String(bytes);
 
-        if (removeSpecialChars)
+        if (!removeSpecialChars) return result;
+        var sb = new StringBuilder(result.Length);
+        foreach (var c in result.Where(c => !SpecialChars.Contains(c)))
         {
-            var sb = new StringBuilder(result.Length);
-            foreach (var c in result)
-            {
-                if (!SpecialChars.Contains(c))
-                {
-                    sb.Append(c);
-                }
-            }
-            return sb.ToString();
+            sb.Append(c);
         }
+        return sb.ToString();
 
-        return result;
     }
 }

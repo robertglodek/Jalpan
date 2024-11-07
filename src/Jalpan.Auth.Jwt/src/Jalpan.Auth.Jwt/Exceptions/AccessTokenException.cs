@@ -2,7 +2,4 @@
 
 namespace Jalpan.Auth.Jwt.Exceptions;
 
-public sealed class AccessTokenException(string message) : CustomException(message)
-{
-    public string? Token { get; set; }
-}
+public sealed class AccessTokenException(string message) : CustomException(message);

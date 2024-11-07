@@ -2,7 +2,7 @@
 
 public sealed class MongoDbOutboxOptions
 {
-    public int Expiry { get; set; }
+    public int Expiry { get; init; }
 
-    public string Collection { get; set; } = null!;
+    public string Collection { get; init; } = null!;
 }

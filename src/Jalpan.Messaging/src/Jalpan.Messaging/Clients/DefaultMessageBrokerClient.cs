@@ -5,13 +5,11 @@ namespace Jalpan.Messaging.Clients;
 
 internal sealed class DefaultMessageBrokerClient(ILogger<DefaultMessageBrokerClient> logger) : IMessageBrokerClient
 {
-    private readonly ILogger<DefaultMessageBrokerClient> _logger = logger;
-
     public Task SendAsync<T>(MessageEnvelope<T> message, CancellationToken cancellationToken = default)
         where T : IMessage
     {
         var name = message.Message.GetType().Name.Underscore();
-        _logger.LogInformation($"Default message broker, message: '{name}', ID: '{message.Context.MessageId}' won't be sent.");
+        logger.LogInformation("Default message broker, message: '{Name}', ID: '{MessageId}' won't be sent.", name, message.Context.MessageId);
         return Task.CompletedTask;
     }
 }

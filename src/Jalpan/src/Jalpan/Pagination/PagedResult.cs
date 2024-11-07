@@ -3,7 +3,7 @@
 public class PagedResult<T> : PagedResultBase
 {
     public IEnumerable<T> Items { get; }
-    public bool IsEmpty => Items is null || !Items.Any();
+    public bool IsEmpty => !Items.Any();
     public bool IsNotEmpty => !IsEmpty;
 
     protected PagedResult()
@@ -36,6 +36,6 @@ public class PagedResult<T> : PagedResultBase
 
     public static PagedResult<T> Empty => new();
 
-    public PagedResult<U> Map<U>(Func<T, U> map)
-        => PagedResult<U>.From(this, Items.Select(map));
+    public PagedResult<T1> Map<T1>(Func<T, T1> map)
+        => PagedResult<T1>.From(this, Items.Select(map));
 }

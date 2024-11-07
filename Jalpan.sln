@@ -29,17 +29,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D046849E-1F5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Logging.Serilog", "src\Jalpan.Logging.Serilog\src\Jalpan.Logging.Serilog\Jalpan.Logging.Serilog.csproj", "{931A1000-0E23-4502-910D-790E6ED54BE5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistance.Redis", "Jalpan.Persistance.Redis", "{2B8B5170-D38D-4D60-891A-317BA3C73543}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistence.Redis", "Jalpan.Persistence.Redis", "{2B8B5170-D38D-4D60-891A-317BA3C73543}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E25A53D4-6928-448D-9518-030A55840F7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistance.Redis", "src\Jalpan.Persistance.Redis\src\Jalpan.Persistance.Redis\Jalpan.Persistance.Redis.csproj", "{92F97D96-0C33-44B8-8769-79CBA8D59052}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistence.Redis", "src\Jalpan.Persistence.Redis\src\Jalpan.Persistence.Redis\Jalpan.Persistence.Redis.csproj", "{92F97D96-0C33-44B8-8769-79CBA8D59052}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistance.MongoDB", "Jalpan.Persistance.MongoDB", "{F3CE7B68-A71E-4198-A6A1-418FBC2C1CD9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistence.MongoDB", "Jalpan.Persistence.MongoDB", "{F3CE7B68-A71E-4198-A6A1-418FBC2C1CD9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1CA18124-475F-4DAF-8B88-EB572D4BDEFB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistance.MongoDB", "src\Jalpan.Persistance.MongoDB\src\Jalpan.Persistance.MongoDB\Jalpan.Persistance.MongoDB.csproj", "{BB8A46FB-55AD-4E00-ACD6-7EA6A05F4738}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistence.MongoDB", "src\Jalpan.Persistence.MongoDB\src\Jalpan.Persistence.MongoDB\Jalpan.Persistence.MongoDB.csproj", "{BB8A46FB-55AD-4E00-ACD6-7EA6A05F4738}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.WebApi", "Jalpan.WebApi", "{62127B0A-6DE9-47AE-8FB6-95344F12D242}"
 EndProject
@@ -109,7 +109,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Secrets.Vault", "Jal
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A2FB4A1C-6E7C-48DD-B597-AA863CD7FDE5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Secrets.Valut", "src\Jalpan.Secrets.Vault\src\Jalpan.Secrets.Valut\Jalpan.Secrets.Valut.csproj", "{21E9A92A-C92D-4C25-AA59-2C946D755F52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Secrets.Vault", "src\Jalpan.Secrets.Vault\src\Jalpan.Secrets.Vault\Jalpan.Secrets.Vault.csproj", "{21E9A92A-C92D-4C25-AA59-2C946D755F52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Messaging.Idempotency", "Jalpan.Messaging.Idempotency", "{2F1BACA1-B0CA-4CA8-82A5-B152B2462039}"
 EndProject
@@ -123,11 +123,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Messaging.Idempotenc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Messaging.Idempotency.MongoDB", "src\Jalpan.Messaging.Idempotency.MongoDB\src\Jalpan.Messaging.Idempotency.MongoDB\Jalpan.Messaging.Idempotency.MongoDB.csproj", "{EDD0E25F-82C3-4269-917C-86B4695F5927}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistance.Postgres", "Jalpan.Persistance.Postgres", "{BE93C6EF-1548-404A-9CCA-A89E8014C4D4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistence.Postgres", "Jalpan.Persistence.Postgres", "{BE93C6EF-1548-404A-9CCA-A89E8014C4D4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{83CABF6A-AD2A-40F6-B17F-3281B5076D5B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistance.Postgres", "src\Jalpan.Persistance.Postgres\src\Jalpan.Persistance.Postgres\Jalpan.Persistance.Postgres.csproj", "{AA597AF2-0DC8-4498-8859-FE2B8D30C7FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistence.Postgres", "src\Jalpan.Persistence.Postgres\src\Jalpan.Persistence.Postgres\Jalpan.Persistence.Postgres.csproj", "{AA597AF2-0DC8-4498-8859-FE2B8D30C7FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Testing", "Jalpan.Testing", "{80174F03-A59F-4AE1-88F1-6D9AF7B0FCD0}"
 EndProject

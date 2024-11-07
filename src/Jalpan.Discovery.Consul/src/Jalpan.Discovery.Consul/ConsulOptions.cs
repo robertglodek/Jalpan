@@ -2,22 +2,22 @@ namespace Jalpan.Discovery.Consul;
 
 public sealed class ConsulOptions
 {
-    public bool Enabled { get; set; }
-    public string Url { get; set; } = string.Empty;
-    public ServiceRegistration Service { get; set; } = new();
-    public HealthCheckRegistration HealthCheck { get; set; } = new();
+    public bool Enabled { get; init; }
+    public string Url { get; init; } = string.Empty;
+    public ServiceRegistrationOptions Service { get; init; } = new();
+    public HealthCheckRegistrationOptions HealthCheck { get; init; } = new();
 
-    public sealed class ServiceRegistration
+    public sealed class ServiceRegistrationOptions
     {
-        public string Name { get; set; } = string.Empty;
-        public string Url { get; set; } = string.Empty;
-        public List<string> Tags { get; set; } = [];
+        public string Name { get; init; } = string.Empty;
+        public string Url { get; init; } = string.Empty;
+        public List<string> Tags { get; init; } = [];
     }
 
-    public sealed class HealthCheckRegistration
+    public sealed class HealthCheckRegistrationOptions
     {
-        public string Endpoint { get; set; } = string.Empty;
-        public TimeSpan? Interval { get; set; }
-        public TimeSpan? DeregisterInterval { get; set; }
+        public string Endpoint { get; init; } = string.Empty;
+        public TimeSpan? Interval { get; init; }
+        public TimeSpan? DeregisterInterval { get; init; }
     }
 }

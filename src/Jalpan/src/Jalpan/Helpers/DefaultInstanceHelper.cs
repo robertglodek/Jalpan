@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace Jalpan.Helpers;
 
@@ -15,18 +13,11 @@ public static class DefaultInstanceHelper
 
         var defaultValueCache = new Dictionary<Type, object?>();
 
-        if (TryGetDefaultValue(type, out var instance, defaultValueCache))
-        {
-            return instance;
-        }
-
-        return default;
+        return TryGetDefaultValue(type, out var instance, defaultValueCache) ? instance : default;
     }
 
     private static object SetDefaultInstanceProperties(object instance, Dictionary<Type, object?> defaultValueCache)
     {
-        defaultValueCache ??= [];
-
         var type = instance.GetType();
 
         foreach (var propertyInfo in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))

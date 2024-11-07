@@ -1,7 +1,6 @@
 ﻿using Jalpan.WebApi.Exceptions.Mappers;
 using Jalpan.WebApi.Exceptions.Middlewares;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.WebApi.Exceptions;
 

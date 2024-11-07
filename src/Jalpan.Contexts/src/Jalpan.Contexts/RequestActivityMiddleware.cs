@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Jalpan.Contexts;
 
@@ -80,8 +81,8 @@ public sealed class RequestActivityMiddleware
 
         activity.AddTag("http.status_code", context.Response.StatusCode.ToString());
         activity.AddTag("http.content_length", context.Response.ContentLength?.ToString() ?? "0");
-        activity.AddTag("http.response_time", responseTime.TotalMilliseconds.ToString());
+        activity.AddTag("http.response_time", responseTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
         activity.AddTag("http.protocol", context.Request.Protocol);
-        activity.AddTag("http.is_successful", (context.Response.StatusCode >= 200 && context.Response.StatusCode < 300).ToString());
+        activity.AddTag("http.is_successful", (context.Response.StatusCode is >= 200 and < 300).ToString());
     }
 }

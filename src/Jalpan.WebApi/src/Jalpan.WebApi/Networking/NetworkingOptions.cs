@@ -2,12 +2,12 @@
 
 public sealed class NetworkingOptions
 {
-    public bool Enabled { get; set; }
-    public List<KnownNetwork> Networks { get; set; } = [];
+    public bool Enabled { get; init; }
+    public List<KnownNetwork> Networks { get; init; } = [];
 
-    public class KnownNetwork
+    public sealed class KnownNetwork
     {
-        public string Prefix { get; set; } = string.Empty;
-        public int PrefixLength { get; set; }
+        public string Prefix { get; init; } = string.Empty;
+        public int PrefixLength { get; init; }
     }
 }

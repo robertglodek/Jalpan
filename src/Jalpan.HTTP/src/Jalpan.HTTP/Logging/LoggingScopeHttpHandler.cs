@@ -1,13 +1,10 @@
 using System.Net;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace Jalpan.HTTP.Logging;
 
 internal sealed class LoggingScopeHttpMessageHandler(ILogger logger, IOptions<HttpClientOptions> options) : DelegatingHandler
 {
-    private readonly ILogger _logger = logger;
-    private readonly HashSet<string> _maskedUrlParts = new(options.Value.RequestMasking.UrlParts);
+    private readonly HashSet<string> _maskedUrlParts = [..options.Value.RequestMasking.UrlParts];
     private readonly string _maskTemplate = string.IsNullOrWhiteSpace(options.Value.RequestMasking.MaskTemplate)
             ? "*****"
             : options.Value.RequestMasking.MaskTemplate;
@@ -16,11 +13,11 @@ internal sealed class LoggingScopeHttpMessageHandler(ILogger logger, IOptions<Ht
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        using (Log.BeginRequestPipelineScope(_logger, request, _maskedUrlParts, _maskTemplate))
+        using (Log.BeginRequestPipelineScope(logger, request, _maskedUrlParts, _maskTemplate))
         {
-            Log.HandleRequestPipelineStart(_logger, request, _maskedUrlParts, _maskTemplate);
+            Log.HandleRequestPipelineStart(logger, request, _maskedUrlParts, _maskTemplate);
             var response = await base.SendAsync(request, cancellationToken);
-            Log.HandleRequestPipelineEnd(_logger, response);
+            Log.HandleRequestPipelineEnd(logger, response);
 
             return response;
         }

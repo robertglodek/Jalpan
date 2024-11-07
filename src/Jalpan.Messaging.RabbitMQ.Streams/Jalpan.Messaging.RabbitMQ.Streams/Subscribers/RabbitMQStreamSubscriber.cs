@@ -10,17 +10,17 @@ using RabbitMQ.Stream.Client.Reliable;
 
 namespace Jalpan.Messaging.RabbitMQ.Streams.Subscribers;
 
-internal sealed class RabbitMQStreamSubscriber : IStreamSubscriber
+internal sealed class RabbitMqStreamSubscriber : IStreamSubscriber
 {
     private readonly ConcurrentDictionary<string, Consumer> _consumers = new();
     private readonly RabbitStreamManager _streamManager;
     private readonly IStreamSerializer _serializer;
-    private readonly ILogger<RabbitMQStreamSubscriber> _logger;
+    private readonly ILogger<RabbitMqStreamSubscriber> _logger;
     private readonly bool _enabled;
     private readonly RabbitMQStreamsOptions.ConsumerOptions _consumerOptions;
 
-    public RabbitMQStreamSubscriber(RabbitStreamManager streamManager, IStreamSerializer serializer,
-        IOptions<RabbitMQStreamsOptions> options, ILogger<RabbitMQStreamSubscriber> logger)
+    public RabbitMqStreamSubscriber(RabbitStreamManager streamManager, IStreamSerializer serializer,
+        IOptions<RabbitMQStreamsOptions> options, ILogger<RabbitMqStreamSubscriber> logger)
     {
         _streamManager = streamManager;
         _serializer = serializer;
@@ -38,7 +38,7 @@ internal sealed class RabbitMQStreamSubscriber : IStreamSubscriber
     {
         if (!_enabled)
         {
-            _logger.LogWarning($"RabbitMQ Streams consumer is disabled, stream: '{stream}' will not be subscribed.");
+            _logger.LogWarning("RabbitMQ Streams consumer is disabled, stream: '{Stream}' will not be subscribed.", stream);
             return;
         }
 
@@ -63,7 +63,7 @@ internal sealed class RabbitMQStreamSubscriber : IStreamSubscriber
             var payload = _serializer.Deserialize<T>(bytes);
             if (payload is null)
             {
-                _logger.LogWarning($"Received a null payload for message with offset: {ctx.Offset}.");
+                _logger.LogWarning("Received a null payload for message with offset: {Offset}.", ctx.Offset);
                 return;
             }
 

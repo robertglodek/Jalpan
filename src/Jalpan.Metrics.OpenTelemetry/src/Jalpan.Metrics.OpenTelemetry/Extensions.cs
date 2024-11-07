@@ -31,21 +31,21 @@ internal static class Extensions
         }
 
         builder.Services.AddOpenTelemetry()
-            .WithMetrics(builder =>
+            .WithMetrics(configure =>
             {
-                builder.AddAspNetCoreInstrumentation();
-                builder.AddHttpClientInstrumentation();
-                builder.AddRuntimeInstrumentation();
+                configure.AddAspNetCoreInstrumentation();
+                configure.AddHttpClientInstrumentation();
+                configure.AddRuntimeInstrumentation();
 
                 foreach (var attribute in GetMeterAttributes())
                 {
                     if (attribute is not null)
                     {
-                        builder.AddMeter(attribute.Key);
+                        configure.AddMeter(attribute.Key);
                     }
                 }
 
-                ConfigureExporter(builder, sectionName, options);
+                ConfigureExporter(configure, sectionName, options);
             });
 
         return builder;

@@ -1,7 +1,6 @@
 ﻿using Humanizer;
 using Jalpan.Attributes;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Concurrent;
 using System.Reflection;
 

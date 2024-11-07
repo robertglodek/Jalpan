@@ -1,7 +1,7 @@
-﻿using Jalpan.Messaging.Brokers;
-using Jalpan.Types;
+﻿using Jalpan.Types;
 using System.Collections.Concurrent;
 using System.Diagnostics.Metrics;
+using Jalpan.Messaging.Brokers;
 
 namespace Jalpan.Metrics.OpenTelemetry.Decorators;
 
@@ -10,7 +10,6 @@ internal sealed class MessageBrokerMetricsDecorator(IMessageBroker messageBroker
 {
     private const string MetricsKey = "message_broker";
     private static readonly ConcurrentDictionary<Type, string> Names = new();
-    private readonly IMessageBroker _messageBroker = messageBroker;
     private static readonly Meter Meter = new(MetricsKey);
     private static readonly Counter<long> PublishedMessagesCounter = Meter.CreateCounter<long>("published_messages");
 
@@ -22,7 +21,7 @@ internal sealed class MessageBrokerMetricsDecorator(IMessageBroker messageBroker
             new("message", name)
         };
 
-        await _messageBroker.SendAsync(message, cancellationToken);
+        await messageBroker.SendAsync(message, cancellationToken);
         PublishedMessagesCounter.Add(1, tags);
     }
 }

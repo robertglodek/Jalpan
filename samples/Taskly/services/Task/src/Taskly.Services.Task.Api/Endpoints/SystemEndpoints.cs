@@ -2,7 +2,7 @@
 using Jalpan.WebApi.MinimalApi;
 using Microsoft.Extensions.Options;
 
-namespace Taskly.Services.Invntory.Api.Endpoints;
+namespace Taskly.Services.Task.Api.Endpoints;
 
 public sealed class SystemEndpoints : EndpointGroupBase
 {

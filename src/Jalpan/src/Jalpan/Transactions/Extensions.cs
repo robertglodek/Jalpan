@@ -1,5 +1,4 @@
 ﻿using Jalpan.Handlers;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Transactions;
 

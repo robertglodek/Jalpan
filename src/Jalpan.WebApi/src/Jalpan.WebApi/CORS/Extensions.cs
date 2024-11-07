@@ -1,7 +1,5 @@
 ﻿using Jalpan.Exceptions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace Jalpan.WebApi.CORS;
 

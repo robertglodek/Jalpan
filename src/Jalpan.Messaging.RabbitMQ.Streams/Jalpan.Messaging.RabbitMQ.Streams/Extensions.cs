@@ -10,7 +10,7 @@ public static class Extensions
 {
     private const string SectionName = "rabbitmq:streams";
 
-    public static IServiceCollection AddRabbitMQStreams(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRabbitMqStreams(this IServiceCollection services, IConfiguration configuration)
     {
         var section = configuration.GetSection(SectionName);
         var options = section.BindOptions<RabbitMQStreamsOptions>();
@@ -23,8 +23,8 @@ public static class Extensions
 
         services.AddSingleton<RabbitStreamManager>();
         services.AddHostedService<RabbitStreamInitializer>();
-        services.AddSingleton<IStreamPublisher, RabbitMQStreamPublisher>();
-        services.AddSingleton<IStreamSubscriber, RabbitMQStreamSubscriber>();
+        services.AddSingleton<IStreamPublisher, RabbitMqStreamPublisher>();
+        services.AddSingleton<IStreamSubscriber, RabbitMqStreamSubscriber>();
 
         return services;
     }

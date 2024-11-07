@@ -3,14 +3,8 @@ using Jalpan.Exceptions;
 
 namespace Jalpan.Validation;
 
-public sealed class ValidationException : CustomException
+public sealed class ValidationException() : CustomException("One or more validation failures have occurred.")
 {
-    public ValidationException()
-        : base("One or more validation failures have occurred.")
-    {
-        Errors = new Dictionary<string, string[]>();
-    }
-
     public ValidationException(IEnumerable<ValidationFailure> failures)
         : this()
     {
@@ -19,5 +13,5 @@ public sealed class ValidationException : CustomException
             .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
     }
 
-    public IDictionary<string, string[]> Errors { get; }
+    public IDictionary<string, string[]> Errors { get; } = new Dictionary<string, string[]>();
 }

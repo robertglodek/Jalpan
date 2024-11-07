@@ -6,10 +6,10 @@ using Microsoft.Extensions.Options;
 
 namespace Jalpan.Messaging.Idempotency.Outbox;
 
-internal sealed class OutboxSender(IServiceProvider serviceProvider, IOptions<OutboxOptions> options, ILogger<OutboxSender> logger) : BackgroundService
+internal sealed class OutboxSender(
+    IServiceProvider serviceProvider,
+    IOptions<OutboxOptions> options, ILogger<OutboxSender> logger) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
-    private readonly ILogger<OutboxSender> _logger = logger;
     private readonly TimeSpan _senderInterval = options.Value.SenderInterval ?? TimeSpan.FromSeconds(5);
     private readonly bool _enabled = options.Value.Enabled;
     private int _isProcessing;
@@ -18,11 +18,11 @@ internal sealed class OutboxSender(IServiceProvider serviceProvider, IOptions<Ou
     {
         if (!_enabled)
         {
-            _logger.LogWarning("Outbox is disabled");
+            logger.LogWarning("Outbox is disabled");
             return;
         }
 
-        _logger.LogInformation($"Outbox is enabled, sender interval: {_senderInterval}");
+        logger.LogInformation("Outbox is enabled, sender interval: {SenderInterval}", _senderInterval);
         while (!stoppingToken.IsCancellationRequested)
         {
             if (Interlocked.Exchange(ref _isProcessing, 1) == 1)
@@ -31,10 +31,10 @@ internal sealed class OutboxSender(IServiceProvider serviceProvider, IOptions<Ou
                 continue;
             }
                 
-            _logger.LogInformation("Started processing outbox messages...");
+            logger.LogInformation("Started processing outbox messages...");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            await using (var scope = _serviceProvider.CreateAsyncScope())
+            await using (var scope = serviceProvider.CreateAsyncScope())
             {
                 try
                 {
@@ -43,14 +43,14 @@ internal sealed class OutboxSender(IServiceProvider serviceProvider, IOptions<Ou
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError("There was an error when processing outbox.");
-                    _logger.LogError(exception, exception.Message);
+                    logger.LogError("There was an error when processing outbox.");
+                    logger.LogError("An error occurred: {Message}", exception.Message);
                 }
                 finally
                 {
                     Interlocked.Exchange(ref _isProcessing, 0);
                     stopwatch.Stop();
-                    _logger.LogInformation($"Finished processing outbox messages in {stopwatch.ElapsedMilliseconds} ms.");
+                    logger.LogInformation("Finished processing outbox messages in {ElapsedMilliseconds} ms.", stopwatch.ElapsedMilliseconds);
                 }
             }
 

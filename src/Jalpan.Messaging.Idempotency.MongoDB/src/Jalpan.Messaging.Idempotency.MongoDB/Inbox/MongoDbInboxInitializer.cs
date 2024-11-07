@@ -7,7 +7,6 @@ namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 internal sealed class MongoDbInboxInitializer(IMongoDatabase database,
     IOptions<InboxOptions> inboxOptions, IOptions<MongoDbInboxOptions> inboxMongoOptions) : IInitializer
 {
-    private readonly IMongoDatabase _database = database;
     private readonly InboxOptions _inboxOptions = inboxOptions.Value;
     private readonly MongoDbInboxOptions _inboxMongoOptions = inboxMongoOptions.Value;
 
@@ -23,10 +22,11 @@ internal sealed class MongoDbInboxInitializer(IMongoDatabase database,
             return;
         }
 
-        var collection = string.IsNullOrWhiteSpace(_inboxMongoOptions.Collection) ? Extensions.DefaultInboxCollectionName : _inboxMongoOptions.Collection;
+        var collection = string.IsNullOrWhiteSpace(_inboxMongoOptions.Collection)
+            ? Extensions.DefaultInboxCollectionName : _inboxMongoOptions.Collection;
 
         var builder = Builders<InboxMessage>.IndexKeys;
-        await _database.GetCollection<InboxMessage>(collection)
+        await database.GetCollection<InboxMessage>(collection)
             .Indexes.CreateOneAsync(
                 new CreateIndexModel<InboxMessage>(builder.Ascending(i => i.ProcessedAt),
                     new CreateIndexOptions

@@ -1,9 +1,9 @@
 ﻿using Jalpan;
+using Jalpan.WebApi.MinimalApi;
 using Jalpan.WebApi.Swagger;
 using Serilog;
-using Taskly.Services.Invntory.Api.Endpoints;
 
-namespace Taskly.Services.Invntory.Api;
+namespace Taskly.Services.Task.Api;
 
 public static class Extensions
 {
@@ -14,7 +14,7 @@ public static class Extensions
     {
         app.UseSerilogRequestLogging();
         app.UseSwaggerDocs();
-        app.MapSystemEndpoints();
+        app.MapEndpoints();
         return app;
     }
 }

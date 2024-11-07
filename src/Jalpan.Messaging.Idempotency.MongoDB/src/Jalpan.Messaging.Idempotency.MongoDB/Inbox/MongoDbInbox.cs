@@ -1,64 +1,64 @@
 ﻿using Jalpan.Messaging.Idempotency.Inbox;
 using Microsoft.Extensions.Logging;
-using Jalpan.Persistance.MongoDB.Repositories;
+using Jalpan.Persistence.MongoDB.Repositories;
 using Jalpan.Time;
 using Microsoft.Extensions.Options;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Inbox;
 
-internal class MongoDbInbox(IMongoDbRepository<InboxMessage, string> inboxRepository, IOptions<InboxOptions> options,
-    ILogger<MongoDbInbox> logger, IDateTime dateTime) : IInbox
+internal class MongoDbInbox(
+    IMongoDbRepository<InboxMessage, string> inboxRepository,
+    IOptions<InboxOptions> options,
+    ILogger<MongoDbInbox> logger,
+    IDateTime dateTime) : IInbox
 {
-    private readonly IMongoDbRepository<InboxMessage, string> _inboxRepository = inboxRepository;
-    private readonly ILogger<MongoDbInbox> _logger = logger;
-    private readonly IDateTime _dateTime = dateTime;
-
     public bool Enabled { get; } = options.Value.Enabled;
 
     public async Task HandleAsync(string messageId, string messageName, Func<Task> handler, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation($"Received a message with ID: '{messageId}' to be processed.");
-        if (await _inboxRepository.ExistsAsync(m => m.Id == messageId, cancellationToken))
+        logger.LogInformation("Received a message with ID: '{MessageId}' to be processed.", messageId);
+        if (await inboxRepository.ExistsAsync(m => m.Id == messageId, cancellationToken))
         {
-            _logger.LogWarning($"Message with ID: '{messageId}' was already processed.");
+            logger.LogWarning("Message with ID: '{MessageId}' was already processed.", messageId);
             return;
         }
 
-        _logger.LogInformation($"Processing a message with ID: '{messageId}'...");
+        logger.LogInformation("Processing a message with ID: '{MessageId}'...", messageId);
 
         var inboxMessage = new InboxMessage
         {
             Id = messageId,
             Name = messageName,
-            ReceivedAt = _dateTime.Now
+            ReceivedAt = dateTime.Now
         };
 
         await handler();
 
-        inboxMessage.ProcessedAt = _dateTime.Now;
-        await _inboxRepository.AddAsync(inboxMessage, cancellationToken: cancellationToken);
-        _logger.LogInformation($"Processed a message with ID: '{messageId}'.");
+        inboxMessage.ProcessedAt = dateTime.Now;
+        await inboxRepository.AddAsync(inboxMessage, cancellationToken: cancellationToken);
+        logger.LogInformation("Processed a message with ID: '{MessageId}'.", messageId);
     }
 
     public async Task CleanupAsync(DateTime? to = null, CancellationToken cancellationToken = default)
     {
         if (!Enabled)
         {
-            _logger.LogWarning("Outbox is disabled, incoming messages won't be cleaned up.");
+            logger.LogWarning("Outbox is disabled, incoming messages won't be cleaned up.");
             return;
         }
 
-        var dateTo = to ?? _dateTime.Now;
-        var inboxMessages = await _inboxRepository.FindAsync(x => x.ReceivedAt <= dateTo, cancellationToken);
+        var dateTo = to ?? dateTime.Now;
+        var inboxMessages = await inboxRepository.FindAsync(x => x.ReceivedAt <= dateTo, cancellationToken);
         if (!inboxMessages.Any())
         {
-            _logger.LogInformation($"No received messages found in inbox till: {dateTo}.");
+            logger.LogInformation("No received messages found in inbox till: {DateTo}.", dateTo);
             return;
         }
 
-        _logger.LogInformation($"Found {inboxMessages.Count} received messages in inbox till: {dateTo}, cleaning up...");
+        logger.LogInformation("Found {Count} received messages in inbox till: {DateTo}, cleaning up...", inboxMessages.Count, dateTo);
 
-        await _inboxRepository.DeleteAsync(n => inboxMessages.Any(x => x.Id == n.Id), cancellationToken);
-        _logger.LogInformation($"Removed {inboxMessages.Count} received messages from inbox till: {dateTo}.");
+        await inboxRepository.DeleteAsync(n => inboxMessages.Any(x => x.Id == n.Id), cancellationToken);
+        
+        logger.LogInformation("Removed {Count} received messages from inbox till: {DateTo}.", inboxMessages.Count, dateTo);
     }
 }

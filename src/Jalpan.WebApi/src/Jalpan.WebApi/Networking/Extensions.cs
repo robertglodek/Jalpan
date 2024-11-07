@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using IPNetwork = Microsoft.AspNetCore.HttpOverrides.IPNetwork;
 
 namespace Jalpan.WebApi.Networking;
@@ -16,11 +13,11 @@ public static class Extensions
 
     private static readonly IPNetwork LoopbackIPv4 = new(IPAddress.Parse("127.0.0.0"), 8);
     private static readonly IPNetwork LoopbackIPv6 = new(IPAddress.Parse("::1"), 128);
-    private static readonly IPNetwork PrivateIPv4_10 = new(IPAddress.Parse("10.0.0.0"), 8);
-    private static readonly IPNetwork PrivateIPv4_172 = new(IPAddress.Parse("172.16.0.0"), 12);
-    private static readonly IPNetwork PrivateIPv4_192 = new(IPAddress.Parse("192.168.0.0"), 16);
-    private static readonly IPNetwork IPv6ULA = new(IPAddress.Parse("fd00::"), 8);
-    private static readonly IPNetwork IPv6MappedIPv4 = new(IPAddress.Parse("::ffff:10.0.0.0"), 8);
+    private static readonly IPNetwork PrivateIPv410 = new(IPAddress.Parse("10.0.0.0"), 8);
+    private static readonly IPNetwork PrivateIPv4172 = new(IPAddress.Parse("172.16.0.0"), 12);
+    private static readonly IPNetwork PrivateIPv4192 = new(IPAddress.Parse("192.168.0.0"), 16);
+    private static readonly IPNetwork Pv6Ula = new(IPAddress.Parse("fd00::"), 8);
+    private static readonly IPNetwork Pv6MappedIPv4 = new(IPAddress.Parse("::ffff:10.0.0.0"), 8);
 
     public static IJalpanBuilder AddHeadersForwarding(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
@@ -45,11 +42,11 @@ public static class Extensions
         {
             knownNetworks.Add(LoopbackIPv4);
             knownNetworks.Add(LoopbackIPv6);
-            knownNetworks.Add(PrivateIPv4_10);
-            knownNetworks.Add(PrivateIPv4_172);
-            knownNetworks.Add(PrivateIPv4_192);
-            knownNetworks.Add(IPv6ULA);
-            knownNetworks.Add(IPv6MappedIPv4);
+            knownNetworks.Add(PrivateIPv410);
+            knownNetworks.Add(PrivateIPv4172);
+            knownNetworks.Add(PrivateIPv4192);
+            knownNetworks.Add(Pv6Ula);
+            knownNetworks.Add(Pv6MappedIPv4);
         }
         else
         {

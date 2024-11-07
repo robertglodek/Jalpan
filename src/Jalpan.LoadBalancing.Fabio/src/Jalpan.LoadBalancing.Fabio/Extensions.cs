@@ -1,5 +1,6 @@
 using Consul;
 using Jalpan.Discovery;
+using Jalpan.Discovery.Consul;
 using Jalpan.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 

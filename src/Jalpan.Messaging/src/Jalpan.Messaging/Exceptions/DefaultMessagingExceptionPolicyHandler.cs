@@ -35,8 +35,8 @@ internal sealed class DefaultMessagingExceptionPolicyHandler : IMessagingExcepti
                     : resiliency.RetryInterval ?? TimeSpan.FromSeconds(2),
                 (exception, _, retry, context) =>
                 {
-                    _logger.LogError($"There was an error when processing a message, retry: {retry}/{3}");
-                    _logger.LogError(exception, exception.Message);
+                    _logger.LogError("There was an error when processing a message, retry: {Retry}/{TotalRetries}", retry, 3);
+                    _logger.LogError(exception, "An error occurred: {Message}", exception.Message);
 
                     if (!context.ContainsKey(ExceptionKey))
                     {
@@ -72,7 +72,7 @@ internal sealed class DefaultMessagingExceptionPolicyHandler : IMessagingExcepti
             return;
         }
 
-        _logger.LogWarning($"Message: '{messageName}' couldn't be handled.");
+        _logger.LogWarning("Message: '{MessageName}' couldn't be handled.", messageName);
         var finalException = (Exception) policyContext[ExceptionKey];
         var failedMessagePolicy = _messagingExceptionPolicyResolver.Resolve(message, finalException);
         if (failedMessagePolicy is null)
@@ -96,6 +96,6 @@ internal sealed class DefaultMessagingExceptionPolicyHandler : IMessagingExcepti
             throw finalException;
         }
 
-        _logger.LogWarning($"Message: '{messageName}' couldn't be handled and won't be moved to dead letter queue.");
+        _logger.LogWarning("Message: '{MessageName}' couldn't be handled and won't be moved to dead letter queue.", messageName);
     }
 }

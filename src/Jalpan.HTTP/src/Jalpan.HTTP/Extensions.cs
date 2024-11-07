@@ -33,7 +33,7 @@ public static class Extensions
 
         builder.Services.Configure<HttpClientOptions>(section);
 
-        var httpClientbuilder = builder.Services
+        var httpClientBuilder = builder.Services
            .AddHttpClient(options.Name)
            .AddTransientHttpErrorPolicy(_ => HttpPolicyExtensions.HandleTransientHttpError()
                .WaitAndRetryAsync(options.Resiliency.Retries, retry =>
@@ -45,7 +45,7 @@ public static class Extensions
         if (options.Certificate is not null && !string.IsNullOrWhiteSpace(certificateLocation))
         {
             var certificate = new X509Certificate2(certificateLocation, options.Certificate.Password);
-            httpClientbuilder.ConfigurePrimaryHttpMessageHandler(() =>
+            httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = new HttpClientHandler();
                 handler.ClientCertificates.Add(certificate);
@@ -58,7 +58,7 @@ public static class Extensions
             builder.Services.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, HttpLoggingFilter>());
         }
 
-        configureHttpClient?.Invoke(httpClientbuilder);
+        configureHttpClient?.Invoke(httpClientBuilder);
 
         return builder;
     }

@@ -1,43 +1,43 @@
 using System.Net;
-using Consul;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Jalpan.Discovery.Consul;
 
-public class ConsulRegistrationService(IConsulClient client, ILogger<ConsulRegistrationService> logger,
+public class ConsulRegistrationService(
+    IConsulClient client,
+    ILogger<ConsulRegistrationService> logger,
     AgentServiceRegistration agentServiceRegistration) : IHostedService
 {
-    private readonly IConsulClient _client = client;
-    private readonly ILogger<ConsulRegistrationService> _logger = logger;
-    private readonly AgentServiceRegistration _agentServiceRegistration = agentServiceRegistration;
     private readonly string _serviceIdentifier = agentServiceRegistration.ID;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Registering a service: '{_serviceIdentifier}' in Consul...");
-        var result = await _client.Agent.ServiceRegister(_agentServiceRegistration, cancellationToken);
+        logger.LogInformation("Registering a service: '{ServiceIdentifier}' in Consul...", _serviceIdentifier);
+        var result = await client.Agent.ServiceRegister(agentServiceRegistration, cancellationToken);
 
         if (result.StatusCode == HttpStatusCode.OK)
         {
-            _logger.LogInformation($"Registered a service: '{_serviceIdentifier}' in Consul.");
+            logger.LogInformation("Registered a service: '{ServiceIdentifier}' in Consul.", _serviceIdentifier);
             return;
         }
         
-        _logger.LogError($"There was an error: {result.StatusCode} when registering a service: '{_serviceIdentifier}' in Consul.");
+        logger.LogError("There was an error: {StatusCode} when registering a service: '{ServiceIdentifier}' in Consul.",
+            result.StatusCode, _serviceIdentifier);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Deregistering a service: '{_serviceIdentifier}' in Consul...");
-        var result = await _client.Agent.ServiceDeregister(_serviceIdentifier, cancellationToken);
+        logger.LogInformation("Deregistering a service: '{ServiceIdentifier}' in Consul...", _serviceIdentifier);
+        var result = await client.Agent.ServiceDeregister(_serviceIdentifier, cancellationToken);
 
         if (result.StatusCode == HttpStatusCode.OK)
         {
-            _logger.LogInformation($"Deregistered a service: '{_serviceIdentifier}' in Consul.");
+            logger.LogInformation("Deregistered a service: '{ServiceIdentifier}' in Consul.", _serviceIdentifier);
             return;
         }
         
-        _logger.LogError($"There was an error: {result.StatusCode} when deregistering a service: '{_serviceIdentifier}' in Consul.");
+        logger.LogError("There was an error: {StatusCode} when deregistering a service: '{ServiceIdentifier}' in Consul.",
+            result.StatusCode, _serviceIdentifier);
     }
 }

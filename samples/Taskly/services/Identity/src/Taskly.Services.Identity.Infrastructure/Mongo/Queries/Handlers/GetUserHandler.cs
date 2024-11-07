@@ -1,4 +1,4 @@
-using Jalpan.Persistance.MongoDB.Repositories;
+using Jalpan.Persistence.MongoDB.Repositories;
 using Taskly.Services.Identity.Application.DTO;
 using Taskly.Services.Identity.Application.Queries;
 using Taskly.Services.Identity.Infrastructure.Mongo.Documents;

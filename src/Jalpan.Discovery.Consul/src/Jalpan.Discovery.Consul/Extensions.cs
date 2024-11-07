@@ -1,9 +1,7 @@
-using Consul;
-using Jalpan.Discovery.Consul;
 using Jalpan.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Jalpan.Discovery;
+namespace Jalpan.Discovery.Consul;
 
 public static class Extensions
 {

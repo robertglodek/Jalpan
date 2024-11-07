@@ -1,4 +1,3 @@
-using Consul;
 using Consul.Filtering;
 using Jalpan.Discovery.Consul.Exceptions;
 using Microsoft.Extensions.Options;
@@ -9,7 +8,6 @@ internal sealed class ConsulHttpHandler(IConsulClient client, IOptions<ConsulOpt
 {
     private const string HostDockerInternal = "host.docker.internal";
     private readonly StringFieldSelector _selector = new("Service");
-    private readonly IConsulClient _client = client;
     private readonly bool _enabled = options.Value.Enabled;
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -21,7 +19,7 @@ internal sealed class ConsulHttpHandler(IConsulClient client, IOptions<ConsulOpt
 
         var serviceName = request.RequestUri.Host;
 
-        var services = await _client.Agent.Services(_selector == serviceName, cancellationToken);
+        var services = await client.Agent.Services(_selector == serviceName, cancellationToken);
         if (services.Response.Count == 0)
         {
             throw new ServiceNotFoundException(serviceName);

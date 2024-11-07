@@ -1,7 +1,7 @@
 ﻿namespace Jalpan.Pagination;
 
-public enum SortOrder
+public enum SortOrder : byte
 {
-    asc, 
-    desc
+    Asc, 
+    Desc
 }

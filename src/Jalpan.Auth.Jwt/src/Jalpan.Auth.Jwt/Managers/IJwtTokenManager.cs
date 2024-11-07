@@ -1,4 +1,4 @@
-﻿namespace Jalpan.Auth.Jwt.Services;
+﻿namespace Jalpan.Auth.Jwt.Managers;
 
 public interface IJwtTokenManager
 {

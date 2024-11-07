@@ -40,9 +40,9 @@ internal static class Extensions
         }
 
         builder.Services.AddOpenTelemetry()
-            .WithTracing(builder =>
+            .WithTracing(configure =>
             {
-                builder.SetResourceBuilder(ResourceBuilder.CreateDefault()
+                configure.SetResourceBuilder(ResourceBuilder.CreateDefault()
                         .AddTelemetrySdk()
                         .AddEnvironmentVariableDetector()
                         .AddService(appOptions.Name))
@@ -56,13 +56,13 @@ internal static class Extensions
                 {
                     case ConsoleExporter:
                     {
-                        builder.AddConsoleExporter();
+                        configure.AddConsoleExporter();
                         break;
                     }
                     case JaegerExporter:
                     {
                         var jaegerOptions = options.Jaeger;
-                        builder.AddJaegerExporter(jaeger =>
+                        configure.AddJaegerExporter(jaeger =>
                         {
                             jaeger.AgentHost = jaegerOptions.AgentHost;
                             jaeger.AgentPort = jaegerOptions.AgentPort;

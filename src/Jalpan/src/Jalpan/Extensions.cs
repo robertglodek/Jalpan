@@ -1,9 +1,4 @@
 ﻿using Figgle;
-using Jalpan.Serializers;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using Jalpan.Time;
 using Microsoft.AspNetCore.Http.Json;
 using Jalpan.Serialization;

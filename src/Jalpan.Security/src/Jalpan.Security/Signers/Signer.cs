@@ -55,9 +55,8 @@ internal sealed class Signer : ISigner
         {
             using var rsa = certificate.GetRSAPublicKey();
 
-            return rsa is null
-                ? throw new InvalidOperationException("RSA public key couldn't be loaded.")
-                : rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+            return rsa?.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
+                   ?? throw new InvalidOperationException("RSA public key couldn't be loaded.");
         }
         catch
         {

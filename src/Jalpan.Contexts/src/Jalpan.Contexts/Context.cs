@@ -2,21 +2,14 @@ using System.Diagnostics;
 
 namespace Jalpan.Contexts;
 
-public sealed class Context : IContext
+public sealed class Context(string activityId, string? userId = null, string? messageId = null)
+    : IContext
 {
-    public string ActivityId { get; }
-    public string? UserId { get; }
-    public string? MessageId { get; }
+    public string ActivityId { get; } = activityId;
+    public string? UserId { get; } = userId;
+    public string? MessageId { get; } = messageId;
 
-    public Context()
+    public Context() : this(Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString())
     {
-        ActivityId = Activity.Current?.Id ?? ActivityTraceId.CreateRandom().ToString();
-    }
-
-    public Context(string activityId, string? userId = null, string? messageId = null)
-    {
-        ActivityId = activityId;
-        UserId = userId;
-        MessageId = messageId;
     }
 }

@@ -4,10 +4,11 @@ using MongoDB.Driver;
 
 namespace Jalpan.Messaging.Idempotency.MongoDB.Outbox;
 
-internal sealed class MongoDbOutboxInitializer(IMongoDatabase database,
-    IOptions<OutboxOptions> outboxOptions, IOptions<MongoDbOutboxOptions> outboxMongoOptions) : IInitializer
+internal sealed class MongoDbOutboxInitializer(
+    IMongoDatabase database,
+    IOptions<OutboxOptions> outboxOptions,
+    IOptions<MongoDbOutboxOptions> outboxMongoOptions) : IInitializer
 {
-    private readonly IMongoDatabase _database = database;
     private readonly OutboxOptions _outboxOptions = outboxOptions.Value;
     private readonly MongoDbOutboxOptions _outboxMongoOptions = outboxMongoOptions.Value;
 
@@ -26,7 +27,7 @@ internal sealed class MongoDbOutboxInitializer(IMongoDatabase database,
         var collection = string.IsNullOrWhiteSpace(_outboxMongoOptions.Collection) ? Extensions.DefaultOutboxCollectionName : _outboxMongoOptions.Collection;
 
         var builder = Builders<OutboxMessage>.IndexKeys;
-        await _database.GetCollection<OutboxMessage>(collection)
+        await database.GetCollection<OutboxMessage>(collection)
             .Indexes.CreateOneAsync(
                 new CreateIndexModel<OutboxMessage>(builder.Ascending(i => i.SentAt),
                     new CreateIndexOptions

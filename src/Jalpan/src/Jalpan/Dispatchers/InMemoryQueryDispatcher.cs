@@ -1,14 +1,11 @@
 ﻿using Jalpan.Types;
 using Jalpan.Handlers;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Dispatchers;
 
 internal sealed class InMemoryQueryDispatcher(IServiceProvider serviceProvider) : IQueryDispatcher
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
-
-    public async Task<TResult> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
+    public async Task<TResult?> QueryAsync<TResult>(IQuery<TResult> query, CancellationToken cancellationToken = default)
     {
         if (query is null)
         {
@@ -24,10 +21,10 @@ internal sealed class InMemoryQueryDispatcher(IServiceProvider serviceProvider) 
     }
 
 
-    public async Task<TResult> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken)
+    public async Task<TResult?> QueryAsync<TQuery, TResult>(TQuery query, CancellationToken cancellationToken)
         where TQuery : class, IQuery<TResult>
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
         return await handler.HandleAsync(query, cancellationToken);
     }

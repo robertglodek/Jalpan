@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Primitives;
 
 namespace Jalpan.Auth.Jwt.Managers;
 
-internal sealed class DistributedAccessTokenManager(IDistributedCache cache, 
+internal sealed class DistributedAccessTokenManager(
+    IDistributedCache cache,
     IHttpContextAccessor httpContextAccessor,
     IOptions<AuthOptions> options) : IAccessTokenManager
 {
-    private readonly IDistributedCache _cache = cache;
-    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly TimeSpan _expiry = options.Value.Jwt.Expiry;
 
     public Task<bool> IsCurrentActiveToken()
@@ -20,10 +17,10 @@ internal sealed class DistributedAccessTokenManager(IDistributedCache cache,
         => DeactivateAsync(GetCurrentAsync());
 
     public async Task<bool> IsActiveAsync(string token)
-       => string.IsNullOrWhiteSpace(await _cache.GetStringAsync(GetCacheKey(token)));
+       => string.IsNullOrWhiteSpace(await cache.GetStringAsync(GetCacheKey(token)));
 
     public Task DeactivateAsync(string token)
-       => _cache.SetStringAsync(GetCacheKey(token),
+       => cache.SetStringAsync(GetCacheKey(token),
            "revoked", new DistributedCacheEntryOptions
            {
                AbsoluteExpirationRelativeToNow = _expiry
@@ -31,12 +28,12 @@ internal sealed class DistributedAccessTokenManager(IDistributedCache cache,
 
     private string GetCurrentAsync()
     {
-        if (_httpContextAccessor.HttpContext == null)
+        if (httpContextAccessor.HttpContext == null)
         {
             return string.Empty;
         }
 
-        var authorizationHeader = _httpContextAccessor.HttpContext!.Request.Headers.Authorization;
+        var authorizationHeader = httpContextAccessor.HttpContext!.Request.Headers.Authorization;
 
         if (authorizationHeader == StringValues.Empty)
         {
@@ -48,5 +45,5 @@ internal sealed class DistributedAccessTokenManager(IDistributedCache cache,
         return token ?? string.Empty;
     }
 
-    private static string GetCacheKey(string token) => $"blacklisted-tokens:{token}";
+    private static string GetCacheKey(string token) => $"revoked-tokens:{token}";
 }

@@ -1,8 +1,4 @@
-﻿using Jalpan.Serialization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace Jalpan.Serializers;
+﻿namespace Jalpan.Serialization;
 
 public sealed class SystemTextJsonSerializer : IJsonSerializer
 {

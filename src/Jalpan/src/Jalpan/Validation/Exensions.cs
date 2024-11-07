@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
 using Jalpan.Handlers;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace Jalpan.Validation;
 

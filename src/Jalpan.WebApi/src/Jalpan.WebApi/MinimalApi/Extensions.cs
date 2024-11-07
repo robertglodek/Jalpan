@@ -38,7 +38,7 @@ public static class Extensions
         string method,
         string name = "",
         string pattern = "",
-        Action<IEndpointConventionBuilder>? config = null)
+        Action<RouteHandlerBuilder>? config = null)
     {
         name = string.IsNullOrWhiteSpace(name) ? GetHandlerName(handler) : name;
         var routeBuilder = method switch
@@ -55,40 +55,45 @@ public static class Extensions
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapGet(this IEndpointRouteBuilder builder,
+    public static IEndpointRouteBuilder MapGet(
+        this IEndpointRouteBuilder builder,
         Delegate handler,
         string name = "",
         string pattern = "",
-        Action<IEndpointConventionBuilder>? config = null)
+        Action<RouteHandlerBuilder>? config = null)
         => builder.MapWithMethod(handler, "get", name, pattern, config);
 
-    public static IEndpointRouteBuilder MapPost(this IEndpointRouteBuilder builder,
+    public static IEndpointRouteBuilder MapPost(
+        this IEndpointRouteBuilder builder,
         Delegate handler,
         string name = "",
         string pattern = "",
-        Action<IEndpointConventionBuilder>? config = null)
+        Action<RouteHandlerBuilder>? config = null)
         => builder.MapWithMethod(handler, "post", name, pattern, config);
 
-    public static IEndpointRouteBuilder MapPut(this IEndpointRouteBuilder builder,
+    public static IEndpointRouteBuilder MapPut(
+        this IEndpointRouteBuilder builder,
         Delegate handler,
         string name = "",
         string pattern = "",
-        Action<IEndpointConventionBuilder>? config = null)
+        Action<RouteHandlerBuilder>? config = null)
         => builder.MapWithMethod(handler, "put", name, pattern, config);
 
-    public static IEndpointRouteBuilder MapDelete(this IEndpointRouteBuilder builder,
+    public static IEndpointRouteBuilder MapDelete(
+        this IEndpointRouteBuilder builder,
         Delegate handler,
         string name = "",
         string pattern = "",
-        Action<IEndpointConventionBuilder>? config = null)
+        Action<RouteHandlerBuilder>? config = null)
         => builder.MapWithMethod(handler, "delete", name, pattern, config);
 
-    public static IEndpointRouteBuilder MapPatch(this IEndpointRouteBuilder builder,
-       Delegate handler,
-       string name = "",
-       string pattern = "",
-       Action<IEndpointConventionBuilder>? config = null)
-       => builder.MapWithMethod(handler, "patch", name, pattern, config);
+    public static IEndpointRouteBuilder MapPatch(
+        this IEndpointRouteBuilder builder, 
+        Delegate handler, 
+        string name = "", 
+        string pattern = "", 
+        Action<RouteHandlerBuilder>? config = null) 
+        => builder.MapWithMethod(handler, "patch", name, pattern, config);
 
     private static string GetHandlerName(Delegate handler)
     {
@@ -99,6 +104,6 @@ public static class Extensions
         return handler.Method.Name;
     }
 
-    public static bool IsAnonymous(this MethodInfo method)
-        => method.Name.Any(c => c == '<' || c == '>');
+    private static bool IsAnonymous(this MethodInfo method)
+        => method.Name.Any(c => c is '<' or '>');
 }

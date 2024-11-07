@@ -7,12 +7,11 @@ using System.Diagnostics;
 
 namespace Jalpan.Messaging.Idempotency.Inbox;
 
-internal sealed class InboxCleaner(IServiceProvider serviceProvider, IOptions<InboxOptions> options, IDateTime dateTime,
+internal sealed class InboxCleaner(
+    IServiceProvider serviceProvider,
+    IOptions<InboxOptions> options, IDateTime dateTime,
     ILogger<InboxCleaner> logger) : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
-    private readonly IDateTime _dateTime = dateTime;
-    private readonly ILogger<InboxCleaner> _logger = logger;
     private readonly TimeSpan _interval = options.Value.CleanupInterval ?? TimeSpan.FromHours(1);
     private readonly bool _enabled = options.Value.Enabled;
     private int _isProcessing;
@@ -32,26 +31,27 @@ internal sealed class InboxCleaner(IServiceProvider serviceProvider, IOptions<In
                 continue;
             }
 
-            _logger.LogInformation("Started cleaning up inbox messages...");
+            logger.LogInformation("Started cleaning up inbox messages...");
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            await using (var scope = _serviceProvider.CreateAsyncScope())
+            await using (var scope = serviceProvider.CreateAsyncScope())
             {
                 try
                 {
                     var inbox = scope.ServiceProvider.GetRequiredService<IInbox>();
-                    await inbox.CleanupAsync(_dateTime.Now.Subtract(_interval), stoppingToken);
+                    await inbox.CleanupAsync(dateTime.Now.Subtract(_interval), stoppingToken);
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError("There was an error when processing inbox.");
-                    _logger.LogError(exception, exception.Message);
+                    logger.LogError("There was an error when processing inbox.");
+                    logger.LogError(exception, "An error occurred: {Message}", exception.Message);
+
                 }
                 finally
                 {
                     Interlocked.Exchange(ref _isProcessing, 0);
                     stopwatch.Stop();
-                    _logger.LogInformation($"Finished cleaning up inbox messages in {stopwatch.ElapsedMilliseconds} ms.");
+                    logger.LogInformation("Finished cleaning up inbox messages in {ElapsedMilliseconds} ms.", stopwatch.ElapsedMilliseconds);
                 }
             }
 
