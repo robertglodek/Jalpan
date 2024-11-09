@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<Description>Jalpan.Persistance.Postgres</Description>
+	<Authors>Robert Głodek</Authors>
+	<Title>Jalpan.Persistance.Postgres</Title>
+	<PackageId>Jalpan.Persistence.Postgres</PackageId>
+	<PackageTags>Jalpan.Persistance.Postgres</PackageTags>
+	<TargetFramework>net8.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+  </ItemGroup>
+
+</Project>
