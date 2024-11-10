@@ -14,7 +14,7 @@ using Elastic.Serilog.Sinks;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Transport;
-using Jalpan.Exceptions;
+using Jalpan.Logging.Serilog.Exceptions;
 
 namespace Jalpan.Logging.Serilog;
 
@@ -150,12 +150,12 @@ public static class Extensions
                 if (!elkOptions.BasicAuthEnabled) return;
                 if (string.IsNullOrEmpty(elkOptions.Username))
                 {
-                    throw new ConfigurationException("When Basic Authentication enabled, username must not be empty.", nameof(elkOptions.Username));
+                    throw new SerilogConfigurationExceptions("When Basic Authentication enabled, username must not be empty.");
                 }
 
                 if (string.IsNullOrEmpty(elkOptions.Password))
                 {
-                    throw new ConfigurationException("When Basic Authentication enabled, password must not be empty.", nameof(elkOptions.Password));
+                    throw new SerilogConfigurationExceptions("When Basic Authentication enabled, password must not be empty.");
                 }
 
                 transport.Authentication(new BasicAuthentication(elkOptions.Username, elkOptions.Password));

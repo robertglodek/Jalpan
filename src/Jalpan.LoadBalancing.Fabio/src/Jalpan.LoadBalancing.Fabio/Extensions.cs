@@ -1,7 +1,6 @@
 using Consul;
-using Jalpan.Discovery;
 using Jalpan.Discovery.Consul;
-using Jalpan.Exceptions;
+using Jalpan.LoadBalancing.Fabio.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.LoadBalancing.Fabio;
@@ -30,7 +29,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(options.Url))
         {
-            throw new ConfigurationException("Fabio URL cannot be empty.", nameof(options.Url));
+            throw new FabioConfigurationException("Fabio URL cannot be empty.");
         }
 
         builder.Services.AddTransient<FabioHttpHandler>();

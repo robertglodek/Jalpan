@@ -40,7 +40,7 @@ public static class Pagination
             return PagedResult<T>.Create(result, page, results, totalPages, totalResults);
         }
 
-        if (sortOrder is null || sortOrder == SortOrder.Asc)
+        if (sortOrder is null or SortOrder.Asc)
         {
             result = await collection.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
         }

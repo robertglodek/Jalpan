@@ -1,4 +1,4 @@
-﻿using Jalpan.Exceptions;
+﻿using Jalpan.WebApi.CORS.Exceptions;
 using Microsoft.AspNetCore.Builder;
 
 namespace Jalpan.WebApi.CORS;
@@ -35,7 +35,7 @@ public static class Extensions
                 // Check if AllowCredentials is true and if any origin is a wildcard
                 if (options.AllowCredentials && origins.Contains("*"))
                 {
-                    throw new ConfigurationException("Cannot use wildcard '*' with AllowCredentials enabled.", nameof(options.AllowCredentials));
+                    throw new CorsConfigurationException("Cannot use wildcard '*' with AllowCredentials enabled.");
                 }
 
                 if (options.AllowCredentials)

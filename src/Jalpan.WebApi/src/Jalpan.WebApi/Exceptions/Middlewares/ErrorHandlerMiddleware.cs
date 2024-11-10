@@ -42,6 +42,6 @@ internal sealed class ErrorHandlerMiddleware(
             return;
         }
 
-        await context.Response.WriteAsJsonAsync(exceptionResponse!.Response, _options);
+        await context.Response.WriteAsJsonAsync(exceptionResponse.Response, _options);
     }
 }

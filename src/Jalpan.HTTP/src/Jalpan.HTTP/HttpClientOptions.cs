@@ -2,13 +2,17 @@ namespace Jalpan.HTTP;
 
 public sealed class HttpClientOptions
 {
-    public string Name { get; init; } = string.Empty;
-    public CertificateOptions? Certificate { get; init; }
-    public ResiliencyOptions Resiliency { get; init; } = new();
     public RequestMaskingOptions RequestMasking { get; init; } = new();
+    public Dictionary<string, ClientOptions> Clients { get; init; } = new();
     
-    public Dictionary<string, string> Services { get; init; } = [];
-
+    public sealed class ClientOptions
+    {
+        public CertificateOptions? Certificate { get; init; }
+        public ResiliencyOptions Resiliency { get; init; } = new();
+        
+        public Dictionary<string, string> Services { get; init; } = [];
+    }
+    
     public sealed class CertificateOptions
     {
         public string Location { get; init; } = string.Empty;

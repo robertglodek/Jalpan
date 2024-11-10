@@ -1,5 +1,4 @@
-﻿using Jalpan.Exceptions;
-using Jalpan.Helpers;
+﻿using Jalpan.WebApi.Swagger.Exceptions;
 using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
@@ -24,7 +23,7 @@ public static class Extensions
             return builder;
         }
 
-        ValidateSwaggerOptions(options, sectionName);
+        ValidateSwaggerOptions(options);
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
@@ -82,21 +81,21 @@ public static class Extensions
         }
     }
 
-    private static void ValidateSwaggerOptions(SwaggerOptions options, string sectionName)
+    private static void ValidateSwaggerOptions(SwaggerOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.Name))
         {
-            throw new ConfigurationException("Name cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Name)));
+            throw new SwaggerConfigurationException("Name cannot be null or whitespace.");
         }
 
         if (string.IsNullOrWhiteSpace(options.Title))
         {
-            throw new ConfigurationException("Title cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Title)));
+            throw new SwaggerConfigurationException("Title cannot be null or whitespace.");
         }
 
         if (string.IsNullOrWhiteSpace(options.Version))
         {
-            throw new ConfigurationException("Version cannot be null or whitespace.", PropertyPathHelper.GetOptionsPropertyPath(sectionName, nameof(options.Version)));
+            throw new SwaggerConfigurationException("Version cannot be null or whitespace.");
         }
     }
 }

@@ -1,4 +1,3 @@
-using Jalpan.Exceptions;
 using Jalpan.Secrets.Vault.Exceptions;
 using Jalpan.Secrets.Vault.Issuers;
 using Jalpan.Secrets.Vault.Secrets;
@@ -22,8 +21,8 @@ public static class Extensions
 {
     private const string DefaultSectionName = "vault";
     private const string RegistryKey = "secrets.valut";
-    private static readonly ILeaseService LeaseService = new LeaseService();
-    private static readonly ICertificatesStore CertificatesStore = new CertificatesStore();
+    private static readonly LeaseService LeaseService = new();
+    private static readonly CertificatesStore CertificatesStore = new();
     private static readonly string[] EngineVersions = ["V1", "V2"];
 
     public static IHostBuilder UseVault(this IHostBuilder builder, string sectionName = DefaultSectionName)
@@ -82,12 +81,12 @@ public static class Extensions
     {
         if(string.IsNullOrWhiteSpace(options.Kv.EngineVersion))
         {
-            throw new ConfigurationException("Vault engine version must not be empty.", nameof(options.Kv.EngineVersion));
+            throw new VaultConfigurationException("Vault engine version must not be empty.");
         }
 
         if (!EngineVersions.Contains(options.Kv.EngineVersion))
         {
-            throw new VaultException($"Invalid KV engine version: {options.Kv.EngineVersion}. Available versions are: V1 or V2).");
+            throw new VaultConfigurationException($"Invalid KV engine version: {options.Kv.EngineVersion}. Available versions are: V1 or V2).");
         }
     }
 
@@ -100,12 +99,12 @@ public static class Extensions
             var mountPoint = options.Kv.MountPoint;
             if (string.IsNullOrWhiteSpace(kvPath))
             {
-                throw new VaultException("KV path is missing.");
+                throw new VaultConfigurationException("KV path is missing.");
             }
 
             if (string.IsNullOrWhiteSpace(mountPoint))
             {
-                throw new VaultException("KV mount point is missing.");
+                throw new VaultConfigurationException("KV mount point is missing.");
             }
 
             Console.WriteLine($"Loading settings from Vault: '{options.Url}', KV path: '{mountPoint}/{kvPath}'...");
@@ -310,7 +309,7 @@ public static class Extensions
     {
         if (string.IsNullOrWhiteSpace(options.Type))
         {
-            throw new VaultException("Vault authentication type is empty.");
+            throw new VaultConfigurationException("Vault authentication type is empty.");
         }
 
         return options.Type.ToLowerInvariant() switch
@@ -334,12 +333,12 @@ public static class Extensions
         var certificateName = options.Pki.HttpHandler.Certificate;
         if (string.IsNullOrWhiteSpace(certificateName))
         {
-            throw new VaultException("PKI HTTP handler certificate name is empty.");
+            throw new VaultConfigurationException("PKI HTTP handler certificate name is empty.");
         }
 
         var certificate = CertificatesStore.Get(certificateName);
         return certificate is null
-            ? throw new VaultException($"PKI HTTP handler certificate: '{certificateName}' was not found.")
+            ? throw new VaultConfigurationException($"PKI HTTP handler certificate: '{certificateName}' was not found.")
             : builder.ConfigurePrimaryHttpMessageHandler(() =>
             {
                 var handler = new HttpClientHandler();

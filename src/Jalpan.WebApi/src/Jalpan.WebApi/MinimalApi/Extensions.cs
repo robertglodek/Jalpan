@@ -35,7 +35,7 @@ public static class Extensions
 
     private static IEndpointRouteBuilder MapWithMethod(this IEndpointRouteBuilder builder,
         Delegate handler,
-        string method,
+        Method method,
         string name = "",
         string pattern = "",
         Action<RouteHandlerBuilder>? config = null)
@@ -43,11 +43,11 @@ public static class Extensions
         name = string.IsNullOrWhiteSpace(name) ? GetHandlerName(handler) : name;
         var routeBuilder = method switch
         {
-            "get" => builder.MapGet(pattern, handler),
-            "post" => builder.MapPost(pattern, handler),
-            "put" => builder.MapPut(pattern, handler),
-            "delete" => builder.MapDelete(pattern, handler),
-            "patch" => builder.MapPatch(pattern, handler),
+            Method.Get => builder.MapGet(pattern, handler),
+            Method.Post => builder.MapPost(pattern, handler),
+            Method.Put => builder.MapPut(pattern, handler),
+            Method.Delete => builder.MapDelete(pattern, handler),
+            Method.Patch => builder.MapPatch(pattern, handler),
             _ => throw new ArgumentException("Invalid HTTP method.")
         };
 
@@ -61,7 +61,7 @@ public static class Extensions
         string name = "",
         string pattern = "",
         Action<RouteHandlerBuilder>? config = null)
-        => builder.MapWithMethod(handler, "get", name, pattern, config);
+        => builder.MapWithMethod(handler, Method.Get, name, pattern, config);
 
     public static IEndpointRouteBuilder MapPost(
         this IEndpointRouteBuilder builder,
@@ -69,7 +69,7 @@ public static class Extensions
         string name = "",
         string pattern = "",
         Action<RouteHandlerBuilder>? config = null)
-        => builder.MapWithMethod(handler, "post", name, pattern, config);
+        => builder.MapWithMethod(handler, Method.Post, name, pattern, config);
 
     public static IEndpointRouteBuilder MapPut(
         this IEndpointRouteBuilder builder,
@@ -77,7 +77,7 @@ public static class Extensions
         string name = "",
         string pattern = "",
         Action<RouteHandlerBuilder>? config = null)
-        => builder.MapWithMethod(handler, "put", name, pattern, config);
+        => builder.MapWithMethod(handler, Method.Put, name, pattern, config);
 
     public static IEndpointRouteBuilder MapDelete(
         this IEndpointRouteBuilder builder,
@@ -85,7 +85,7 @@ public static class Extensions
         string name = "",
         string pattern = "",
         Action<RouteHandlerBuilder>? config = null)
-        => builder.MapWithMethod(handler, "delete", name, pattern, config);
+        => builder.MapWithMethod(handler, Method.Delete, name, pattern, config);
 
     public static IEndpointRouteBuilder MapPatch(
         this IEndpointRouteBuilder builder, 
@@ -93,7 +93,7 @@ public static class Extensions
         string name = "", 
         string pattern = "", 
         Action<RouteHandlerBuilder>? config = null) 
-        => builder.MapWithMethod(handler, "patch", name, pattern, config);
+        => builder.MapWithMethod(handler, Method.Patch, name, pattern, config);
 
     private static string GetHandlerName(Delegate handler)
     {
@@ -106,4 +106,13 @@ public static class Extensions
 
     private static bool IsAnonymous(this MethodInfo method)
         => method.Name.Any(c => c is '<' or '>');
+    
+    private enum Method
+    {
+        Get,
+        Post,
+        Put,
+        Patch,
+        Delete
+    }
 }

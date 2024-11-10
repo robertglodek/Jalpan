@@ -9,7 +9,7 @@ namespace Jalpan.Messaging.RabbitMQ.Streams;
 
 public sealed class RabbitStreamManager
 {
-    private readonly IOptions<RabbitMQStreamsOptions> _options;
+    private readonly IOptions<RabbitMqStreamsOptions> _options;
     private readonly ILogger<RabbitStreamManager> _logger;
     private StreamSystem _system = null!;
     
@@ -17,7 +17,7 @@ public sealed class RabbitStreamManager
     public string ConsumerReference { get; }
     public string ProducerReference { get; }
 
-    public RabbitStreamManager(IOptions<RabbitMQStreamsOptions> options, ILogger<RabbitStreamManager> logger)
+    public RabbitStreamManager(IOptions<RabbitMqStreamsOptions> options, ILogger<RabbitStreamManager> logger)
     {
         _options = options;
         _logger = logger;
@@ -49,9 +49,9 @@ public sealed class RabbitStreamManager
 
     public Task<ulong> GetLastOffset(string stream) => _system.QueryOffset(ConsumerReference, stream);
 
-    private async Task InitStreamsAsync(IEnumerable<RabbitMQStreamsOptions.StreamOptions>? streams)
+    private async Task InitStreamsAsync(IEnumerable<RabbitMqStreamsOptions.StreamOptions>? streams)
     {
-        foreach (var stream in streams ?? Enumerable.Empty<RabbitMQStreamsOptions.StreamOptions>())
+        foreach (var stream in streams ?? [])
         {
             if (!string.IsNullOrWhiteSpace(stream.Name))
             {
@@ -104,7 +104,7 @@ public sealed class RabbitStreamManager
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError(exception, exception.Message);
+                    _logger.LogError(exception, "An error occurred: {Message}", exception.Message);
                 }
 
                 if (offsetStorageEnabled && ctx.Offset % offsetStorageThreshold is 0)
@@ -126,7 +126,7 @@ public sealed class RabbitStreamManager
             {
                 if (confirmation.Status is not ConfirmationStatus.Confirmed)
                 {
-                    _logger.LogError($"Message with publishing ID: {confirmation.PublishingId} has failed with status: {confirmation.Status}.");
+                    _logger.LogError("Message with publishing ID: {PublishingId} has failed with status: {Status}.", confirmation.PublishingId, confirmation.Status);
                 }
                 
                 return Task.CompletedTask;

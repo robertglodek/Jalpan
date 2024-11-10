@@ -1,5 +1,4 @@
 ﻿using Jalpan.Exceptions;
-using Jalpan.Helpers;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Messaging.RabbitMQ.Internals;
 using Jalpan.Tracing.OpenTelemetry.Decorators;
@@ -36,7 +35,7 @@ internal static class Extensions
 
         if (string.IsNullOrWhiteSpace(appOptions.Name))
         {
-            throw new ConfigurationException("Application name cannot be empty when using the tracing.", PropertyPathHelper.GetOptionsPropertyPath(appSectionName, nameof(appOptions.Name)));
+            throw new AppConfigurationException("Application name cannot be empty when using the tracing.");
         }
 
         builder.Services.AddOpenTelemetry()

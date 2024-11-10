@@ -16,7 +16,7 @@ internal sealed class KeyValueSecrets(IVaultClient client, IOptions<VaultOptions
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new VaultException("Vault KV secret path can not be empty.");
+            throw new VaultConfigurationException("Vault KV secret path can not be empty.");
         }
 
         try
@@ -32,12 +32,12 @@ internal sealed class KeyValueSecrets(IVaultClient client, IOptions<VaultOptions
                         _options.Kv.Version, _options.Kv.MountPoint);
                     return secretV2.Data.Data;
                 default:
-                    throw new VaultException($"Invalid KV engine version: {_options.Kv.EngineVersion}.");
+                    throw new VaultConfigurationException($"Invalid KV engine version: {_options.Kv.EngineVersion}.");
             }
         }
         catch (Exception exception)
         {
-            throw new VaultException($"Getting Vault secret for path: '{path}' caused an error. " +
+            throw new VaultConfigurationException($"Getting Vault secret for path: '{path}' caused an error. " +
                                      $"{exception.Message}", exception);
         }
     }

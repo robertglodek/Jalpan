@@ -1,36 +1,36 @@
 namespace Jalpan.Messaging.RabbitMQ.Streams;
 
-public sealed class RabbitMQStreamsOptions
+public sealed class RabbitMqStreamsOptions
 {
-    public bool Enabled { get; set; }
-    public string Server { get; set; } = string.Empty;
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public string VirtualHost { get; set; } = string.Empty;
-    public string ClientName { get; set; } = string.Empty;
-    public ConsumerOptions? Consumer { get; set; }
-    public ProducerOptions? Producer { get; set; }
+    public bool Enabled { get; init; }
+    public string Server { get; init; } = string.Empty;
+    public string Username { get; init; } = string.Empty;
+    public string Password { get; init; } = string.Empty;
+    public string VirtualHost { get; init; } = string.Empty;
+    public string ClientName { get; init; } = string.Empty;
+    public ConsumerOptions? Consumer { get; init; }
+    public ProducerOptions? Producer { get; init; }
 
     public class ConsumerOptions
     {
-        public bool Enabled { get; set; }
-        public string Reference { get; set; } = string.Empty;
-        public string OffsetType { get; set; } = string.Empty;
-        public ulong? OffsetStorageThreshold { get; set; }
-        public IEnumerable<StreamOptions>? Streams { get; set; }
+        public bool Enabled { get; init; }
+        public string Reference { get; init; } = string.Empty;
+        public string OffsetType { get; init; } = "next";
+        public ulong? OffsetStorageThreshold { get; init; }
+        public IEnumerable<StreamOptions>? Streams { get; init; }
     }
 
     public class ProducerOptions
     {
-        public string Reference { get; set; } = string.Empty;
-        public IEnumerable<StreamOptions>? Streams { get; set; }
+        public string Reference { get; init; } = string.Empty;
+        public IEnumerable<StreamOptions>? Streams { get; init; }
     }
 
     public sealed class StreamOptions
     {
-        public string Name { get; set; } = string.Empty;
-        public ulong? MaxLengthBytes { get; set; }
-        public int? MaxSegmentSizeBytes { get; set; }
-        public TimeSpan? MaxAge { get; set; }
+        public string Name { get; init; } = string.Empty;
+        public ulong? MaxLengthBytes { get; init; }
+        public int? MaxSegmentSizeBytes { get; init; }
+        public TimeSpan? MaxAge { get; init; }
     }
 }

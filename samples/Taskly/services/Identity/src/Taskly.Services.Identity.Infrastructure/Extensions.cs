@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Jalpan;
+using Jalpan.Auth.Jwt;
+using Jalpan.Contexts;
+using Jalpan.Logging.Serilog;
+using Jalpan.Persistence.MongoDB;
+using Microsoft.Extensions.DependencyInjection;
 using Taskly.Services.Identity.Infrastructure.Mongo;
 using Taskly.Services.Identity.Infrastructure.Mongo.Documents;
 

@@ -1,6 +1,4 @@
-﻿using Taskly.Services.Identity.Core.Exceptions;
-
-namespace Taskly.Services.Identity.Domain.Exceptions;
+﻿namespace Taskly.Services.Identity.Domain.Exceptions;
 
 public sealed class EmptyRefreshTokenException : DomainException
 {

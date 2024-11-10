@@ -1,4 +1,4 @@
-namespace Taskly.Services.Identity.Core.Exceptions;
+namespace Taskly.Services.Identity.Domain.Exceptions;
 
 public abstract class DomainException(string message) : Exception(message)
 {

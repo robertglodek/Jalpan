@@ -1,7 +1,6 @@
 using Jalpan.Messaging.Streams;
 using Jalpan.Messaging.RabbitMQ.Streams.Publishers;
 using Jalpan.Messaging.RabbitMQ.Streams.Subscribers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Messaging.RabbitMQ.Streams;
@@ -9,23 +8,24 @@ namespace Jalpan.Messaging.RabbitMQ.Streams;
 public static class Extensions
 {
     private const string SectionName = "rabbitmq:streams";
+    private const string RegistryKey = "messaging.rabbitmq.streams";
 
-    public static IServiceCollection AddRabbitMqStreams(this IServiceCollection services, IConfiguration configuration)
+    public static IJalpanBuilder AddRabbitMqStreams(this IJalpanBuilder builder)
     {
-        var section = configuration.GetSection(SectionName);
-        var options = section.BindOptions<RabbitMQStreamsOptions>();
-        services.Configure<RabbitMQStreamsOptions>(section);
+        var section = builder.Configuration.GetSection(SectionName);
+        var options = section.BindOptions<RabbitMqStreamsOptions>();
+        builder.Services.Configure<RabbitMqStreamsOptions>(section);
 
-        if (!options.Enabled)
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
-            return services;
+            return builder;
         }
 
-        services.AddSingleton<RabbitStreamManager>();
-        services.AddHostedService<RabbitStreamInitializer>();
-        services.AddSingleton<IStreamPublisher, RabbitMqStreamPublisher>();
-        services.AddSingleton<IStreamSubscriber, RabbitMqStreamSubscriber>();
+        builder.Services.AddSingleton<RabbitStreamManager>();
+        builder.Services.AddHostedService<RabbitStreamInitializer>();
+        builder.Services.AddSingleton<IStreamPublisher, RabbitMqStreamPublisher>();
+        builder.Services.AddSingleton<IStreamSubscriber, RabbitMqStreamSubscriber>();
 
-        return services;
+        return builder;
     }
 }

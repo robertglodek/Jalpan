@@ -1,6 +1,6 @@
-using Taskly.Services.Identity.Core.Exceptions;
+using Taskly.Services.Identity.Domain.Exceptions;
 
-namespace Taskly.Services.Identity.Core.Entities;
+namespace Taskly.Services.Identity.Domain.Entities;
 
 public sealed class AggregateId : IEquatable<AggregateId>
 {

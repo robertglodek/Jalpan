@@ -1,4 +1,4 @@
-namespace Taskly.Services.Identity.Core.Entities;
+namespace Taskly.Services.Identity.Domain.Entities;
 
 public abstract class AggregateRoot
 {

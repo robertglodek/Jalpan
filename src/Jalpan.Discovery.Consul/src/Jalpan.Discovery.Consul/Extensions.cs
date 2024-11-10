@@ -1,4 +1,3 @@
-using Jalpan.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Discovery.Consul;
@@ -23,7 +22,7 @@ public static class Extensions
 
         if (string.IsNullOrWhiteSpace(options.Url))
         {
-            throw new ConfigurationException("Consul URL cannot be empty.", nameof(options.Url));
+            throw new ConsulConfigurationException("Consul URL cannot be empty.");
         }
 
         builder.Services.AddTransient<ConsulHttpHandler>();
@@ -42,12 +41,12 @@ public static class Extensions
     {
         if (string.IsNullOrWhiteSpace(options.Service.Url))
         {
-            throw new ConfigurationException("Service URL cannot be empty.", nameof(options.Service.Url));
+            throw new ConsulConfigurationException("Service URL cannot be empty.");
         }
 
         if (string.IsNullOrWhiteSpace(options.Service.Name))
         {
-            throw new ConfigurationException("Service name cannot be empty.", nameof(options.Service.Name));
+            throw new ConsulConfigurationException("Service name cannot be empty.");
         }
 
         string serviceId;

@@ -1,6 +1,6 @@
-using Taskly.Services.Identity.Core.Entities;
+using Taskly.Services.Identity.Domain.Entities;
 
-namespace Taskly.Services.Identity.Core.Exceptions;
+namespace Taskly.Services.Identity.Domain.Repositories;
 
 public interface IRefreshTokenRepository
 {

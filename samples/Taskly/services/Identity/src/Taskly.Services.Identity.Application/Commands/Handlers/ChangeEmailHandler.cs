@@ -1,7 +1,7 @@
 ﻿using Jalpan.Contexts.Providers;
 using Jalpan.Time;
 using Taskly.Services.Identity.Application.Exceptions;
-using Taskly.Services.Identity.Core.Exceptions;
+using Taskly.Services.Identity.Domain.Repositories;
 
 namespace Taskly.Services.Identity.Application.Commands.Handlers;
 

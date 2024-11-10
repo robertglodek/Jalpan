@@ -3,7 +3,6 @@ using EasyNetQ.Consumer;
 using Jalpan.Contexts.Accessors;
 using Jalpan.Messaging.RabbitMQ.Exceptions;
 using Jalpan.Messaging.RabbitMQ.Internals;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -15,15 +14,19 @@ namespace Jalpan.Messaging.RabbitMQ;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
+    private const string DefaultSectionName = "rabbitmq";
+    private const string RegistryKey = "messaging.rabbitmq";
+    public static IJalpanBuilder AddRabbitMq(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
-        var section = configuration.GetSection("rabbitmq");
-        var options = section.BindOptions<RabbitMqOptions>();
-        services.Configure<RabbitMqOptions>(section);
+        sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
         
-        if (!options.Enabled)
+        var section = builder.Configuration.GetSection(sectionName);
+        var options = section.BindOptions<RabbitMqOptions>();
+        builder.Services.Configure<RabbitMqOptions>(section);
+        
+        if (!options.Enabled || !builder.TryRegister(RegistryKey))
         {
-            return services;
+            return builder;
         }
         
         var contextAccessor = new ContextAccessor();
@@ -49,15 +52,15 @@ public static class Extensions
                 register.Register(typeof(IMessageContextAccessor), messageContextAccessor);
             });
         
-        services.AddSingleton(bus);
-        services.AddSingleton<IMessageBrokerClient, RabbitMqBrokerClient>();
-        services.AddSingleton<IMessageSubscriber, RabbitMqMessageSubscriber>();
-        services.AddSingleton<Internals.IMessageHandler, Internals.MessageHandler>();
-        services.AddSingleton<IMessageTypeRegistry>(messageTypeRegistry);
-        services.AddSingleton<IContextAccessor>(contextAccessor);
-        services.AddSingleton<IMessageContextAccessor>(messageContextAccessor);
+        builder.Services.AddSingleton(bus);
+        builder.Services.AddSingleton<IMessageBrokerClient, RabbitMqBrokerClient>();
+        builder.Services.AddSingleton<IMessageSubscriber, RabbitMqMessageSubscriber>();
+        builder.Services.AddSingleton<Internals.IMessageHandler, Internals.MessageHandler>();
+        builder.Services.AddSingleton<IMessageTypeRegistry>(messageTypeRegistry);
+        builder.Services.AddSingleton<IContextAccessor>(contextAccessor);
+        builder.Services.AddSingleton<IMessageContextAccessor>(messageContextAccessor);
 
-        return services;
+        return builder;
     }
     
     public static IServiceCollection AddMessagingErrorHandlingDecorators(this IServiceCollection services)

@@ -6,6 +6,7 @@ using Jalpan.Messaging.Brokers;
 namespace Jalpan.Metrics.OpenTelemetry.Decorators;
 
 [Meter(MetricsKey)]
+[UsedImplicitly]
 internal sealed class MessageBrokerMetricsDecorator(IMessageBroker messageBroker) : IMessageBroker
 {
     private const string MetricsKey = "message_broker";

@@ -1,4 +1,4 @@
-﻿using Taskly.Services.Identity.Core.Exceptions;
+﻿using Taskly.Services.Identity.Domain.Exceptions;
 
 namespace Taskly.Services.Identity.Domain.ValueObjects;
 

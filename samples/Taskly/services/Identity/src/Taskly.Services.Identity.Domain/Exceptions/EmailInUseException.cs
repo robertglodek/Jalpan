@@ -1,4 +1,4 @@
-namespace Taskly.Services.Identity.Core.Exceptions;
+namespace Taskly.Services.Identity.Domain.Exceptions;
 
 public sealed class EmailInUseException(string email) : DomainException($"Email {email} is already in use.")
 {

@@ -1,4 +1,4 @@
-﻿using Jalpan.Exceptions;
+﻿using Jalpan.Persistence.Redis.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
@@ -24,12 +24,12 @@ public static class Extensions
 
         if(string.IsNullOrEmpty(options.ConnectionString))
         {
-            throw new ConfigurationException("Redis connection string cannot be empty.", nameof(options.ConnectionString));
+            throw new RedisConfigurationException("Redis connection string cannot be empty.");
         }
 
         builder.Services
             .AddSingleton(options)
-            .AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(options.ConnectionString))
+            .AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(options.ConnectionString))
             .AddTransient(sp => sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase(options.Database))
             .AddStackExchangeRedisCache(o =>
             {

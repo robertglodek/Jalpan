@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Jalpan.Exceptions;
-using Jalpan.Helpers;
 using Jalpan.Messaging.Brokers;
 using Jalpan.Metrics.OpenTelemetry.Decorators;
+using Jalpan.Metrics.OpenTelemetry.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -55,8 +54,7 @@ internal static class Extensions
     {
         if(string.IsNullOrEmpty(options.Exporter))
         {
-            throw new ConfigurationException("Metrics explorer cannot be empty.",
-                PropertyPathHelper.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
+            throw new MetricsConfigurationException("Metrics explorer cannot be empty.");
         }
 
         switch (options.Exporter.ToLowerInvariant())
@@ -69,8 +67,7 @@ internal static class Extensions
                     prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint) ? prometheus.ScrapeEndpointPath : options.Endpoint);
                 break;
             default:
-                throw new ConfigurationException($"Metrics explorer '{options.Exporter}' not configured.",
-                    PropertyPathHelper.GetOptionsPropertyPath<MetricsOptions>(sectionName, n => n.Exporter));
+                throw new MetricsConfigurationException($"Metrics explorer '{options.Exporter}' not configured.");
         }
     }
 

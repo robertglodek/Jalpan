@@ -10,7 +10,9 @@ public static class Extensions
     private const string RegistryKey = "messaging.outbox.mongo";
     internal const string DefaultOutboxCollectionName = "Outbox";
 
-    public static IMessageOutboxConfigurator AddMongo(this IMessageOutboxConfigurator configurator, string sectionName = DefaultSectionName)
+    public static IMessageOutboxConfigurator AddMongo(
+        this IMessageOutboxConfigurator configurator,
+        string sectionName = DefaultSectionName)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 

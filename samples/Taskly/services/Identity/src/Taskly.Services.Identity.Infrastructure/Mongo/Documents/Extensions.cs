@@ -1,5 +1,5 @@
 using Taskly.Services.Identity.Application.DTO;
-using Taskly.Services.Identity.Core.Entities;
+using Taskly.Services.Identity.Domain.Entities;
 using Taskly.Services.Identity.Domain.ValueObjects;
 
 namespace Taskly.Services.Identity.Infrastructure.Mongo.Documents;

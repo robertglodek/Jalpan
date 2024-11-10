@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Taskly.Services.Identity.Core.Exceptions;
-using Taskly.Services.Identity.Domain.ValueObjects;
 
 namespace Taskly.Services.Identity.Application.Commands.Validators;
 
