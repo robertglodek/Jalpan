@@ -107,7 +107,7 @@ public static class Extensions
     private static bool IsAnonymous(this MethodInfo method)
         => method.Name.Any(c => c is '<' or '>');
     
-    private enum Method
+    private enum Method : byte
     {
         Get,
         Post,

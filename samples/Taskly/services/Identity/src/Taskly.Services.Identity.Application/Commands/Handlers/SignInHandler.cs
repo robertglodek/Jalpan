@@ -1,12 +1,8 @@
 ﻿using Jalpan.Time;
 using Microsoft.Extensions.Logging;
 using Taskly.Services.Identity.Application.DTO;
-using Taskly.Services.Identity.Application.Events;
 using Taskly.Services.Identity.Application.Services;
-using Taskly.Services.Identity.Domain.Entities;
-using Taskly.Services.Identity.Domain.Exceptions;
 using Taskly.Services.Identity.Domain.Repositories;
-using Taskly.Services.Identity.Domain.ValueObjects;
 
 namespace Taskly.Services.Identity.Application.Commands.Handlers;
 

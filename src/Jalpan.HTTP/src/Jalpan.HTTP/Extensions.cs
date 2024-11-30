@@ -32,8 +32,8 @@ public static class Extensions
         builder.Services.Configure<HttpClientOptions>(section);
 
         builder.Services.AddSingleton<IHttpClientSerializer, SystemTextJsonHttpClientSerializer>();
-        builder.Services.AddSingleton<IHttpClientAdapterFactory, JalpanHttpClientAdapterFactory>();
-        builder.Services.AddTransient<IHttpClientAdapter, JalpanHttpClientAdapter>();
+        builder.Services.AddSingleton<IJalpanHttpClientFactory, JalpanHttpClientFactory>();
+        builder.Services.AddTransient<IJalpanHttpClient, JalpanHttpClient>();
         
         
         foreach (var (name, option) in options.Clients)

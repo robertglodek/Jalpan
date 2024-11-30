@@ -3,7 +3,7 @@ using Jalpan.HTTP.Serialization;
 
 namespace Jalpan.HTTP.Client;
 
-public interface IHttpClientAdapter
+public interface IJalpanHttpClient
 {
     Task<HttpResponseMessage> GetAsync(string uri);
     Task<T?> GetAsync<T>(string uri, IHttpClientSerializer? serializer = null);
@@ -32,6 +32,6 @@ public interface IHttpClientAdapter
     Task<HttpResponseMessage> SendAsync(HttpRequestMessage request);
     Task<T?> SendAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null);
     Task<HttpResult<T?>> SendResultAsync<T>(HttpRequestMessage request, IHttpClientSerializer? serializer = null);
-    IHttpClientAdapter SetHeaders(IDictionary<string, string> headers);
-    IHttpClientAdapter SetHeaders(Action<HttpRequestHeaders> headers);
+    IJalpanHttpClient SetHeaders(IDictionary<string, string> headers);
+    IJalpanHttpClient SetHeaders(Action<HttpRequestHeaders> headers);
 }

@@ -5,8 +5,8 @@ using Jalpan.HTTP.Serialization;
 
 namespace Jalpan.HTTP.Client;
 
-public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSerializer httpClientSerializer)
-    : IHttpClientAdapter
+public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerializer httpClientSerializer)
+    : IJalpanHttpClient
 {
     public Task<HttpResponseMessage> GetAsync(string uri) => SendAsync(uri, Method.Get);
 
@@ -15,9 +15,11 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
 
     public Task<HttpResult<T?>> GetResultAsync<T>(string uri, IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Get, serializer: serializer);
+    
+    public Task<HttpResult<T?, TError?>> GetResultAsync<T, TError>(string uri, IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Get, serializer: serializer);
 
-    public Task<HttpResponseMessage> PostAsync(string uri, object? data = null,
-        IHttpClientSerializer? serializer = null)
+    public Task<HttpResponseMessage> PostAsync(string uri, object? data = null, IHttpClientSerializer? serializer = null)
         => SendAsync(uri, Method.Post, GetJsonPayload(data, serializer));
 
     public Task<HttpResponseMessage> PostAsync(string uri, HttpContent content)
@@ -32,10 +34,18 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
     public Task<HttpResult<T?>> PostResultAsync<T>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Post, GetJsonPayload(data, serializer), serializer);
+    
+    public Task<HttpResult<T?, TError?>> PostResultAsync<T, TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Post, GetJsonPayload(data, serializer), serializer);
 
     public Task<HttpResult<T?>> PostResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Post, content, serializer);
+    
+    public Task<HttpResult<T?, TError?>> PostResultAsync<T, TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Post, content, serializer);
 
     public Task<HttpResponseMessage> PutAsync(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
@@ -53,10 +63,18 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
     public Task<HttpResult<T?>> PutResultAsync<T>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Put, GetJsonPayload(data, serializer), serializer);
+    
+    public Task<HttpResult<T?, TError?>> PutResultAsync<T, TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Put, GetJsonPayload(data, serializer), serializer);
 
     public Task<HttpResult<T?>> PutResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Put, content, serializer);
+    
+    public Task<HttpResult<T?, TError?>> PutResultAsync<T, TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Put, content, serializer);
 
     public Task<HttpResponseMessage> PatchAsync(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
@@ -74,10 +92,18 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
     public Task<HttpResult<T?>> PatchResultAsync<T>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Patch, GetJsonPayload(data, serializer));
+    
+    public Task<HttpResult<T?, TError?>> PatchResultAsync<T, TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Patch, GetJsonPayload(data, serializer));
 
     public Task<HttpResult<T?>> PatchResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Patch, content, serializer);
+    
+    public Task<HttpResult<T?, TError?>> PatchResultAsync<T, TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Patch, content, serializer);
 
     public Task<HttpResponseMessage> DeleteAsync(string uri)
         => SendAsync(uri, Method.Delete);
@@ -87,6 +113,9 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
 
     public Task<HttpResult<T?>> DeleteResultAsync<T>(string uri, IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Delete, serializer: serializer);
+    
+    public Task<HttpResult<T?, TError?>> DeleteResultAsync<T, TError>(string uri, IHttpClientSerializer? serializer = null)
+        => SendResultAsync<T, TError>(uri, Method.Delete, serializer: serializer);
 
     public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         => await httpClient.SendAsync(request);
@@ -120,7 +149,7 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
         return new HttpResult<T?>(result, response);
     }
 
-    public IHttpClientAdapter SetHeaders(IDictionary<string, string>? headers)
+    public IJalpanHttpClient SetHeaders(IDictionary<string, string>? headers)
     {
         if (headers is null)
         {
@@ -140,7 +169,7 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
         return this;
     }
 
-    public IHttpClientAdapter SetHeaders(Action<HttpRequestHeaders>? headers)
+    public IJalpanHttpClient SetHeaders(Action<HttpRequestHeaders>? headers)
     {
         headers?.Invoke(httpClient.DefaultRequestHeaders);
         return this;
@@ -179,6 +208,24 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
         var result = await DeserializeJsonFromStream<T>(stream, serializer);
 
         return new HttpResult<T?>(result, response);
+    }
+    
+    private async Task<HttpResult<T?, TError?>> SendResultAsync<T, TError>(
+        string uri,
+        Method method,
+        HttpContent? content = null,
+        IHttpClientSerializer? serializer = null)
+    {
+        var response = await SendAsync(uri, method, content);
+        var stream = await response.Content.ReadAsStreamAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await DeserializeJsonFromStream<TError>(stream, serializer);
+            return new HttpResult<T?, TError?>(default, error, response);
+        }
+        var result = await DeserializeJsonFromStream<T>(stream, serializer);
+
+        return new HttpResult<T?, TError?>(result, default, response);
     }
 
     private Task<HttpResponseMessage> SendAsync(
@@ -229,7 +276,7 @@ public sealed class JalpanHttpClientAdapter(HttpClient httpClient, IHttpClientSe
         return await serializer.DeserializeAsync<T>(stream);
     }
 
-    private enum Method
+    private enum Method : byte
     {
         Get,
         Post,
