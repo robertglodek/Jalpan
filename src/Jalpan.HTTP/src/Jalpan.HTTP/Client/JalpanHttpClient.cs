@@ -16,6 +16,9 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
     public Task<HttpResult<T?>> GetResultAsync<T>(string uri, IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Get, serializer: serializer);
     
+    public Task<HttpErrorResult<TError?>> GetErrorResultAsync<TError>(string uri, IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Get, serializer: serializer);
+    
     public Task<HttpResult<T?, TError?>> GetResultAsync<T, TError>(string uri, IHttpClientSerializer? serializer = null)
         => SendResultAsync<T, TError>(uri, Method.Get, serializer: serializer);
 
@@ -30,18 +33,25 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
 
     public Task<T?> PostAsync<T>(string uri, HttpContent? content, IHttpClientSerializer? serializer = null)
         => SendAsync<T>(uri, Method.Post, content, serializer);
-
     public Task<HttpResult<T?>> PostResultAsync<T>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Post, GetJsonPayload(data, serializer), serializer);
     
+    public Task<HttpErrorResult<TError?>> PostErrorResultAsync<TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Post, GetJsonPayload(data, serializer), serializer);
+    
     public Task<HttpResult<T?, TError?>> PostResultAsync<T, TError>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T, TError>(uri, Method.Post, GetJsonPayload(data, serializer), serializer);
-
+    
     public Task<HttpResult<T?>> PostResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Post, content, serializer);
+    
+    public Task<HttpErrorResult<TError?>> PostErrorResultAsync<TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Post, content, serializer);
     
     public Task<HttpResult<T?, TError?>> PostResultAsync<T, TError>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
@@ -64,6 +74,10 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Put, GetJsonPayload(data, serializer), serializer);
     
+    public Task<HttpErrorResult<TError?>> PutErrorResultAsync<TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Put, GetJsonPayload(data, serializer), serializer);
+    
     public Task<HttpResult<T?, TError?>> PutResultAsync<T, TError>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T, TError>(uri, Method.Put, GetJsonPayload(data, serializer), serializer);
@@ -71,6 +85,10 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
     public Task<HttpResult<T?>> PutResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Put, content, serializer);
+    
+    public Task<HttpErrorResult<TError?>> PutErrorResultAsync<TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Put, content, serializer);
     
     public Task<HttpResult<T?, TError?>> PutResultAsync<T, TError>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
@@ -93,6 +111,10 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Patch, GetJsonPayload(data, serializer));
     
+    public Task<HttpErrorResult<TError?>> PatchErrorResultAsync<TError>(string uri, object? data = null,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Patch, GetJsonPayload(data, serializer));
+    
     public Task<HttpResult<T?, TError?>> PatchResultAsync<T, TError>(string uri, object? data = null,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T, TError>(uri, Method.Patch, GetJsonPayload(data, serializer));
@@ -100,6 +122,10 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
     public Task<HttpResult<T?>> PatchResultAsync<T>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
         => SendResultAsync<T>(uri, Method.Patch, content, serializer);
+    
+    public Task<HttpErrorResult<TError?>> PatchErrorResultAsync<TError>(string uri, HttpContent? content,
+        IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Patch, content, serializer);
     
     public Task<HttpResult<T?, TError?>> PatchResultAsync<T, TError>(string uri, HttpContent? content,
         IHttpClientSerializer? serializer = null)
@@ -116,6 +142,9 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
     
     public Task<HttpResult<T?, TError?>> DeleteResultAsync<T, TError>(string uri, IHttpClientSerializer? serializer = null)
         => SendResultAsync<T, TError>(uri, Method.Delete, serializer: serializer);
+    
+    public Task<HttpErrorResult<TError?>> DeleteErrorResultAsync<TError>(string uri, IHttpClientSerializer? serializer = null)
+        => SendErrorResultAsync<TError>(uri, Method.Delete, serializer: serializer);
 
     public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         => await httpClient.SendAsync(request);
@@ -147,6 +176,33 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
         var result = await DeserializeJsonFromStream<T>(stream, serializer);
 
         return new HttpResult<T?>(result, response);
+    }
+    
+    public async Task<HttpErrorResult<TError?>> SendErrorResultAsync<TError>(
+        HttpRequestMessage request, 
+        IHttpClientSerializer? serializer = null)
+    {
+        var response = await httpClient.SendAsync(request);
+        if (response.IsSuccessStatusCode) return new HttpErrorResult<TError?>(default, response);
+        var stream = await response.Content.ReadAsStreamAsync();
+        var error = await DeserializeJsonFromStream<TError>(stream, serializer);
+        return new HttpErrorResult<TError?>(error, response);
+    }
+    
+    public async Task<HttpResult<T?, TError?>> SendResultAsync<T, TError>(
+        HttpRequestMessage request, 
+        IHttpClientSerializer? serializer = null)
+    {
+        var response = await SendAsync(request);
+        var stream = await response.Content.ReadAsStreamAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await DeserializeJsonFromStream<TError>(stream, serializer);
+            return new HttpResult<T?, TError?>(default, error, response);
+        }
+        var result = await DeserializeJsonFromStream<T>(stream, serializer);
+
+        return new HttpResult<T?, TError?>(result, default, response);
     }
 
     public IJalpanHttpClient SetHeaders(IDictionary<string, string>? headers)
@@ -226,6 +282,19 @@ public sealed class JalpanHttpClient(HttpClient httpClient, IHttpClientSerialize
         var result = await DeserializeJsonFromStream<T>(stream, serializer);
 
         return new HttpResult<T?, TError?>(result, default, response);
+    }
+    
+    private async Task<HttpErrorResult<TError?>> SendErrorResultAsync<TError>(
+        string uri,
+        Method method,
+        HttpContent? content = null,
+        IHttpClientSerializer? serializer = null)
+    {
+        var response = await SendAsync(uri, method, content);
+        if (response.IsSuccessStatusCode) return new HttpErrorResult<TError?>(default, response);
+        var stream = await response.Content.ReadAsStreamAsync();
+        var error = await DeserializeJsonFromStream<TError>(stream, serializer);
+        return new HttpErrorResult<TError?>(error, response);
     }
 
     private Task<HttpResponseMessage> SendAsync(
