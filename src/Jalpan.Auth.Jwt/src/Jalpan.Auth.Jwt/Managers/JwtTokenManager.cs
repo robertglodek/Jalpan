@@ -17,7 +17,7 @@ internal sealed class JwtTokenManager : IJwtTokenManager
 
     public JwtTokenManager(IOptions<AuthOptions> options, SecurityKeyDetails securityKeyDetails, IDateTime dateTime)
     {
-        var jwtOptions = options.Value?.Jwt!;
+        var jwtOptions = options.Value.Jwt!;
 
         _audience = jwtOptions.Audience;
         _issuer = jwtOptions.Issuer;
@@ -32,17 +32,18 @@ internal sealed class JwtTokenManager : IJwtTokenManager
         string? role = null,
         IDictionary<string, IEnumerable<string>>? claims = null)
     {
-        if(_signingCredentials.Key is X509SecurityKey { PrivateKeyStatus: PrivateKeyStatus.DoesNotExist })
+        if (_signingCredentials.Key is X509SecurityKey { PrivateKeyStatus: PrivateKeyStatus.DoesNotExist })
         {
-            throw new InvalidOperationException("Cannot create JWT: The X509SecurityKey does not contain a private key required for signing.");
+            throw new InvalidOperationException(
+                "Cannot create JWT: The X509SecurityKey does not contain a private key required for signing.");
         }
 
         var now = _dateTime.Now;
 
-        var jwtClaims = new List<Claim> 
-        { 
+        var jwtClaims = new List<Claim>
+        {
             new(JwtRegisteredClaimNames.Sub, userId),
-            new(JwtRegisteredClaimNames.UniqueName, userId) 
+            new(JwtRegisteredClaimNames.UniqueName, userId)
         };
 
         if (!string.IsNullOrWhiteSpace(email))

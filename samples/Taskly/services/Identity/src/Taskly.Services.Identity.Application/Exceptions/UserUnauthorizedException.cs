@@ -2,5 +2,5 @@
 
 public sealed class UserUnauthorizedException() : AppException("User not authorized.")
 {
-    public override string Code { get; } = "user_not_authorized";
+    public override string Code => "user_not_authorized";
 }

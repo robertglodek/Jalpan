@@ -4,7 +4,7 @@ public interface IJwtTokenManager
 {
     JsonWebToken CreateToken(
         string userId,
+        string? email = null,
         string? role = null,
-        string? audience = null,
         IDictionary<string, IEnumerable<string>>? claims = null);
 }

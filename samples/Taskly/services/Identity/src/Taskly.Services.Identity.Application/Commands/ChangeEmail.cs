@@ -1,11 +1,7 @@
 ﻿namespace Taskly.Services.Identity.Application.Commands;
 
-public sealed class ChangeEmail : ICommand<Empty>
+[UsedImplicitly]
+public sealed class ChangeEmail(string email) : ICommand<Empty>
 {
-    public string Email { get; set; }
-
-    public ChangeEmail(string email)
-    {
-        Email = email;
-    }
+    public string Email { get; set; } = email;
 }

@@ -2,14 +2,9 @@
 
 namespace Taskly.Services.Identity.Application.Commands;
 
-public sealed class SignIn : ICommand<AuthDto>
+[UsedImplicitly]
+public sealed class SignIn(string email, string password) : ICommand<AuthDto>
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
-
-    public SignIn(string email, string password)
-    {
-        Email = email;
-        Password = password;
-    }
+    public string Email { get; set; } = email;
+    public string Password { get; set; } = password;
 }

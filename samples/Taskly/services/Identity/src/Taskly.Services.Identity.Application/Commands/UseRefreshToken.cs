@@ -2,12 +2,8 @@
 
 namespace Taskly.Services.Identity.Application.Commands;
 
-public sealed class UseRefreshToken : ICommand<AuthDto>
+[UsedImplicitly]
+public sealed class UseRefreshToken(string refreshToken) : ICommand<AuthDto>
 {
-    public string RefreshToken { get; set; } = null!;
-
-    public UseRefreshToken(string refreshToken)
-    {
-        RefreshToken = refreshToken;
-    }
+    public string RefreshToken { get; set; } = refreshToken;
 }

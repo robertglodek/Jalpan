@@ -7,7 +7,8 @@ namespace Taskly.Services.Identity.Infrastructure.Mongo.Documents;
 internal static class Extensions
 {
     public static User AsEntity(this UserDocument document)
-        => new(document.Id, document.Email, document.Password, (Role)document.Role, document.CreatedAt, document.LastModifiedAt);
+        => new(document.Id, document.Email, document.Password, (Role)document.Role, document.CreatedAt,
+            document.LastModifiedAt, document.Permissions, document.UiSettings, document.LockTo, document.LockReason);
 
     public static UserDocument AsDocument(this User entity)
         => new()
@@ -17,7 +18,11 @@ internal static class Extensions
             Password = entity.Password,
             Role = entity.Role,
             CreatedAt = entity.CreatedAt,
-            LastModifiedAt = entity.LastModifiedAt    
+            LastModifiedAt = entity.LastModifiedAt,
+            Permissions = entity.Permissions,
+            UiSettings = entity.UiSettings,
+            LockTo = entity.LockTo,
+            LockReason = entity.LockReason
         };
 
     public static UserDto AsDto(this UserDocument document)
@@ -26,13 +31,26 @@ internal static class Extensions
             Id = document.Id,
             Email = document.Email,
             Role = document.Role,
+            CreatedAt = document.CreatedAt
+        };
+    
+    public static UserDetailsDto AsDetailsDto(this UserDocument document)
+        => new()
+        {
+            Id = document.Id,
+            Email = document.Email,
+            Role = document.Role,
             CreatedAt = document.CreatedAt,
-            LastModifiedAt = document.LastModifiedAt
+            LastModifiedAt = document.LastModifiedAt,
+            Permissions = document.Permissions,
+            UiSettings = document.UiSettings,
+            LockTo = document.LockTo,
+            LockReason = document.LockReason
         };
 
     public static RefreshToken AsEntity(this RefreshTokenDocument document)
-        => new(document.Id, document.UserId, document.Token, document.CreatedAt, document.RevokedAt);
-    
+        => new(document.Id, document.UserId, document.Token, document.CreatedAt, document.ExpiresAt, document.RevokedAt);
+
     public static RefreshTokenDocument AsDocument(this RefreshToken entity)
         => new()
         {
@@ -40,6 +58,7 @@ internal static class Extensions
             UserId = entity.UserId,
             Token = entity.Token,
             CreatedAt = entity.CreatedAt,
-            RevokedAt = entity.RevokedAt
+            RevokedAt = entity.RevokedAt,
+            ExpiresAt = entity.ExpiresAt
         };
 }

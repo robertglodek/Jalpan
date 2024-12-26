@@ -3,7 +3,7 @@ using Jalpan.Persistence.MongoDB.Repositories;
 using MongoDB.Driver;
 using Taskly.Services.Identity.Infrastructure.Mongo.Documents;
 
-namespace Taskly.Services.Identity.Infrastructure.Mongo;
+namespace Taskly.Services.Identity.Infrastructure.Mongo.Initializers;
 
 internal sealed class MongoDbInitializer(IMongoDbRepository<UserDocument, Guid> usersRepository) : IInitializer
 {
@@ -18,7 +18,8 @@ internal sealed class MongoDbInitializer(IMongoDbRepository<UserDocument, Guid> 
     {
         var indexKeysDefinition = Builders<UserDocument>.IndexKeys.Ascending(u => u.Email);
 
-        var indexModel = new CreateIndexModel<UserDocument>(indexKeysDefinition, new CreateIndexOptions { Unique = true });
+        var indexModel =
+            new CreateIndexModel<UserDocument>(indexKeysDefinition, new CreateIndexOptions { Unique = true });
 
         await UsersRepository.Collection.Indexes.CreateOneAsync(indexModel);
     }

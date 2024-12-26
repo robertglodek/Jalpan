@@ -6,6 +6,7 @@ public sealed class RefreshToken : AggregateRoot
 {
     public AggregateId UserId { get; private set; }
     public string Token { get; private set; }
+    public DateTime ExpiresAt { get; private set; }
     public DateTime? RevokedAt { get; private set; }
     public bool Revoked => RevokedAt.HasValue;
 
@@ -14,6 +15,7 @@ public sealed class RefreshToken : AggregateRoot
         AggregateId userId,
         string token,
         DateTime createdAt,
+        DateTime expiresAt,
         DateTime? revokedAt = null)
     {
         if (string.IsNullOrWhiteSpace(token))
@@ -26,6 +28,7 @@ public sealed class RefreshToken : AggregateRoot
         Token = token;
         CreatedAt = createdAt;
         RevokedAt = revokedAt;
+        ExpiresAt = expiresAt;
     }
 
     public void Revoke(DateTime revokedAt)

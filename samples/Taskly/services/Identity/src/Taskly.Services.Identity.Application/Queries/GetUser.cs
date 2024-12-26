@@ -2,7 +2,8 @@
 
 namespace Taskly.Services.Identity.Application.Queries;
 
-public sealed class GetUser : IQuery<UserDto>
+[UsedImplicitly]
+public sealed class GetUser : IQuery<UserDetailsDto>
 {
     public Guid UserId { get; set; }
 }

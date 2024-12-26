@@ -1,11 +1,7 @@
 ﻿namespace Taskly.Services.Identity.Application.Commands;
 
-public sealed class RevokeRefreshToken : ICommand<Empty>
+[UsedImplicitly]
+public sealed class RevokeRefreshToken(string refreshToken) : ICommand<Empty>
 {
-    public string RefreshToken { get; }
-
-    public RevokeRefreshToken(string refreshToken)
-    {
-        RefreshToken = refreshToken;
-    }
+    public string RefreshToken { get; } = refreshToken;
 }

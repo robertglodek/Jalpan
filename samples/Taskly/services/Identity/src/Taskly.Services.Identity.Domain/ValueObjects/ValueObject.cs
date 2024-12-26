@@ -2,7 +2,7 @@
 
 public abstract class ValueObject
 {
-    protected static bool EqualOperator(ValueObject left, ValueObject right)
+    protected static bool EqualOperator(ValueObject? left, ValueObject? right)
     {
         if (left is null ^ right is null)
         {

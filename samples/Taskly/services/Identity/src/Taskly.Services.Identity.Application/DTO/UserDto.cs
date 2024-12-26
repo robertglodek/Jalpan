@@ -6,5 +6,4 @@ public sealed class UserDto
     public string Email { get; set; } = null!;
     public string Role { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
-    public DateTime? LastModifiedAt { get; set; }
 }

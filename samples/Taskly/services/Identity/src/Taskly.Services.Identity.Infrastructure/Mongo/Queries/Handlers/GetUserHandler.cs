@@ -6,12 +6,14 @@ using Taskly.Services.Identity.Infrastructure.Mongo.Documents;
 
 namespace Taskly.Services.Identity.Infrastructure.Mongo.Queries.Handlers;
 
-internal sealed  class GetUserHandler(IMongoDbRepository<UserDocument, Guid> userRepository) : IQueryHandler<GetUser, UserDto>
+[UsedImplicitly]
+internal sealed class GetUserHandler(IMongoDbRepository<UserDocument, Guid> userRepository)
+    : IQueryHandler<GetUser, UserDetailsDto>
 {
-    public async Task<UserDto?> HandleAsync(GetUser query, CancellationToken cancellationToken = default)
+    public async Task<UserDetailsDto?> HandleAsync(GetUser query, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetAsync(query.UserId, cancellationToken);
 
-        return user?.AsDto();
+        return user?.AsDetailsDto();
     }
 }

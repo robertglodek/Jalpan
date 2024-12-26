@@ -1,17 +1,12 @@
 ﻿namespace Taskly.Services.Identity.Application.Commands;
 
-public sealed class SignUp : ICommand<Empty>
+[UsedImplicitly]
+public sealed class SignUp(Guid userId, string email, string password, string role, IEnumerable<string> permissions)
+    : ICommand<Empty>
 {
-    public Guid UserId { get; }
-    public string Email { get; } = null!;
-    public string Password { get; } = null!;
-    public string Role { get; } = null!;
-
-    public SignUp(Guid userId, string email, string password, string role)
-    {
-        UserId = userId == Guid.Empty ? Guid.NewGuid() : userId;
-        Email = email;
-        Password = password;
-        Role = role;
-    }
+    public Guid UserId { get; } = userId == Guid.Empty ? Guid.NewGuid() : userId;
+    public string Email { get; } = email;
+    public string Password { get; } = password;
+    public string Role { get; } = role;
+    public IEnumerable<string> Permissions { get; } = permissions;
 }

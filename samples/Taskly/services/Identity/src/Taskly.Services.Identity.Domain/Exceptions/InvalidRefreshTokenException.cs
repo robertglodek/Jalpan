@@ -1,10 +1,6 @@
 namespace Taskly.Services.Identity.Domain.Exceptions;
 
-public sealed class InvalidRefreshTokenException : DomainException
+public sealed class InvalidRefreshTokenException() : DomainException("Invalid refresh token.")
 {
-    public override string Code { get; } = "invalid_refresh_token";
-    
-    public InvalidRefreshTokenException() : base("Invalid refresh token.")
-    {
-    }
+    public override string Code => "invalid_refresh_token";
 }

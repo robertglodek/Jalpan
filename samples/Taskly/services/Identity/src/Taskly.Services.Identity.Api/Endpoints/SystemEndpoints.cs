@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace Taskly.Services.Identity.Api.Endpoints;
 
+[UsedImplicitly]
 public sealed class SystemEndpoints : EndpointGroupBase
 {
     public override void Map(WebApplication app)

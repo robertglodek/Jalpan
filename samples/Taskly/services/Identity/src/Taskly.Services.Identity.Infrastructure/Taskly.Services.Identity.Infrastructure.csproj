@@ -13,8 +13,4 @@
 		<ProjectReference Include="..\Taskly.Services.Identity.Application\Taskly.Services.Identity.Application.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Mongo\Initializers\" />
-	</ItemGroup>
-
 </Project>

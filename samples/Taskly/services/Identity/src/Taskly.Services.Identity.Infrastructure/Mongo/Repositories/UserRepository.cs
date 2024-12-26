@@ -5,7 +5,7 @@ using Taskly.Services.Identity.Infrastructure.Mongo.Documents;
 
 namespace Taskly.Services.Identity.Infrastructure.Mongo.Repositories;
 
-internal sealed  class UserRepository(IMongoDbRepository<UserDocument, Guid> repository) : IUserRepository
+internal sealed class UserRepository(IMongoDbRepository<UserDocument, Guid> repository) : IUserRepository
 {
     public async Task<User?> GetAsync(Guid id)
     {

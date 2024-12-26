@@ -1,10 +1,6 @@
 namespace Taskly.Services.Identity.Domain.Exceptions;
 
-public sealed class InvalidPasswordException : DomainException
+public sealed class InvalidPasswordException() : DomainException("Invalid password.")
 {
-    public override string Code { get; } = "invalid_password";
-
-    public InvalidPasswordException() : base($"Invalid password.")
-    {
-    }
+    public override string Code => "invalid_password";
 }

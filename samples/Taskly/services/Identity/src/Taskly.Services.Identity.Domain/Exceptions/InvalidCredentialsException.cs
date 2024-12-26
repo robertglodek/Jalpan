@@ -1,6 +1,7 @@
 namespace Taskly.Services.Identity.Domain.Exceptions;
 
-public sealed class InvalidCredentialsException() : DomainException("Invalid credentials.")
+public sealed class InvalidCredentialsException(string email) : DomainException("Invalid credentials.")
 {
-    public override string Code { get; } = "invalid_credentials";
+    public string Email { get; } = email;
+    public override string Code => "invalid_credentials";
 }

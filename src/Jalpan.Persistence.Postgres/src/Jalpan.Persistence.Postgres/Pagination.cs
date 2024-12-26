@@ -10,7 +10,7 @@ public static class Pagination
         => data.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results, cancellationToken);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, string? orderBy,
-        SortOrder? sortOrder, int page, int results, CancellationToken cancellationToken = default)
+        string? sortOrder, int page, int results, CancellationToken cancellationToken = default)
     {
         if (page <= 0)
         {
@@ -34,7 +34,7 @@ public static class Pagination
             return PagedResult<T>.Create(result, page, results, totalPages, totalResults);
         }
 
-        if (sortOrder is null || sortOrder == SortOrder.Asc)
+        if (sortOrder?.ToLowerInvariant() == "asc")
         {
             result = await data.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
         }

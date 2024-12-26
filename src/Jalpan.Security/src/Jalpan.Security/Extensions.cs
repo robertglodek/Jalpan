@@ -1,5 +1,6 @@
 ﻿using Jalpan.Security.Encryptors;
 using Jalpan.Security.Hashers;
+using Jalpan.Security.Rng;
 using Jalpan.Security.Signers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,8 @@ public static class Extensions
         builder.Services
             .AddSingleton<IEncryptor, Encryptor>()
             .AddSingleton<IHasher, Hasher>()
-            .AddSingleton<ISigner, Signer>();
+            .AddSingleton<ISigner, Signer>()
+            .AddSingleton<IRng, Rng.Rng>();
 
         return builder;
     }

@@ -1,8 +1,7 @@
-﻿using FluentValidation;
+﻿namespace Taskly.Services.Identity.Application.Commands.Validators;
 
-namespace Taskly.Services.Identity.Application.Commands.Validators;
-
-internal class ChangeEmailValidator : AbstractValidator<ChangeEmail>
+[UsedImplicitly]
+public sealed class ChangeEmailValidator : AbstractValidator<ChangeEmail>
 {
     public ChangeEmailValidator()
     {
