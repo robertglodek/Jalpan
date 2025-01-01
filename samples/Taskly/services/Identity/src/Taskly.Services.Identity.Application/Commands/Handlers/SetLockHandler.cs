@@ -1,3 +1,5 @@
+using Jalpan.Messaging.Brokers;
+using Taskly.Services.Identity.Application.Events;
 using Taskly.Services.Identity.Application.Exceptions;
 using Taskly.Services.Identity.Domain.Repositories;
 
@@ -7,7 +9,8 @@ namespace Taskly.Services.Identity.Application.Commands.Handlers;
 internal sealed class SetLockHandler(
     IUserRepository userRepository,
     IDateTime dateTime,
-    ILogger<SetLockHandler> logger)
+    ILogger<SetLockHandler> logger,
+    IMessageBroker messageBroker)
     : ICommandHandler<SetLock, Empty>
 {
     public async Task<Empty> HandleAsync(SetLock command, CancellationToken cancellationToken = default)
@@ -24,5 +27,7 @@ internal sealed class SetLockHandler(
             await userRepository.UpdateAsync(user);
             
             logger.LogInformation("Changed lock state for the user with id: {UserId}", user.Id);
+            
+            await messageBroker.SendAsync(new LockSet(command.UserId, command.To), cancellationToken);
         });
 }

@@ -69,17 +69,33 @@ public static class Extensions
         options.CustomSchemaIds(x => x.FullName);
         options.SwaggerDoc(swaggerOptions.Name, new OpenApiInfo { Title = swaggerOptions.Title, Version = swaggerOptions.Version });
 
-        if (swaggerOptions.IncludeSecurity)
+        if (!swaggerOptions.IncludeSecurity) return;
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer"
+        });
+        
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
             {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer"
-            });
-        }
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme = "Bearer",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header
+                },
+                new List<string>()
+            }
+        });
     }
 
     private static void ValidateSwaggerOptions(SwaggerOptions options)

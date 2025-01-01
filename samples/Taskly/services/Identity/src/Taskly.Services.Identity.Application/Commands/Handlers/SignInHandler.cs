@@ -1,6 +1,8 @@
-﻿using Jalpan.Security.Rng;
+﻿using Jalpan.Messaging.Brokers;
+using Jalpan.Security.Rng;
 using Microsoft.Extensions.Options;
 using Taskly.Services.Identity.Application.DTO;
+using Taskly.Services.Identity.Application.Events;
 using Taskly.Services.Identity.Application.Services;
 using Taskly.Services.Identity.Domain.Entities;
 using Taskly.Services.Identity.Domain.Exceptions;
@@ -17,12 +19,13 @@ internal sealed class SignInHandler(
     IRng rng,
     IRefreshTokenRepository refreshTokenRepository,
     IOptions<RefreshTokenOptions> refreshTokenOptions,
-    IDateTime dateTime) : ICommandHandler<SignIn, AuthDto>
+    IDateTime dateTime,
+    IMessageBroker messageBroker) : ICommandHandler<SignIn, AuthDto>
 {
     public async Task<AuthDto> HandleAsync(SignIn command, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetAsync(command.Email);
-        if (user is null || passwordService.IsValid(user.Password, command.Password))
+        if (user is null)
         {
             logger.LogError("User with email {Email} was not found.", command.Email);
             throw new InvalidCredentialsException(command.Email);
@@ -45,6 +48,8 @@ internal sealed class SignInHandler(
         var refreshToken = await CreateRefreshTokenAsync(user.Id);
 
         logger.LogInformation("User with id {UserId} has been authenticated.", user.Id);
+
+        await messageBroker.SendAsync(new SignedIn(user.Id, user.Role), cancellationToken);
 
         return new AuthDto
         {

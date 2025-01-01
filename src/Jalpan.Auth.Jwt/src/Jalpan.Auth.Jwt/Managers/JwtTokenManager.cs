@@ -17,7 +17,7 @@ internal sealed class JwtTokenManager : IJwtTokenManager
 
     public JwtTokenManager(IOptions<AuthOptions> options, SecurityKeyDetails securityKeyDetails, IDateTime dateTime)
     {
-        var jwtOptions = options.Value.Jwt!;
+        var jwtOptions = options.Value.Jwt;
 
         _audience = jwtOptions.Audience;
         _issuer = jwtOptions.Issuer;

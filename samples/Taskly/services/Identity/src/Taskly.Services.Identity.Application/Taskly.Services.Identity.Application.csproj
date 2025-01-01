@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Auth.Jwt\src\Jalpan.Auth.Jwt\Jalpan.Auth.Jwt.csproj" />
 		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Contexts\src\Jalpan.Contexts\Jalpan.Contexts.csproj" />
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan\src\Jalpan\Jalpan.csproj" />
 		<ProjectReference Include="..\Taskly.Services.Identity.Domain\Taskly.Services.Identity.Domain.csproj" />
 		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Security\src\Jalpan.Security\Jalpan.Security.csproj" />

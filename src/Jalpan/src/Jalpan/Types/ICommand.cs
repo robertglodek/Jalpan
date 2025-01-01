@@ -1,8 +1,4 @@
 namespace Jalpan.Types;
 
-/// <summary>
-/// Marker interface
-/// </summary>
-public interface ICommand<T>
-{
-}
+public interface ICommand<T> : ICommand;
+public interface ICommand;

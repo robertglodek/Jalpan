@@ -11,7 +11,7 @@ namespace Jalpan.Auth.Jwt;
 
 public static class Extensions
 {
-    private const string DefaultSectionName = "jwt";
+    private const string DefaultSectionName = "auth";
     private const string RegistryKey = "auth";
 
     public static IJalpanBuilder AddJwt(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
@@ -25,11 +25,13 @@ public static class Extensions
 
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<AuthOptions>();
-        builder.Services.Configure<AppOptions>(section);
+        builder.Services.Configure<AuthOptions>(section);
 
         var tokenValidationParameters = CreateTokenValidationParameters(options);
 
         var securityKey = GetSecurityKey(options, out var algorithm);
+
+        tokenValidationParameters.IssuerSigningKey = securityKey;
 
         ConfigureJwtBearerAuthentication(builder.Services, options, tokenValidationParameters);
 

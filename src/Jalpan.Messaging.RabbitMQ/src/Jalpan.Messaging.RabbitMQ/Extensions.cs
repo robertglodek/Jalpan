@@ -68,6 +68,12 @@ public static class Extensions
         services.TryDecorate(typeof(IEventHandler<>), typeof(MessagingErrorHandlingEventHandlerDecorator<>));
         return services;
     }
+    
+    public static IServiceCollection AddErrorToMessageHandlerDecorators(this IServiceCollection services)
+    {
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(ErrorToMessageCommandHandlerDecorator<,>));
+        return services;
+    }
 
     internal static string ToMessageKey(this string messageType) => messageType.Underscore();
 }

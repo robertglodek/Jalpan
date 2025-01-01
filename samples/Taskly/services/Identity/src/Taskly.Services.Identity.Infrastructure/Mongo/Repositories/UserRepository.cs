@@ -10,14 +10,12 @@ internal sealed class UserRepository(IMongoDbRepository<UserDocument, Guid> repo
     public async Task<User?> GetAsync(Guid id)
     {
         var user = await repository.GetAsync(id);
-
         return user?.AsEntity();
     }
 
     public async Task<User?> GetAsync(string email)
     {
-        var user = await repository.GetAsync(x => x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
-
+        var user = await repository.GetAsync(x => x.Email == email.ToLowerInvariant());
         return user?.AsEntity();
     }
 

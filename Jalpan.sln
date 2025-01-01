@@ -197,6 +197,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notificatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Api", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Api\Taskly.Services.Notification.Api.csproj", "{605F3688-FDC8-4C47-B621-9D6C2B684288}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{8FE839F4-B1CB-4B1D-B237-7E78E92A4627}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mongo", "mongo", "{BC3F8BD3-1CE3-420B-8490-59847FABFE76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "localhost", "localhost", "{DF3A42A8-88FE-4FE1-983A-D3E3A3872C31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -455,6 +461,8 @@ Global
 		{92E95202-00E2-4157-8B0E-DFEF17E96F0F} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
 		{DEBA9B74-B77A-4475-AF90-8ACD6CDE8516} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
 		{605F3688-FDC8-4C47-B621-9D6C2B684288} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
+		{BC3F8BD3-1CE3-420B-8490-59847FABFE76} = {8FE839F4-B1CB-4B1D-B237-7E78E92A4627}
+		{DF3A42A8-88FE-4FE1-983A-D3E3A3872C31} = {BC3F8BD3-1CE3-420B-8490-59847FABFE76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BD1658A-F18C-408B-B206-A21057A6E039}
