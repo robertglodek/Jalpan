@@ -11,7 +11,7 @@ public static class Extensions
 
     public static IServiceCollection AddJalpan(this IServiceCollection services,
         IConfiguration configuration,
-        Action<IJalpanBuilder>? configure = null,
+        Action<IJalpanBuilder>? jalpanBuilder = null,
         string sectionName = DefaultSectionName)
     {
         ArgumentNullException.ThrowIfNull(configuration);
@@ -23,9 +23,7 @@ public static class Extensions
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<AppOptions>();
         services.Configure<AppOptions>(section);
-
-        services.AddMemoryCache();
-        services.AddHttpContextAccessor();
+        
         services.AddSingleton<IServiceId, ServiceId>();
         services.AddSingleton<IDateTime, UtcDateTime>();
         services.AddSingleton<IJsonSerializer, SystemTextJsonSerializer>();
@@ -39,7 +37,7 @@ public static class Extensions
 
         services.AddHostedService<StartupInitializer>();
 
-        configure?.Invoke(builder);
+        jalpanBuilder?.Invoke(builder);
 
         if (string.IsNullOrWhiteSpace(options.Name))
         {

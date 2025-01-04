@@ -8,10 +8,11 @@ public static class Extensions
     private const string DefaultSectionName = "inbox";
     private const string RegistryKey = "messaging.inbox";
 
-    public static IJalpanBuilder AddInbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
+    public static IJalpanBuilder AddInbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName,
+        Action<IMessageInboxConfigurator>? configure = null)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
-        
+
         var section = builder.Configuration.GetSection(sectionName);
         var options = section.BindOptions<InboxOptions>();
         builder.Services.Configure<InboxOptions>(section);
@@ -23,6 +24,9 @@ public static class Extensions
 
         builder.Services.AddHostedService<InboxCleaner>();
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(InboxEventHandlerDecorator<>));
+        
+        var configurator = new MessageInboxConfigurator(builder, options);
+        configure?.Invoke(configurator);
 
         return builder;
     }

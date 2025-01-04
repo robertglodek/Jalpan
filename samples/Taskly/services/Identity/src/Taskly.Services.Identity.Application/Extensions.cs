@@ -1,5 +1,6 @@
 ﻿using Jalpan.Dispatchers;
 using Jalpan.Messaging;
+using Jalpan.Transactions;
 using Jalpan.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Taskly.Services.Identity.Application.Context;
@@ -15,6 +16,7 @@ public static class Extensions
     {
         builder.AddHandlers();
         builder.AddDispatchers();
+        builder.AddTransactionalDecorators();
         builder.AddValidation();
         builder.AddExceptionToMessageResolver<ExceptionToMessageResolver>();
         builder.Services.Configure<RefreshTokenOptions>(builder.Configuration.GetSection(RefreshTokenSectionName));

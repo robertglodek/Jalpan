@@ -7,7 +7,7 @@ using Jalpan.WebApi.Exceptions.Mappers;
 using Taskly.Services.Identity.Application.Exceptions;
 using Taskly.Services.Identity.Domain.Exceptions;
 
-namespace Taskly.Services.Identity.Api.Exceptions.Mappers;
+namespace Taskly.Services.Identity.Infrastructure.Exceptions.Mappers;
 
 [UsedImplicitly]
 internal sealed class ExceptionToResponseMapper : IExceptionToResponseMapper

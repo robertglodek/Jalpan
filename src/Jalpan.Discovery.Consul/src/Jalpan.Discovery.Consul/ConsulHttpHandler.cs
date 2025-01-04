@@ -10,7 +10,8 @@ internal sealed class ConsulHttpHandler(IConsulClient client, IOptions<ConsulOpt
     private readonly StringFieldSelector _selector = new("Service");
     private readonly bool _enabled = options.Value.Enabled;
 
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         if (!_enabled || request.RequestUri is null || string.IsNullOrWhiteSpace(request.RequestUri.Host))
         {

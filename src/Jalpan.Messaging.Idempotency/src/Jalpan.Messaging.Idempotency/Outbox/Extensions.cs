@@ -9,7 +9,8 @@ public static class Extensions
     private const string DefaultSectionName = "outbox";
     private const string RegistryKey = "messaging.outbox";
 
-    public static IJalpanBuilder AddOutbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
+    public static IJalpanBuilder AddOutbox(this IJalpanBuilder builder, string sectionName = DefaultSectionName,
+        Action<IMessageOutboxConfigurator>? configure = null)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
@@ -25,6 +26,9 @@ public static class Extensions
         builder.Services.AddTransient<IMessageBroker, OutboxMessageBroker>();
         builder.Services.AddHostedService<OutboxSender>();
         builder.Services.AddHostedService<OutboxCleaner>();
+        
+        var configurator = new MessageOutboxConfigurator(builder, options);
+        configure?.Invoke(configurator);
 
         return builder;
     }

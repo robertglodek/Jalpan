@@ -11,7 +11,8 @@ public static class Extensions
     private const string DefaultConsulSectionName = "consul";
     private const string RegistryName = "loadBalancing.fabio";
 
-    public static IJalpanBuilder AddFabio(this IJalpanBuilder builder, string sectionName = DefaultSectionName, string consulSectionName = DefaultConsulSectionName)
+    public static IJalpanBuilder AddFabio(this IJalpanBuilder builder, string sectionName = DefaultSectionName,
+        string consulSectionName = DefaultConsulSectionName)
     {
         sectionName = string.IsNullOrEmpty(sectionName) ? DefaultSectionName : sectionName;
         consulSectionName = string.IsNullOrEmpty(consulSectionName) ? DefaultConsulSectionName : consulSectionName;
@@ -56,12 +57,14 @@ public static class Extensions
             registration.Tags = [.. registration.Tags, .. tags];
         }
 
-        var serviceDescriptor = builder.Services.FirstOrDefault(sd => sd.ServiceType == typeof(AgentServiceRegistration));
+        var serviceDescriptor =
+            builder.Services.FirstOrDefault(sd => sd.ServiceType == typeof(AgentServiceRegistration));
         builder.Services.Remove(serviceDescriptor!);
         builder.Services.AddSingleton(registration);
     }
 
-    private static List<string> GetFabioTags(string consulServiceName) => [$"urlprefix-/{consulServiceName} strip=/{consulServiceName}"];
+    private static List<string> GetFabioTags(string consulServiceName) =>
+        [$"urlprefix-/{consulServiceName} strip=/{consulServiceName}"];
 
     public static IHttpClientBuilder AddFabioHandler(this IHttpClientBuilder builder)
         => builder.AddHttpMessageHandler<FabioHttpHandler>();

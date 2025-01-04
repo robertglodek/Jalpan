@@ -9,7 +9,7 @@ using OpenTelemetry.Trace;
 
 namespace Jalpan.Tracing.OpenTelemetry;
 
-internal static class Extensions
+public static class Extensions
 {
     private const string ConsoleExporter = "console";
     private const string JaegerExporter = "jaeger";
@@ -17,7 +17,8 @@ internal static class Extensions
     private const string DefaultAppSectionName = "app";
     private const string RegistryKey = "tracing.openTelemetry";
 
-    public static IJalpanBuilder AddTracing(this IJalpanBuilder builder, string sectionName = DefaultSectionName, string appSectionName = DefaultAppSectionName)
+    public static IJalpanBuilder AddTracing(this IJalpanBuilder builder, string sectionName = DefaultSectionName,
+        string appSectionName = DefaultAppSectionName)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
         appSectionName = string.IsNullOrWhiteSpace(appSectionName) ? DefaultAppSectionName : appSectionName;

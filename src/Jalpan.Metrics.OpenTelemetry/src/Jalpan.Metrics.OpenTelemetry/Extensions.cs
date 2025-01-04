@@ -9,7 +9,7 @@ using OpenTelemetry.Metrics;
 
 namespace Jalpan.Metrics.OpenTelemetry;
 
-internal static class Extensions
+public static class Extensions
 {
     private const string ConsoleExporter = "console";
     private const string PrometheusExporter = "prometheus";
@@ -52,7 +52,7 @@ internal static class Extensions
 
     private static void ConfigureExporter(MeterProviderBuilder builder, string sectionName, MetricsOptions options)
     {
-        if(string.IsNullOrEmpty(options.Exporter))
+        if (string.IsNullOrEmpty(options.Exporter))
         {
             throw new MetricsConfigurationException("Metrics explorer cannot be empty.");
         }
@@ -64,7 +64,9 @@ internal static class Extensions
                 break;
             case PrometheusExporter:
                 builder.AddPrometheusExporter(prometheus =>
-                    prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint) ? prometheus.ScrapeEndpointPath : options.Endpoint);
+                    prometheus.ScrapeEndpointPath = string.IsNullOrWhiteSpace(options.Endpoint)
+                        ? prometheus.ScrapeEndpointPath
+                        : options.Endpoint);
                 break;
             default:
                 throw new MetricsConfigurationException($"Metrics explorer '{options.Exporter}' not configured.");
@@ -96,7 +98,7 @@ internal static class Extensions
             .Where(x => x.IsClass && x.GetCustomAttribute<MeterAttribute>() is not null)
             .Select(x => x.GetCustomAttribute<MeterAttribute>())
             .Where(x => x is not null);
-    
+
     public static IJalpanBuilder AddMessagingMetricsDecorators(this IJalpanBuilder builder)
     {
         builder.Services.TryDecorate<IMessageBroker, MessageBrokerMetricsDecorator>();

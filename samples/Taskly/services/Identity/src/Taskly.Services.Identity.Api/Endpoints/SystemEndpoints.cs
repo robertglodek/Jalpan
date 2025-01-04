@@ -1,5 +1,6 @@
 ﻿using Jalpan;
 using Jalpan.WebApi.MinimalApi;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Options;
 
 namespace Taskly.Services.Identity.Api.Endpoints;

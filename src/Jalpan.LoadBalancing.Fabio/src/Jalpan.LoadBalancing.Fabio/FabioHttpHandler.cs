@@ -1,3 +1,4 @@
+using Jalpan.LoadBalancing.Fabio.Exceptions;
 using Microsoft.Extensions.Options;
 
 namespace Jalpan.LoadBalancing.Fabio;
@@ -11,14 +12,15 @@ internal sealed class FabioHttpHandler : DelegatingHandler
     {
         if (string.IsNullOrWhiteSpace(options.Value.Url))
         {
-            throw new ArgumentException("Fabio URL cannot be empty.", nameof(options.Value.Url));
+            throw new FabioConfigurationException("Fabio URL cannot be empty.");
         }
 
         _enabled = options.Value.Enabled;
         _url = new Uri(options.Value.Url);
     }
-    
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
+        CancellationToken cancellationToken)
     {
         if (!_enabled)
         {
@@ -37,7 +39,7 @@ internal sealed class FabioHttpHandler : DelegatingHandler
             Port = _url.Port,
             Path = $"{serviceName}{request.RequestUri.PathAndQuery}"
         };
-        
+
         request.RequestUri = uriBuilder.Uri;
 
         return await base.SendAsync(request, cancellationToken);

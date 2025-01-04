@@ -10,7 +10,10 @@ public static class Extensions
     private const string DefaultSectionName = "swagger";
     private const string RegistryKey = "webApi.swagger";
 
-    public static IJalpanBuilder AddSwaggerDocs(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
+    public static IJalpanBuilder AddSwaggerDocs(
+        this IJalpanBuilder builder,
+        string sectionName = DefaultSectionName,
+        Action<SwaggerGenOptions>? swaggerGenOptions = null)
     {
         sectionName = string.IsNullOrWhiteSpace(sectionName) ? DefaultSectionName : sectionName;
 
@@ -29,8 +32,9 @@ public static class Extensions
         builder.Services.AddSwaggerGen(c =>
         {
             ConfigureSwaggerGen(c, options);
+            swaggerGenOptions?.Invoke(c);
         });
-
+        
         return builder;
     }
 
@@ -44,10 +48,7 @@ public static class Extensions
 
         var routePrefix = string.IsNullOrWhiteSpace(options.RoutePrefix) ? string.Empty : options.RoutePrefix;
 
-        builder.UseSwagger(c =>
-        {
-            c.RouteTemplate = $"{routePrefix}/{{documentName}}/swagger.json";
-        });
+        builder.UseSwagger(c => { c.RouteTemplate = $"{routePrefix}/{{documentName}}/swagger.json"; });
 
         return options.ReDocEnabled
             ? builder.UseReDoc(c =>
@@ -67,18 +68,20 @@ public static class Extensions
         options.SchemaFilter<ExcludePropertiesFilter>();
         options.EnableAnnotations();
         options.CustomSchemaIds(x => x.FullName);
-        options.SwaggerDoc(swaggerOptions.Name, new OpenApiInfo { Title = swaggerOptions.Title, Version = swaggerOptions.Version });
+        options.SwaggerDoc(swaggerOptions.Name,
+            new OpenApiInfo { Title = swaggerOptions.Title, Version = swaggerOptions.Version });
 
         if (!swaggerOptions.IncludeSecurity) return;
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-            Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+            Description =
+                "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
             Name = "Authorization",
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.Http,
             Scheme = "Bearer"
         });
-        
+
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
             {

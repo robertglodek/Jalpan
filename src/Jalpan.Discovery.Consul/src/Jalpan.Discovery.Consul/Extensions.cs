@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using ConsulConfigurationException = Jalpan.Discovery.Consul.Exceptions.ConsulConfigurationException;
 
 namespace Jalpan.Discovery.Consul;
 
@@ -37,7 +38,8 @@ public static class Extensions
         return builder;
     }
 
-    private static AgentServiceRegistration CreateConsulAgentRegistration(this IJalpanBuilder builder, ConsulOptions options)
+    private static AgentServiceRegistration CreateConsulAgentRegistration(this IJalpanBuilder builder,
+        ConsulOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.Service.Url))
         {

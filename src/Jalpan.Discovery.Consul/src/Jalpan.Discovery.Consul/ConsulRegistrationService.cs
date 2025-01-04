@@ -21,7 +21,7 @@ public class ConsulRegistrationService(
             logger.LogInformation("Registered a service: '{ServiceIdentifier}' in Consul.", _serviceIdentifier);
             return;
         }
-        
+
         logger.LogError("There was an error: {StatusCode} when registering a service: '{ServiceIdentifier}' in Consul.",
             result.StatusCode, _serviceIdentifier);
     }
@@ -36,8 +36,9 @@ public class ConsulRegistrationService(
             logger.LogInformation("Deregistered a service: '{ServiceIdentifier}' in Consul.", _serviceIdentifier);
             return;
         }
-        
-        logger.LogError("There was an error: {StatusCode} when deregistering a service: '{ServiceIdentifier}' in Consul.",
+
+        logger.LogError(
+            "There was an error: {StatusCode} when deregistering a service: '{ServiceIdentifier}' in Consul.",
             result.StatusCode, _serviceIdentifier);
     }
 }

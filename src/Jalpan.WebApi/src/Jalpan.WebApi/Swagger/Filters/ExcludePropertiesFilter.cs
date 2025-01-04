@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace Jalpan.WebApi.Swagger.Filters;
 
+[UsedImplicitly]
 internal sealed class ExcludePropertiesFilter : ISchemaFilter
 {
     private const BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance;
