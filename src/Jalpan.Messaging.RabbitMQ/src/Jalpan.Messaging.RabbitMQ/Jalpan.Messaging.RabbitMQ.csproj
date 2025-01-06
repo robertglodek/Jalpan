@@ -7,7 +7,7 @@
 		<Title>Jalpan.Messaging.RabbitMQ</Title>
 		<PackageId>Jalpan.Messaging.RabbitMQ</PackageId>
 		<PackageTags>Jalpan.Messaging.RabbitMQ</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
@@ -19,7 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj" />
 	</ItemGroup>
 

@@ -7,22 +7,22 @@
 		<Title>Jalpan.Metrics.OpenTelemetry</Title>
 		<PackageId>Jalpan.Metrics.OpenTelemetry</PackageId>
 		<PackageTags>Jalpan.Metrics.OpenTelemetry</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OpenTelemetry.Exporter.Prometheus" Version="1.3.0-beta.2" />
-		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
-		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.9.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
+		<PackageReference Include="OpenTelemetry" Version="1.11.0-rc.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.0-rc.1" />
+		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.10.0-beta.1" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.11.0-rc.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.10.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.10.0" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.10.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
 	  <ProjectReference Include="..\..\..\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj" />
 	</ItemGroup>
 

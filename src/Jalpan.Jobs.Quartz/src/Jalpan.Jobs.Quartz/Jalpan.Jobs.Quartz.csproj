@@ -7,13 +7,13 @@
 		<Title>Jalpan.Jobs.Quartz</Title>
 		<PackageId>Jalpan.Jobs.Quartz</PackageId>
 		<PackageTags>Jalpan.Jobs.Quartz</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.11.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
 	</ItemGroup>
 
 	<ItemGroup>

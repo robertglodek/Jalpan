@@ -18,7 +18,7 @@ internal sealed class ContextCommandHandlerDecorator<TCommand, TResponse>(
         if (context.UserId is null) return await handler.HandleAsync(command, cancellationToken);
 
         var user = await userRepository.GetAsync(Guid.Parse(context.UserId!));
-        var identityContext = new IdentityDataContext(user!.Permissions, user.Email, user.Role, user.LockTo);
+        var identityContext = new IdentityDataContext(user!.Permissions, user.Email, user.Role);
         dataContextAccessor.DataContext = new DataContext<IdentityDataContext>(identityContext, context);
 
         return await handler.HandleAsync(command, cancellationToken);

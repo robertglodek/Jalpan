@@ -140,8 +140,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Taskly", "Taskly", "{9B235ABD-DEEE-441E-AEFA-1022B3DB1E6B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{35401914-10DC-46C6-A08E-9F87EE52298C}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\services\docker-compose.yml = samples\Taskly\services\docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Task", "Task", "{1C928D38-EDBC-4081-8E5C-49284097829D}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\services\Task\Dockerfile = samples\Taskly\services\Task\Dockerfile
+		samples\Taskly\services\Task\.gitlab-ci.yml = samples\Taskly\services\Task\.gitlab-ci.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F66D3D7C-EAAF-4050-AB82-3E06E11B6770}"
 EndProject
@@ -156,6 +163,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Task.Infrastructure", "samples\Taskly\services\Task\src\Taskly.Services.Task.Infrastructure\Taskly.Services.Task.Infrastructure.csproj", "{469EB4C7-7142-4091-B589-308DE30B9590}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{8D2B98F2-E423-4128-B198-BC99F227A545}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\services\Identity\Dockerfile = samples\Taskly\services\Identity\Dockerfile
+		samples\Taskly\services\Identity\.gitlab-ci.yml = samples\Taskly\services\Identity\.gitlab-ci.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D9FE616C-B39A-45EB-A540-BE750EE12373}"
 EndProject
@@ -170,8 +181,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Identity.Application", "samples\Taskly\services\Identity\src\Taskly.Services.Identity.Application\Taskly.Services.Identity.Application.csproj", "{B7DE3D8F-D8AA-4292-8230-1DB462F3CF34}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{00D5C9B7-CC72-47BA-B325-E5F73E55B13E}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\services\Notification\Dockerfile = samples\Taskly\services\Notification\Dockerfile
+		samples\Taskly\services\Notification\.gitlab-ci.yml = samples\Taskly\services\Notification\.gitlab-ci.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Report", "Report", "{C1849BFA-9191-47DE-B0F0-E4FECABBADB6}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\services\Report\Dockerfile = samples\Taskly\services\Report\Dockerfile
+		samples\Taskly\services\Report\.gitlab-ci.yml = samples\Taskly\services\Report\.gitlab-ci.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}"
 EndProject
@@ -197,9 +216,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notificatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Notification.Api", "samples\Taskly\services\Notification\src\Taskly.Services.Notification.Api\Taskly.Services.Notification.Api.csproj", "{605F3688-FDC8-4C47-B621-9D6C2B684288}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{8FE839F4-B1CB-4B1D-B237-7E78E92A4627}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infrastructure", "infrastructure", "{3BA16826-979C-45D3-9E17-54295EFCF1CF}"
 	ProjectSection(SolutionItems) = preProject
-		infrastructure\docker-compose.yml = infrastructure\docker-compose.yml
+		samples\Taskly\infrastructure\docker-compose.yml = samples\Taskly\infrastructure\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "prometheus", "prometheus", "{AA3B702C-BAF6-489E-A251-9BDAD726F5B6}"
+	ProjectSection(SolutionItems) = preProject
+		samples\Taskly\infrastructure\prometheus\Dockerfile = samples\Taskly\infrastructure\prometheus\Dockerfile
+		samples\Taskly\infrastructure\prometheus\prometheus.yml = samples\Taskly\infrastructure\prometheus\prometheus.yml
 	EndProjectSection
 EndProject
 Global
@@ -460,6 +485,8 @@ Global
 		{92E95202-00E2-4157-8B0E-DFEF17E96F0F} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
 		{DEBA9B74-B77A-4475-AF90-8ACD6CDE8516} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
 		{605F3688-FDC8-4C47-B621-9D6C2B684288} = {ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}
+		{3BA16826-979C-45D3-9E17-54295EFCF1CF} = {9B235ABD-DEEE-441E-AEFA-1022B3DB1E6B}
+		{AA3B702C-BAF6-489E-A251-9BDAD726F5B6} = {3BA16826-979C-45D3-9E17-54295EFCF1CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BD1658A-F18C-408B-B206-A21057A6E039}

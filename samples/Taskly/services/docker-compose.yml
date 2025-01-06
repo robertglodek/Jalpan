@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  identity-service:
+    build: ./
+    container_name: taskly-identity-service
+    restart: unless-stopped
+    ports:
+      - "5239:8080"
+    networks:
+      - taskly_network
+      - redis_network
+      - mongors_network
+      - fabio_network
+      - consul_network
+      - jaeger_network
+      - vault_network
+      - seq_network
+      - rabbitmq_network
+      - prometheus_network
+      - grafana_network
+
+networks:
+  taskly_network:
+    driver: bridge

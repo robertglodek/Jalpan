@@ -21,7 +21,7 @@ internal sealed class ErrorToMessageCommandHandlerDecorator<TCommand, TResponse>
         }
         catch (Exception e)
         {
-            var @event = exceptionToMessageResolver.Map(command, e);
+            var @event = exceptionToMessageResolver.Resolve(command, e);
             if (@event != null)
             {
                 await messageBroker.SendAsync(@event, cancellationToken);

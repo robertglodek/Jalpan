@@ -7,7 +7,7 @@
 		<Title>Jalpan.Messaging</Title>
 		<PackageId>Jalpan.Messaging</PackageId>
 		<PackageTags>Jalpan.Messaging</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

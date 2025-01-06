@@ -6,13 +6,13 @@
 	<Title>Jalpan.Persistance.MongoDB</Title>
 	<PackageId>Jalpan.Persistence.MongoDB</PackageId>
 	<PackageTags>Jalpan.Persistance.MongoDB</PackageTags>
-	<TargetFramework>net8.0</TargetFramework>
+	<TargetFramework>net9.0</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.26.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
   </ItemGroup>
 
   <ItemGroup>

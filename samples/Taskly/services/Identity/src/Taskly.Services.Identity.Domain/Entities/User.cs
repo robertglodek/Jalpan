@@ -11,12 +11,8 @@ public sealed class User : AggregateRoot
     public DateTime? LastModifiedAt { get; set; }
     public IEnumerable<string> Permissions { get; private set; }
     public string? UiSettings { get; private set; }
-    public DateTime? LockTo { get; private set; }
-    public string? LockReason { get; private set; }
-
     public User(Guid id, string email, string password, Role role, DateTime createdAt, DateTime? lastModifiedAt = null,
-        IEnumerable<string>? permissions = null, string? uiSettings = null, DateTime? lockTo = null,
-        string? lockReason = null)
+        IEnumerable<string>? permissions = null, string? uiSettings = null)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -36,8 +32,6 @@ public sealed class User : AggregateRoot
         LastModifiedAt = lastModifiedAt;
         Permissions = permissions ?? [];
         UiSettings = uiSettings;
-        LockTo = lockTo;
-        LockReason = lockReason;
     }
 
     public void UpdatePassword(string password)
@@ -58,11 +52,5 @@ public sealed class User : AggregateRoot
         }
 
         Email = email;
-    }
-
-    public void SetLock(DateTime? to, string? reason)
-    {
-        LockTo = to;
-        LockReason = reason;
     }
 }

@@ -14,8 +14,6 @@ public sealed class IdentityEndpoints : EndpointGroupBase
         app.MapGroup(this)
             .MapPost(SignUp, pattern: "signup")
             .MapPost(SignIn, pattern: "signin")
-            .MapPost(SetLock, pattern: "lock",
-                config: config => config.RequireAuthorization(n => n.RequireRole(Role.Admin)))
             .MapPut(ChangeEmail, pattern: "change_email", config: config => config.RequireAuthorization())
             .MapPut(ChangePassword, pattern: "change_password", config: config => config.RequireAuthorization())
             .MapPost(RevokeAccessToken, pattern: "access_token/revoke",
@@ -62,12 +60,6 @@ public sealed class IdentityEndpoints : EndpointGroupBase
     }
 
     private static async Task<IResult> RevokeRefreshToken(IDispatcher dispatcher, RevokeRefreshToken command)
-    {
-        await dispatcher.SendAsync(command);
-        return Results.NoContent();
-    }
-    
-    private static async Task<IResult> SetLock(IDispatcher dispatcher, SetLock command)
     {
         await dispatcher.SendAsync(command);
         return Results.NoContent();

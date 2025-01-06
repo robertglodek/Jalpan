@@ -8,7 +8,7 @@ namespace Taskly.Services.Identity.Application.Exceptions;
 [UsedImplicitly]
 internal sealed class ExceptionToMessageResolver : IExceptionToMessageResolver
 {
-    public IRejectedEvent? Map(ICommand command, Exception exception)
+    public IRejectedEvent? Resolve(ICommand command, Exception exception)
         => exception switch
 
         {

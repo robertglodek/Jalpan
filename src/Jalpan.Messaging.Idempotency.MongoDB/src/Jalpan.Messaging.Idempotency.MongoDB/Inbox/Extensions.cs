@@ -8,7 +8,7 @@ public static class Extensions
 {
     private const string DefaultSectionName = "inbox:mongo";
     private const string RegistryKey = "messaging.inbox.mongo";
-    internal const string DefaultInboxCollectionName = "Inbox";
+    internal const string DefaultInboxCollectionName = "inbox";
 
     public static IMessageInboxConfigurator AddMongo(this IMessageInboxConfigurator configurator, string sectionName = DefaultSectionName)
     {

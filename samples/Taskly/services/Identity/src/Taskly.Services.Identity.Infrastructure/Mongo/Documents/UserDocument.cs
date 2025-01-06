@@ -12,6 +12,4 @@ internal sealed class UserDocument : IIdentifiable<Guid>
     public DateTime CreatedAt { get; init; }
     public DateTime? LastModifiedAt { get; init; }
     public IEnumerable<string> Permissions { get; init; } = null!;
-    public DateTime? LockTo { get; set; }
-    public string? LockReason { get; set; }
 }

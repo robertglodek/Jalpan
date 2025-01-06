@@ -1,6 +1,5 @@
 ﻿using Jalpan.Contexts.Accessors;
 using Jalpan.Contexts.Providers;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jalpan.Contexts;

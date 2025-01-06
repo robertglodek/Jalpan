@@ -12,7 +12,6 @@ using Jalpan.Persistence.MongoDB;
 using Jalpan.Persistence.Redis;
 using Jalpan.Security;
 using Jalpan.Tracing.OpenTelemetry;
-using Jalpan.Transactions;
 using Jalpan.WebApi.Contracts;
 using Jalpan.WebApi.CORS;
 using Jalpan.WebApi.Exceptions;

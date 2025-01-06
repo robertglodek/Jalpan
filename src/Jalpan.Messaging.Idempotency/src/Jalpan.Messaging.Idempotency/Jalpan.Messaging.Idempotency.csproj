@@ -7,13 +7,12 @@
 		<Title>Jalpan.Messaging.Idempotency</Title>
 		<PackageId>Jalpan.Messaging.Idempotency</PackageId>
 		<PackageTags>Jalpan.Messaging.Idempotency</PackageTags>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Jalpan.MessageBrokers\src\Jalpan.MessageBrokers\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\Jalpan.Messaging\src\Jalpan.Messaging\Jalpan.Messaging.csproj" />
 		<ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
 	</ItemGroup>

@@ -8,7 +8,7 @@ internal static class Extensions
 {
     public static User AsEntity(this UserDocument document)
         => new(document.Id, document.Email, document.Password, (Role)document.Role, document.CreatedAt,
-            document.LastModifiedAt, document.Permissions, document.UiSettings, document.LockTo, document.LockReason);
+            document.LastModifiedAt, document.Permissions, document.UiSettings);
 
     public static UserDocument AsDocument(this User entity)
         => new()
@@ -20,9 +20,7 @@ internal static class Extensions
             CreatedAt = entity.CreatedAt,
             LastModifiedAt = entity.LastModifiedAt,
             Permissions = entity.Permissions,
-            UiSettings = entity.UiSettings,
-            LockTo = entity.LockTo,
-            LockReason = entity.LockReason
+            UiSettings = entity.UiSettings
         };
 
     public static UserDto AsDto(this UserDocument document)
@@ -43,9 +41,7 @@ internal static class Extensions
             CreatedAt = document.CreatedAt,
             LastModifiedAt = document.LastModifiedAt,
             Permissions = document.Permissions,
-            UiSettings = document.UiSettings,
-            LockTo = document.LockTo,
-            LockReason = document.LockReason
+            UiSettings = document.UiSettings
         };
 
     public static RefreshToken AsEntity(this RefreshTokenDocument document)

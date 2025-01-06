@@ -1,0 +1,259 @@
+version: "3.9"
+
+services:
+  
+  vault:
+    image: vault:1.13.3
+    container_name: vault
+    restart: unless-stopped
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/data
+    networks:
+      - vault_network
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=secret
+    cap_add:
+      - IPC_LOCK
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1:8200/v1/sys/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+  
+  jaeger:
+    image: jaegertracing/all-in-one:1.64.0
+    container_name: jaeger
+    restart: unless-stopped
+    ports:
+      - "5775:5775/udp"
+      - "5778:5778"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "9411:9411"
+      - "14268:14268"
+      - "16686:16686"
+    volumes:
+      - jaeger_data:/data
+    networks:
+      - jaeger_network
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:16686" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  
+  redis:
+    image: redis:7.4.0
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - redis_network
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  mongo1:
+    image: mongo:7.0
+    container_name: mongo1
+    volumes:
+      - mongo1_data:/data/db
+    networks:
+      - mongors_network
+    ports:
+      - "27017:27017"
+    restart: always
+    command: [ "--replSet", "dbrs", "--bind_ip_all", "--port", "27017" ]
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'dbrs',members:[{_id:0,host:'mongo1:27017',priority:1},{_id:1,host:'mongo2:27018',priority:0.5},{_id:2,host:'mongo3:27019',priority:0.5}]}) }" | mongosh --port 27017 --quiet
+      interval: 5s
+      timeout: 30s
+      start_period: 0s
+      retries: 30
+
+  mongo2:
+    image: mongo:7.0
+    container_name: mongo2
+    volumes:
+      - mongo2_data:/data/db
+    networks:
+      - mongors_network
+    ports:
+      - "27018:27018"
+    restart: always
+    command: [ "--replSet", "dbrs", "--bind_ip_all", "--port", "27018" ]
+    healthcheck:
+      test: [ "CMD", "mongosh", "--host", "localhost", "--port", "27018", "--eval", "db.adminCommand('ping')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  mongo3:
+    image: mongo:7.0
+    container_name: mongo3
+    volumes:
+      - mongo3_data:/data/db
+    networks:
+      - mongors_network
+    ports:
+      - "27019:27019"
+    restart: always
+    command: [ "--replSet", "dbrs", "--bind_ip_all", "--port", "27019" ]
+    healthcheck:
+      test: [ "CMD", "mongosh", "--host", "localhost", "--port", "27019", "--eval", "db.adminCommand('ping')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+  
+  consul:
+    image: consul:1.15.4
+    container_name: consul
+    restart: unless-stopped
+    ports:
+      - "8500:8500"
+    volumes:
+      - consul_data:/consul/data
+    networks:
+      - consul_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8500/v1/status/leader" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  fabio:
+    image: fabiolb/fabio:1.6.4
+    container_name: fabio
+    restart: unless-stopped
+    environment:
+      - FABIO_REGISTRY_CONSUL_ADDR=consul:8500
+    ports:
+      - "9998:9998"
+      - "9999:9999"
+    networks:
+      - fabio_network
+      - consul_network
+    entrypoint: /bin/sh -c "apk update && apk add --no-cache curl && exec /usr/bin/fabio -proxy.addr :9999 -ui.addr :9998"
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9998/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+  
+  seq:
+    image: datalust/seq:2024.3
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    volumes:
+      - seq_data:/data
+    networks:
+      - seq_network
+  
+  rabbitmq:
+    image: rabbitmq:4.0.5-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - rabbitmq_network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  prometheus:
+    build: ./prometheus
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    networks:
+      - prometheus_network
+    volumes:
+      - prometheus_data:/prometheus
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "--quiet", "http://localhost:9090/targets" ]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+  
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - grafana_network
+    volumes:
+      - grafana_data:/var/lib/grafana
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "--quiet", "http://localhost:3000" ]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 10s
+
+volumes:
+  redis_data:
+    driver: local
+  mongo1_data:
+    driver: local
+  mongo2_data:
+    driver: local
+  mongo3_data:
+    driver: local
+  consul_data:
+    driver: local
+  jaeger_data:
+    driver: local
+  vault_data:
+    driver: local
+  seq_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  grafana_data:
+    driver: local
+  prometheus_data:
+    driver: local
+
+networks:
+  redis_network:
+    driver: bridge
+  mongors_network:
+    driver: bridge
+  fabio_network:
+    driver: bridge
+  consul_network:
+    driver: bridge
+  jaeger_network:
+    driver: bridge
+  vault_network:
+    driver: bridge
+  seq_network:
+    driver: bridge
+  rabbitmq_network:
+    driver: bridge
+  prometheus_network:
+    driver: bridge
+  grafana_network:
+    driver: bridge
