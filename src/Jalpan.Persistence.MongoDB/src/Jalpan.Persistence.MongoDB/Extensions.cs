@@ -9,6 +9,7 @@ public static class Extensions
 {
     private const string DefaultSectionName = "mongo";
     private const string RegistryKey = "persistence.mongoDb";
+    private const string DefaultMongoHealthCheckName = "mongo_health_check";
 
     public static IJalpanBuilder AddMongo(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
@@ -23,7 +24,7 @@ public static class Extensions
             return builder;
         }
 
-        builder.Services.AddSingleton<IMongoClient>(sp => new MongoClient(options.ConnectionString));
+        builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(options.ConnectionString));
         builder.Services.AddTransient(sp =>
         {
             var client = sp.GetRequiredService<IMongoClient>();
@@ -48,4 +49,8 @@ public static class Extensions
 
         return builder;
     }
+
+    public static IHealthChecksBuilder AddMongoCheck(this IHealthChecksBuilder builder,
+        string name = DefaultMongoHealthCheckName)
+        => builder.AddCheck<MongoDbHealthCheck>(name);
 }

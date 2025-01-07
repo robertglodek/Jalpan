@@ -44,13 +44,13 @@ public static class Extensions
                     }
                 }
 
-                ConfigureExporter(configure, sectionName, options);
+                ConfigureExporter(configure, options);
             });
 
         return builder;
     }
 
-    private static void ConfigureExporter(MeterProviderBuilder builder, string sectionName, MetricsOptions options)
+    private static void ConfigureExporter(MeterProviderBuilder builder, MetricsOptions options)
     {
         if (string.IsNullOrEmpty(options.Exporter))
         {

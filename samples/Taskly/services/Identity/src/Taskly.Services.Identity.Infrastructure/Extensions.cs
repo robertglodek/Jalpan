@@ -12,6 +12,7 @@ using Jalpan.Persistence.MongoDB;
 using Jalpan.Persistence.Redis;
 using Jalpan.Security;
 using Jalpan.Tracing.OpenTelemetry;
+using Jalpan.WebApi;
 using Jalpan.WebApi.Contracts;
 using Jalpan.WebApi.CORS;
 using Jalpan.WebApi.Exceptions;
@@ -72,8 +73,8 @@ public static class Extensions
             .AddTransient<IInitializer, MongoDbInitializer>()
             .AddTransient<IJwtProvider, JwtProvider>()
             .AddTransient<IPasswordService, PasswordService>()
-            .AddHealthChecks().AddMongoCheck().AddSelfCheck();
-
+            .AddHealthChecks().AddMongoCheck().AddSelfCheck().AddRedisCheck();
+        
         return builder;
     }
 
@@ -94,7 +95,4 @@ public static class Extensions
 
         return app;
     }
-
-    private static void AddSelfCheck(this IHealthChecksBuilder builder)
-        => builder.AddCheck("Self health check", () => HealthCheckResult.Healthy());
 }

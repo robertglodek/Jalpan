@@ -8,6 +8,7 @@ public static class Extensions
 {
     private const string DefaultSectionName = "redis";
     private const string RegistryKey = "persistence.redis";
+    private const string DefaultRedisHealthCheckName = "redis_health_check";
 
     public static IJalpanBuilder AddRedis(this IJalpanBuilder builder, string sectionName = DefaultSectionName)
     {
@@ -22,7 +23,7 @@ public static class Extensions
         var options = section.BindOptions<RedisOptions>();
         builder.Services.Configure<RedisOptions>(section);
 
-        if(string.IsNullOrEmpty(options.ConnectionString))
+        if (string.IsNullOrEmpty(options.ConnectionString))
         {
             throw new RedisConfigurationException("Redis connection string cannot be empty.");
         }
@@ -39,4 +40,8 @@ public static class Extensions
 
         return builder;
     }
+
+    public static IHealthChecksBuilder AddRedisCheck(this IHealthChecksBuilder builder,
+        string name = DefaultRedisHealthCheckName)
+        => builder.AddCheck<RedisHealthCheck>(name);
 }
