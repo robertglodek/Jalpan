@@ -16,12 +16,12 @@ public sealed class MongoDbHealthCheck(IMongoDatabase mongoDatabase) : IHealthCh
         {
             await mongoDatabase.RunCommandAsync(_command, cancellationToken: cancellationToken).ConfigureAwait(false);
             return HealthCheckResult.Healthy(
-                $"Successfully connected to database '{mongoDatabase.DatabaseNamespace.DatabaseName}'.");
+                $"Successfully connected to database.");
         }
         catch (Exception ex)
         {
             return HealthCheckResult.Unhealthy(
-                $"Unable to connect to database '{mongoDatabase.DatabaseNamespace.DatabaseName}'.", ex);
+                $"Unable to connect to database.", ex);
         }
     }
 }
