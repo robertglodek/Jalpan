@@ -24,7 +24,13 @@ public static class Extensions
 
         builder.Services.AddQuartz(q =>
         {
-            if(options.PostgresPersistency is { Enabled: true })
+            if (options is { PostgresPersistency.Enabled: true, SqlServerPersistency.Enabled: true })
+            {
+                throw new QuartzConfigurationException(
+                    "Both PostgresPersistency and SqlServerPersistency are enabled. Only one persistency provider can be enabled at a time.");
+            }
+
+            if (options.PostgresPersistency is { Enabled: true })
             {
                 if (string.IsNullOrEmpty(options.PostgresPersistency.ConnectionString))
                 {
@@ -33,10 +39,25 @@ public static class Extensions
 
                 q.UsePersistentStore(persistentStoreOptions =>
                 {
-                    persistentStoreOptions.UsePostgres(postgresOptions =>
-                    {
-                        postgresOptions.ConnectionString = options.PostgresPersistency.ConnectionString;
-                    });
+                    persistentStoreOptions.UsePostgres(postgresOptions => 
+                        postgresOptions.ConnectionString = options.PostgresPersistency.ConnectionString);
+
+                    persistentStoreOptions.UseSerializer<SystemTextJsonObjectSerializer>();
+                    persistentStoreOptions.UseClustering();
+                });
+            }
+            
+            if (options.SqlServerPersistency is { Enabled: true })
+            {
+                if (string.IsNullOrEmpty(options.SqlServerPersistency.ConnectionString))
+                {
+                    throw new QuartzConfigurationException("SqlServer database connection string cannot be empty.");
+                }
+
+                q.UsePersistentStore(persistentStoreOptions =>
+                {
+                    persistentStoreOptions.UseSqlServer(sqlServerOptions =>
+                        sqlServerOptions.ConnectionString = options.SqlServerPersistency.ConnectionString);
 
                     persistentStoreOptions.UseSerializer<SystemTextJsonObjectSerializer>();
                     persistentStoreOptions.UseClustering();
@@ -55,7 +76,7 @@ public static class Extensions
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var jobTypes = assemblies.SelectMany(a => a.GetTypes())
-            .Where(t => typeof(IJob).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract)
+            .Where(t => typeof(IJob).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
             .ToArray();
 
         foreach (var jobType in jobTypes)
@@ -64,7 +85,8 @@ public static class Extensions
         }
     }
 
-    private static void AddJobAndTrigger(this IServiceCollectionQuartzConfigurator quartzConfigurator, Type jobType, QuartzOptions options)
+    private static void AddJobAndTrigger(this IServiceCollectionQuartzConfigurator quartzConfigurator, Type jobType,
+        QuartzOptions options)
     {
         var jobKey = new JobKey(jobType.Name);
         quartzConfigurator.AddJob(jobType, jobKey);
@@ -79,7 +101,8 @@ public static class Extensions
         }
         else
         {
-            throw new CronScheduleException($"No Quartz.NET Cron schedule found for job in configuration at {jobType.Name}");
+            throw new CronScheduleException(
+                $"No Quartz.NET Cron schedule found for job in configuration at {jobType.Name}");
         }
     }
 }

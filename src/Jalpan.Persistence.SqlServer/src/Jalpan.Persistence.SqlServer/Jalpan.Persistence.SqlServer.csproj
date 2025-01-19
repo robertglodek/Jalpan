@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+    <Description>Jalpan.Persistence.SqlServer</Description>
+    <Authors>Robert Głodek</Authors>
+    <Title>Jalpan.Persistence.SqlServer</Title>
+    <PackageId>Jalpan.Persistence.SqlServer</PackageId>
+    <PackageTags>Jalpan.Persistence.SqlServer</PackageTags>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+</PropertyGroup>
+
+<ItemGroup>
+    <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
+</ItemGroup>
+
+</Project>

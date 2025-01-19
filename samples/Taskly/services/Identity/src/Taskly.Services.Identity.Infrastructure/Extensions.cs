@@ -66,6 +66,7 @@ public static class Extensions
             .AddMemoryCache()
             .AddHttpContextAccessor()
             .AddErrorToMessageHandlerDecorators()
+            .AddDataContextDecorators()
             .AddTransient<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddSingleton<IPasswordService, PasswordService>()
             .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
