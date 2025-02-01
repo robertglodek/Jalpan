@@ -23,14 +23,16 @@ public sealed class Role : ValueObject
         return role;
     }
 
-    public static Role User => new("user");
+    public static Role Standard => new("standard");
+    public static Role Premium => new("premium");
     public static Role Admin => new("admin");
 
     public static IEnumerable<Role> SupportedRoles
     {
         get
         {
-            yield return User;
+            yield return Standard;
+            yield return Premium;
             yield return Admin;
         }
     }

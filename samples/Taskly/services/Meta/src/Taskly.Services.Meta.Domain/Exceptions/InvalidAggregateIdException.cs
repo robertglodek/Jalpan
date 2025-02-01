@@ -1,4 +1,4 @@
-namespace Taskly.Services.Identity.Domain.Exceptions;
+namespace Taskly.Services.Meta.Domain.Exceptions;
 
 public sealed class InvalidAggregateIdException() : DomainException("Invalid aggregate id.")
 {

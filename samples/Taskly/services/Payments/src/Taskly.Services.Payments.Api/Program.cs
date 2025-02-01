@@ -1,4 +1,4 @@
-using Taskly.Services.Note.Api;
+using Taskly.Services.Payments.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +37,7 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
-namespace Taskly.Services.Note.Api
+namespace Taskly.Services.Payments.Api
 {
     record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
     {

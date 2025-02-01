@@ -10,6 +10,8 @@ internal class MongoDbUnitOfWork(IMongoClient mongoClient) : IUnitOfWork
 
         try
         {
+            MongoDbSessionContext.CurrentSession = session;
+            
             session.StartTransaction();
 
             await action();
@@ -20,6 +22,10 @@ internal class MongoDbUnitOfWork(IMongoClient mongoClient) : IUnitOfWork
         {
             await session.AbortTransactionAsync(cancellationToken);
             throw;
+        }
+        finally 
+        {
+            session.Dispose();
         }
     }
 
