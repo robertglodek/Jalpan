@@ -7,7 +7,7 @@
 		<Title>Jalpan.Messaging.Idempotency.MongoDB</Title>
 		<PackageId>Jalpan.Messaging.Idempotency.MongoDB</PackageId>
 		<PackageTags>Jalpan.Messaging.Idempotency.MongoDB</PackageTags>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

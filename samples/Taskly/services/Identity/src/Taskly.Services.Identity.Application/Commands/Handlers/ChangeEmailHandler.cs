@@ -1,5 +1,4 @@
-﻿using Taskly.Services.Identity.Application.Context;
-using Taskly.Services.Identity.Domain.Exceptions;
+﻿using Taskly.Services.Identity.Domain.Exceptions;
 using Taskly.Services.Identity.Domain.Repositories;
 
 namespace Taskly.Services.Identity.Application.Commands.Handlers;
@@ -9,16 +8,12 @@ internal sealed class ChangeEmailHandler(
     IContextProvider contextProvider,
     IUserRepository userRepository,
     IDateTime dateTime,
-    IDataContextProvider<IdentityDataContext> dataContextProvider,
     ILogger<ChangeEmailHandler> logger) : ICommandHandler<ChangeEmail, Empty>
 {
     public async Task<Empty> HandleAsync(ChangeEmail command, CancellationToken cancellationToken = default)
         => await Empty.ExecuteAsync(async () =>
         {
             var context = contextProvider.Current();
-            
-            var dataContext = dataContextProvider.Current();
-            
             
             var currentUserId = Guid.Parse(context.UserId!);
 

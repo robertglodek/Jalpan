@@ -7,7 +7,7 @@
 		<Title>Jalpan.Security</Title>
 		<PackageId>Jalpan.Security</PackageId>
 		<PackageTags>Jalpan.Security</PackageTags>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

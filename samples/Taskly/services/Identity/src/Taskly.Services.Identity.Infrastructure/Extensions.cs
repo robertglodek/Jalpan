@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Taskly.Services.Identity.Application.Context;
 using Taskly.Services.Identity.Application.Services;
 using Taskly.Services.Identity.Domain.Repositories;
 using Taskly.Services.Identity.Infrastructure.Auth;
@@ -41,7 +40,6 @@ public static class Extensions
         builder
             .AddErrorHandler<ExceptionToResponseMapper>()
             .AddContexts()
-            .AddDataContexts<IdentityDataContext>()
             .AddJwt()
             .AddCorsPolicy()
             .AddSwaggerDocs(swaggerGenOptions: options => options.SchemaFilter<EnumSchemaFilter>())
@@ -64,7 +62,6 @@ public static class Extensions
             .AddMemoryCache()
             .AddHttpContextAccessor()
             .AddErrorToMessageHandlerDecorators()
-            .AddDataContextDecorators()
             .AddTransient<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddSingleton<IPasswordService, PasswordService>()
             .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()

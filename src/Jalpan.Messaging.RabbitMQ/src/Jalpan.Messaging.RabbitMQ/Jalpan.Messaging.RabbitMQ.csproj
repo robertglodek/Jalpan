@@ -7,7 +7,7 @@
 		<Title>Jalpan.Messaging.RabbitMQ</Title>
 		<PackageId>Jalpan.Messaging.RabbitMQ</PackageId>
 		<PackageTags>Jalpan.Messaging.RabbitMQ</PackageTags>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>

@@ -6,7 +6,7 @@
 	<Title>Jalpan.Persistence.Postgres</Title>
 	<PackageId>Jalpan.Persistence.Postgres</PackageId>
 	<PackageTags>Jalpan.Persistence.Postgres</PackageTags>
-	<TargetFramework>net9.0</TargetFramework>
+	<TargetFramework>net8.0</TargetFramework>
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
   </PropertyGroup>

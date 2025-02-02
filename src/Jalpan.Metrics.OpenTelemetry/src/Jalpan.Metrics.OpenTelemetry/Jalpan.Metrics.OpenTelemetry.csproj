@@ -7,7 +7,7 @@
 		<Title>Jalpan.Metrics.OpenTelemetry</Title>
 		<PackageId>Jalpan.Metrics.OpenTelemetry</PackageId>
 		<PackageTags>Jalpan.Metrics.OpenTelemetry</PackageTags>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
