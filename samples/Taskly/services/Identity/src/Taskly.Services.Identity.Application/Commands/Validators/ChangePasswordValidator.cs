@@ -6,8 +6,8 @@ public sealed class ChangePasswordValidator : AbstractValidator<ChangePassword>
     public ChangePasswordValidator()
     {
         RuleFor(model => model.CurrentPassword)
-            .NotEmpty().WithMessage("current_password_must_not_be_empty");
+            .NotEmpty().WithMessage("Current password is required.").WithErrorCode("required");
         RuleFor(model => model.NewPassword)
-            .NotEmpty().WithMessage("new_password_must_not_be_empty");
+            .NotEmpty().WithMessage("New password is required.").WithErrorCode("required");
     }
 }

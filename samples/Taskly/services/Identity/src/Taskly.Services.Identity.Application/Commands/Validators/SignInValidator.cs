@@ -6,10 +6,10 @@ public sealed class SignInValidator : AbstractValidator<SignIn>
     public SignInValidator()
     {
         RuleFor(model => model.Email)
-            .NotEmpty().WithMessage("email_must_not_be_empty")
-            .EmailAddress().WithMessage("email_format_is_invalid");
+            .NotEmpty().WithMessage("Email is required.").WithErrorCode("required")
+            .EmailAddress().WithMessage("Email is invalid.").WithErrorCode("invalid");
 
         RuleFor(model => model.Password)
-            .NotEmpty().WithMessage("password_must_not_be_empty");
+            .NotEmpty().WithMessage("Password is required.").WithErrorCode("required");
     }
 }

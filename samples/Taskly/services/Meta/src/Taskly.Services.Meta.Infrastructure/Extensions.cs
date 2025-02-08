@@ -1,7 +1,15 @@
 ﻿using Jalpan;
 using Jalpan.Contexts;
+using Jalpan.Discovery.Consul;
+using Jalpan.LoadBalancing.Fabio;
 using Jalpan.Logging.Serilog;
+using Jalpan.Messaging;
+using Jalpan.Messaging.RabbitMQ;
+using Jalpan.Messaging.RabbitMQ.Streams;
 using Jalpan.Metrics.OpenTelemetry;
+using Jalpan.Persistence.MongoDB;
+using Jalpan.Persistence.Redis;
+using Jalpan.Tracing.OpenTelemetry;
 using Jalpan.WebApi.Contracts;
 using Jalpan.WebApi.CORS;
 using Jalpan.WebApi.Exceptions;
@@ -10,6 +18,7 @@ using Jalpan.WebApi.Swagger;
 using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Taskly.Services.Meta.Infrastructure.Exceptions.Mappers;
 using Taskly.Services.Meta.Infrastructure.Mongo.Documents;
@@ -33,24 +42,22 @@ public static class Extensions
             .AddRabbitMqStreams()
             .AddConsul()
             .AddFabio()
-            .AddSecurity()
             .AddLogger()
             .AddTracing()
             .AddMetrics()
             .AddMongo()
             .AddRedis()
             .AddDistributedAccessTokenValidator()
-            .AddMongoRepository<TagDocument, Guid>("refreshTokens")
-            .AddMongoRepository<GoalDocument, Guid>("users")
+            .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
+            .AddMongoRepository<UserDocument, Guid>("users")
             .Services
             .AddMemoryCache()
             .AddHttpContextAccessor()
             .AddErrorToMessageHandlerDecorators()
-            .AddDataContextDecorators()
-            .AddTransient<IRefreshTokenRepository, SectionRepository>()
+            .AddTransient<IRefreshTokenRepository, RefreshTokenRepository>()
             .AddSingleton<IPasswordService, PasswordService>()
             .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
-            .AddTransient<IUserRepository, TagRepository>()
+            .AddTransient<IUserRepository, UserRepository>()
             .AddTransient<IInitializer, MongoDbInitializer>()
             .AddTransient<IJwtProvider, JwtProvider>()
             .AddTransient<IPasswordService, PasswordService>()

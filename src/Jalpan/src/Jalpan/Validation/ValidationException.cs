@@ -9,9 +9,12 @@ public sealed class ValidationException() : CustomException("One or more validat
         : this()
     {
         Errors = failures
-            .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
-            .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
+            .GroupBy(f => f.PropertyName)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(f => new ValidationError(f.ErrorMessage, f.ErrorCode)).ToArray()
+            );
     }
 
-    public IDictionary<string, string[]> Errors { get; } = new Dictionary<string, string[]>();
+    public IDictionary<string, ValidationError[]> Errors { get; } = new Dictionary<string, ValidationError[]>();
 }

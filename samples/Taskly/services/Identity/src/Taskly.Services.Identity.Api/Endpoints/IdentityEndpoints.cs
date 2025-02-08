@@ -14,13 +14,11 @@ public sealed class IdentityEndpoints : EndpointGroupBase
         app.MapGroup(this)
             .MapPost(SignUp, pattern: "signup")
             .MapPost(SignIn, pattern: "signin")
-            .MapPut(ChangeEmail, pattern: "change_email", config: config => config.RequireAuthorization())
-            .MapPut(ChangePassword, pattern: "change_password", config: config => config.RequireAuthorization())
-            .MapPost(RevokeAccessToken, pattern: "access_token/revoke",
-                config: config => config.RequireAuthorization(n => n.RequireRole(Role.Admin)))
+            .MapPut(ChangeEmail, pattern: "change_email")
+            .MapPut(ChangePassword, pattern: "change_password")
+            .MapPost(RevokeAccessToken, pattern: "access_tokens/revoke")
             .MapPost(UseRefreshToken, pattern: "refresh_tokens/use")
-            .MapPost(RevokeRefreshToken, pattern: "refresh_tokens/revoke",
-                config: config => config.RequireAuthorization(n => n.RequireRole(Role.Admin)));
+            .MapPost(RevokeRefreshToken, pattern: "refresh_tokens/revoke");
     }
 
     private static async Task<IResult> SignUp(IDispatcher dispatcher, SignUp command)

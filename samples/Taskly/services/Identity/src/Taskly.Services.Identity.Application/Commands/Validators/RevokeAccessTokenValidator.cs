@@ -6,6 +6,6 @@ public sealed class RevokeAccessTokenValidator : AbstractValidator<RevokeAccessT
     public RevokeAccessTokenValidator()
     {
         RuleFor(model => model.AccessToken)
-            .NotEmpty().WithMessage("access_token_must_not_be_empty");
+            .NotEmpty().WithMessage("Access token is required.").WithErrorCode("required");
     }
 }

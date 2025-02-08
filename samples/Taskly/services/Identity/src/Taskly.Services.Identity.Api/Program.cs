@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Jalpan;
+using Jalpan.Logging.Serilog;
 using Jalpan.WebApi.MinimalApi;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Taskly.Services.Identity.Application;

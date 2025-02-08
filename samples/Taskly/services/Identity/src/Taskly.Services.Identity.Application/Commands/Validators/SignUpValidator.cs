@@ -6,18 +6,18 @@ public sealed class SignUpValidator : AbstractValidator<SignUp>
     public SignUpValidator()
     {
         RuleFor(model => model.Password)
-            .NotEmpty().WithMessage("password_required")
-            .MinimumLength(8).WithMessage("password_too_short")
-            .Matches("[A-Z]").WithMessage("password_uppercase_required")
-            .Matches("[a-z]").WithMessage("password_lowercase_required")
-            .Matches(@"\d").WithMessage("password_digit_required")
-            .Matches(@"[^\w\d]").WithMessage("password_special_character_required");
+            .NotEmpty().WithMessage("Password is required.").WithErrorCode("required")
+            .MinimumLength(8).WithMessage("Password must have at least 8 characters.").WithErrorCode("min_length")
+            .Matches("[A-Z]").WithMessage("Uppercase character required.").WithErrorCode("uppercase_required")
+            .Matches("[a-z]").WithMessage("Lowercase character required.").WithErrorCode("lowercase_required")
+            .Matches(@"\d").WithMessage("Digit required").WithErrorCode("digit_required")
+            .Matches(@"[^\w\d]").WithMessage("Special character required").WithErrorCode("special_character_required");
 
         RuleFor(model => model.Email)
-            .NotEmpty().WithMessage("email_must_not_be_empty")
-            .EmailAddress().WithMessage("email_format_is_invalid");
+            .NotEmpty().WithMessage("Email is required.").WithErrorCode("required")
+            .EmailAddress().WithMessage("Email is invalid.").WithErrorCode("invalid");
 
         RuleFor(model => model.Role)
-            .NotEmpty().WithMessage("role_required");
+            .NotEmpty().WithMessage("Role required.").WithErrorCode("required");
     }
 }

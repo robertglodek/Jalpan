@@ -14,7 +14,6 @@ public static class Extensions
     private const string RefreshTokenSectionName = "auth:refreshToken";
     public static IJalpanBuilder AddApplication(this IJalpanBuilder builder)
     {
-        builder.Services.AddScoped<ICommandHandler<SignUp, Empty>, SignUpHandler>();
         builder.AddHandlers();
         builder.AddDispatchers();
         builder.AddTransactionalDecorators();

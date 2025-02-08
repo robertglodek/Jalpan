@@ -8,6 +8,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Taskly.Services.Meta.Domain\Taskly.Services.Meta.Domain.csproj" />
+        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Contexts\src\Jalpan.Contexts\Jalpan.Contexts.csproj" />
+        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan\src\Jalpan\Jalpan.csproj" />
     </ItemGroup>
 
 </Project>

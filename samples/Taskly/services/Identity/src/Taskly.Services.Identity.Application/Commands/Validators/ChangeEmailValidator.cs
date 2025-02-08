@@ -6,7 +6,7 @@ public sealed class ChangeEmailValidator : AbstractValidator<ChangeEmail>
     public ChangeEmailValidator()
     {
         RuleFor(model => model.Email)
-            .NotEmpty().WithMessage("email_must_not_be_empty")
-            .EmailAddress().WithMessage("email_format_is_invalid");
+            .NotEmpty().WithMessage("Email must not be empty.").WithErrorCode("required")
+            .EmailAddress().WithMessage("Email format is not valid.").WithErrorCode("required");
     }
 }
