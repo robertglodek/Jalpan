@@ -18,7 +18,7 @@ internal sealed class ChangePasswordHandler(
         {
             var context = contextProvider.Current();
 
-            var user = await userRepository.GetAsync(Guid.Parse(context.UserId!));
+            var user = await userRepository.GetAsync(Guid.Parse(context.UserId!), cancellationToken);
             if (!passwordService.IsValid(user!.Password, command.CurrentPassword))
             {
                 throw new InvalidCredentialsException(user.Email);
@@ -27,7 +27,7 @@ internal sealed class ChangePasswordHandler(
             var password = passwordService.Hash(command.NewPassword);
             user.UpdatePassword(password);
             user.LastModifiedAt = dateTime.Now;
-            await userRepository.UpdateAsync(user);
+            await userRepository.UpdateAsync(user, cancellationToken);
 
             logger.LogInformation("Changed password for the user with id: {UserId}", user.Id);
         });

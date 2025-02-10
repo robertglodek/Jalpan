@@ -17,9 +17,23 @@ public sealed class Goal : AggregateRoot
         }
 
         Id = id;
-        Name = name;
-        Description = description;
+        UpdateName(name);
+        UpdateDescription(description);
         UserId = userId;
+    }
+    
+    public void UpdateName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new InvalidGoalNameException();
+        }
+        Name = name;
+    }
+    
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
     }
     
     public string Name { get; set; }

@@ -4,8 +4,8 @@ namespace Taskly.Services.Meta.Domain.Repositories;
 
 public interface ISectionRepository
 {
-    Task<Section?> GetAsync(Guid id);
-    Task AddAsync(Section section);
-    Task UpdateAsync(Section section);
-    Task DeleteAsync(Guid id);
+    Task<Section?> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task AddAsync(Section section, CancellationToken cancellationToken = default);
+    Task UpdateAsync(Section section, CancellationToken cancellationToken = default);
+    Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }

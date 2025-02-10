@@ -15,7 +15,7 @@ internal sealed class UseRefreshTokenHandler(
 {
     public async Task<AuthDto> HandleAsync(UseRefreshToken command, CancellationToken cancellationToken = default)
     {
-        var token = await refreshTokenRepository.GetAsync(command.RefreshToken);
+        var token = await refreshTokenRepository.GetAsync(command.RefreshToken, cancellationToken);
         if (token is null)
         {
             throw new InvalidRefreshTokenException();
@@ -31,7 +31,7 @@ internal sealed class UseRefreshTokenHandler(
             throw new ExpiredRefreshTokenException();
         }
 
-        var user = await userRepository.GetAsync(token.UserId);
+        var user = await userRepository.GetAsync(token.UserId, cancellationToken);
         if (user is null)
         {
             throw new UserNotFoundException(token.UserId);

@@ -24,7 +24,7 @@ internal sealed class SignInHandler(
 {
     public async Task<AuthDto> HandleAsync(SignIn command, CancellationToken cancellationToken = default)
     {
-        var user = await userRepository.GetAsync(command.Email);
+        var user = await userRepository.GetAsync(command.Email, cancellationToken);
         if (user is null)
         {
             logger.LogError("User with email {Email} was not found.", command.Email);

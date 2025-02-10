@@ -1,7 +1,10 @@
-﻿using MongoDB.Driver;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
 using Microsoft.Extensions.DependencyInjection;
 using Jalpan.Persistence.MongoDB.Repositories;
 using Jalpan.Types;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace Jalpan.Persistence.MongoDB;
 
@@ -23,6 +26,8 @@ public static class Extensions
         {
             return builder;
         }
+        
+        ConfigureConventions();
 
         builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(options.ConnectionString));
         builder.Services.AddTransient(sp =>
@@ -34,6 +39,21 @@ public static class Extensions
         builder.Services.AddScoped<IUnitOfWork, MongoDbUnitOfWork>();
 
         return builder;
+    }
+
+    public static async Task CreateIndexAsync<TModel>(
+        this IMongoCollection<TModel> collection,
+        bool isUnique,
+        params Expression<Func<TModel, object>>[] fields)
+    {
+        var keys = Builders<TModel>.IndexKeys.Ascending(fields[0]);
+
+        for (var i = 1; i < fields.Length; i++)
+            keys = keys.Ascending(fields[i]);
+
+        var options = new CreateIndexOptions<TModel> { Unique = isUnique };
+        var createIndexModel = new CreateIndexModel<TModel>(keys, options);
+        await collection.Indexes.CreateOneAsync(createIndexModel);
     }
 
     public static IJalpanBuilder AddMongoRepository<TEntity, TIdentifiable>(
@@ -48,6 +68,16 @@ public static class Extensions
         });
 
         return builder;
+    }
+
+    private static void ConfigureConventions()
+    {
+        var conventionPack = new ConventionPack
+        {
+            new EnumRepresentationConvention(BsonType.String)
+        };
+        
+        ConventionRegistry.Register("EnumStringConvention", conventionPack, t => true);
     }
 
     public static IHealthChecksBuilder AddMongoCheck(this IHealthChecksBuilder builder,

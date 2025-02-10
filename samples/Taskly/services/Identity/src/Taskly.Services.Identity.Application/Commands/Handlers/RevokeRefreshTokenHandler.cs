@@ -10,9 +10,9 @@ internal sealed class RevokeRefreshTokenHandler(IRefreshTokenRepository refreshT
     public async Task<Empty> HandleAsync(RevokeRefreshToken command, CancellationToken cancellationToken = default)
         => await Empty.ExecuteAsync(async () =>
         {
-            var token = await refreshTokenRepository.GetAsync(command.RefreshToken) ??
+            var token = await refreshTokenRepository.GetAsync(command.RefreshToken, cancellationToken) ??
                         throw new InvalidRefreshTokenException();
             token.Revoke(dateTime.Now);
-            await refreshTokenRepository.UpdateAsync(token);
+            await refreshTokenRepository.UpdateAsync(token, cancellationToken);
         });
 }

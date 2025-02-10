@@ -7,11 +7,7 @@ public sealed class Tag : AggregateRoot
 {
     public Tag(Guid id, string name, Guid userId, Colour colour)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new InvalidTagNameException();
-        }
-        
+        UpdateName(name);
         if (Guid.Empty == userId)
         {
             throw new InvalidUserIdException();
@@ -19,11 +15,25 @@ public sealed class Tag : AggregateRoot
         
         Id = id;
         Name = name;
-        Colour = colour;
+        UpdateColour(colour);
         UserId = userId;
     }
+
+    public void UpdateName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new InvalidTagNameException();
+        }
+        Name = name;
+    }
     
-    public string Name { get; set; }
-    public Colour Colour { get; set; }
-    public Guid UserId { get; set; }
+    public void UpdateColour(Colour colour)
+    {
+        Colour = colour;
+    }
+    
+    public string Name { get; private set; }
+    public Colour Colour { get; private set;  }
+    public Guid UserId { get; }
 }

@@ -4,7 +4,7 @@ namespace Taskly.Services.Identity.Domain.Repositories;
 
 public interface IRefreshTokenRepository
 {
-    Task<RefreshToken?> GetAsync(string token);
-    Task AddAsync(RefreshToken token);
-    Task UpdateAsync(RefreshToken token);
+    Task<RefreshToken?> GetAsync(string token, CancellationToken cancellationToken = default);
+    Task AddAsync(RefreshToken token, CancellationToken cancellationToken = default);
+    Task UpdateAsync(RefreshToken token, CancellationToken cancellationToken = default);
 }

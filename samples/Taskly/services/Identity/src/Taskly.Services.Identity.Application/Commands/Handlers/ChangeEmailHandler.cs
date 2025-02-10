@@ -18,16 +18,16 @@ internal sealed class ChangeEmailHandler(
             var currentUserId = Guid.Parse(context.UserId!);
 
             // Check if the email is already used by another user
-            var userWithSameEmail = await userRepository.GetAsync(command.Email);
+            var userWithSameEmail = await userRepository.GetAsync(command.Email, cancellationToken);
             if (userWithSameEmail is not null && userWithSameEmail.Id != currentUserId)
             {
                 throw new EmailInUseException($"The email '{command.Email}' is already in use by another user.");
             }
 
-            var user = await userRepository.GetAsync(currentUserId);
+            var user = await userRepository.GetAsync(currentUserId, cancellationToken);
             user!.UpdateEmail(command.Email);
             user.LastModifiedAt = dateTime.Now;
-            await userRepository.UpdateAsync(user);
+            await userRepository.UpdateAsync(user, cancellationToken);
 
             logger.LogInformation("Changed email for the user with id: {UserId}", user.Id);
         });

@@ -18,7 +18,7 @@ internal sealed class SignUpHandler(
 {
     public async Task<Empty> HandleAsync(SignUp command, CancellationToken cancellationToken = default)
     {
-        var user = await userRepository.GetAsync(command.Email);
+        var user = await userRepository.GetAsync(command.Email, cancellationToken);
         if (user is not null)
         {
             logger.LogError("Email already in use: {Email}", command.Email);
@@ -29,7 +29,7 @@ internal sealed class SignUpHandler(
         var password = passwordService.Hash(command.Password);
 
         user = new User(command.UserId, command.Email, password, role, dateTime.Now, permissions: command.Permissions);
-        await userRepository.AddAsync(user);
+        await userRepository.AddAsync(user, cancellationToken);
 
         logger.LogInformation("Created an account for the user with id: {UserId}", user.Id);
         await messageBroker.SendAsync(new SignedUp(command.UserId, command.Email, command.Role), cancellationToken);

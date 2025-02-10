@@ -17,9 +17,28 @@ public sealed class Section : AggregateRoot
         }
         
         Id = id;
-        Name = name;
-        Description = description;
+        UpdateName(name);
+        UpdateDescription(description);
         UserId = userId;
+        UpdateGoalId(goalId);
+    }
+    
+    public void UpdateName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new InvalidSectionNameException();
+        }
+        Name = name;
+    }
+    
+    public void UpdateDescription(string? description)
+    {
+        Description = description;
+    }
+    
+    public void UpdateGoalId(Guid? goalId)
+    {
         GoalId = goalId;
     }
     
