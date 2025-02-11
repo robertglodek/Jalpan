@@ -1,46 +1,25 @@
-using Taskly.Services.Meta.Api;
+using HealthChecks.UI.Client;
+using Jalpan;
+using Jalpan.Logging.Serilog;
+using Jalpan.WebApi.MinimalApi;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Taskly.Services.Meta.Application;
+using Taskly.Services.Meta.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Host.UseLogging();
+
+builder.Services.AddJalpan(builder.Configuration, 
+    jalpanBuilder => jalpanBuilder.AddApplication().AddInfrastructure());
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseInfrastructure();
+app.MapEndpoints();
+app.MapHealthChecks("/health", new HealthCheckOptions
 {
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
-
-namespace Taskly.Services.Meta.Api
-{
-    record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-    {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
-}

@@ -3,8 +3,6 @@ using Jalpan.Messaging;
 using Jalpan.Transactions;
 using Jalpan.Validation;
 using Microsoft.Extensions.DependencyInjection;
-using Taskly.Services.Identity.Application.Commands;
-using Taskly.Services.Identity.Application.Commands.Handlers;
 using Taskly.Services.Identity.Application.Exceptions;
 
 namespace Taskly.Services.Identity.Application;

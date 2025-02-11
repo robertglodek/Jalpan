@@ -1,15 +1,15 @@
 ﻿using Jalpan;
+using Jalpan.Auth.Jwt;
 using Jalpan.Contexts;
 using Jalpan.Discovery.Consul;
 using Jalpan.LoadBalancing.Fabio;
 using Jalpan.Logging.Serilog;
-using Jalpan.Messaging;
 using Jalpan.Messaging.RabbitMQ;
-using Jalpan.Messaging.RabbitMQ.Streams;
 using Jalpan.Metrics.OpenTelemetry;
 using Jalpan.Persistence.MongoDB;
 using Jalpan.Persistence.Redis;
 using Jalpan.Tracing.OpenTelemetry;
+using Jalpan.WebApi;
 using Jalpan.WebApi.Contracts;
 using Jalpan.WebApi.CORS;
 using Jalpan.WebApi.Exceptions;
@@ -17,9 +17,9 @@ using Jalpan.WebApi.Networking;
 using Jalpan.WebApi.Swagger;
 using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Taskly.Services.Meta.Domain.Repositories;
 using Taskly.Services.Meta.Infrastructure.Exceptions.Mappers;
 using Taskly.Services.Meta.Infrastructure.Mongo.Documents;
 using Taskly.Services.Meta.Infrastructure.Mongo.Initializers;
@@ -37,9 +37,6 @@ public static class Extensions
             .AddCorsPolicy()
             .AddSwaggerDocs(swaggerGenOptions: options => options.SchemaFilter<EnumSchemaFilter>())
             .AddHeadersForwarding()
-            .AddMessaging()
-            .AddRabbitMq()
-            .AddRabbitMqStreams()
             .AddConsul()
             .AddFabio()
             .AddLogger()
@@ -48,19 +45,17 @@ public static class Extensions
             .AddMongo()
             .AddRedis()
             .AddDistributedAccessTokenValidator()
-            .AddMongoRepository<RefreshTokenDocument, Guid>("refreshTokens")
-            .AddMongoRepository<UserDocument, Guid>("users")
+            .AddMongoRepository<GoalDocument, Guid>("goals")
+            .AddMongoRepository<SectionDocument, Guid>("sections")
+            .AddMongoRepository<TagDocument, Guid>("tags")
             .Services
             .AddMemoryCache()
             .AddHttpContextAccessor()
             .AddErrorToMessageHandlerDecorators()
-            .AddTransient<IRefreshTokenRepository, RefreshTokenRepository>()
-            .AddSingleton<IPasswordService, PasswordService>()
-            .AddSingleton<IPasswordHasher<IPasswordService>, PasswordHasher<IPasswordService>>()
-            .AddTransient<IUserRepository, UserRepository>()
+            .AddTransient<IGoalRepository, GoalRepository>()
+            .AddTransient<ISectionRepository, SectionRepository>()
+            .AddTransient<ITagRepository, TagRepository>()
             .AddTransient<IInitializer, MongoDbInitializer>()
-            .AddTransient<IJwtProvider, JwtProvider>()
-            .AddTransient<IPasswordService, PasswordService>()
             .AddHealthChecks().AddMongoCheck().AddSelfCheck().AddRedisCheck();
         
         return builder;

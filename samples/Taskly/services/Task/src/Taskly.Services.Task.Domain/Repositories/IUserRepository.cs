@@ -1,5 +1,3 @@
-using Taskly.Services.Task.Domain.Entities;
-
 namespace Taskly.Services.Task.Domain.Repositories;
 
 public interface IUserRepository

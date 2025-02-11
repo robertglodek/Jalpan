@@ -77,7 +77,7 @@ public static class Extensions
             new EnumRepresentationConvention(BsonType.String)
         };
         
-        ConventionRegistry.Register("EnumStringConvention", conventionPack, t => true);
+        ConventionRegistry.Register("EnumStringConvention", conventionPack, _ => true);
     }
 
     public static IHealthChecksBuilder AddMongoCheck(this IHealthChecksBuilder builder,

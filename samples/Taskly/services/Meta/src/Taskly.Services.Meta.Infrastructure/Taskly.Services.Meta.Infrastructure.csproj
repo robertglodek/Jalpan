@@ -7,12 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Auth.Jwt\src\Jalpan.Auth.Jwt\Jalpan.Auth.Jwt.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Discovery.Consul\src\Jalpan.Discovery.Consul\Jalpan.Discovery.Consul.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.LoadBalancing.Fabio\src\Jalpan.LoadBalancing.Fabio\Jalpan.LoadBalancing.Fabio.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Logging.Serilog\src\Jalpan.Logging.Serilog\Jalpan.Logging.Serilog.csproj" />
-        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Messaging.Idempotency.MongoDB\src\Jalpan.Messaging.Idempotency.MongoDB\Jalpan.Messaging.Idempotency.MongoDB.csproj" />
-        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Messaging.RabbitMQ.Streams\Jalpan.Messaging.RabbitMQ.Streams\Jalpan.Messaging.RabbitMQ.Streams.csproj" />
-        <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Messaging.RabbitMQ\src\Jalpan.Messaging.RabbitMQ\Jalpan.Messaging.RabbitMQ.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Metrics.OpenTelemetry\src\Jalpan.Metrics.OpenTelemetry\Jalpan.Metrics.OpenTelemetry.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Persistence.MongoDB\src\Jalpan.Persistence.MongoDB\Jalpan.Persistence.MongoDB.csproj" />
         <ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Persistence.Redis\src\Jalpan.Persistence.Redis\Jalpan.Persistence.Redis.csproj" />
