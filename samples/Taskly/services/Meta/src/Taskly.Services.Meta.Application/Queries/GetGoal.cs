@@ -2,7 +2,7 @@
 
 namespace Taskly.Services.Meta.Application.Queries;
 
-public sealed class GetTags : IQuery<IEnumerable<TagDto>>
+public sealed class GetGoal : IQuery<GoalDto>
 {
-    
+    public Guid Id { get; set; }
 }

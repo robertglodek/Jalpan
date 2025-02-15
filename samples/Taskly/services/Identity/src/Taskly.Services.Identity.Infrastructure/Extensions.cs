@@ -84,7 +84,6 @@ public static class Extensions
         app.UseRouting();
         app.UsePublicContracts();
         app.UseMetrics();
-        app.UseAuthorization();
         app.UseContextLogger();
         app.UseAccessTokenValidator();
         app.UseSerilogRequestLogging();

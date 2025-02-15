@@ -8,16 +8,16 @@ using Taskly.Services.Meta.Infrastructure.Mongo.Documents;
 namespace Taskly.Services.Meta.Infrastructure.Mongo.Queries.Handlers;
 
 [UsedImplicitly]
-internal sealed class GetSectionsHandler(
+internal sealed class GetSectionHandler(
     IMongoDbRepository<SectionDocument, Guid> sectionRepository,
-    IContextProvider contextProvider) : IQueryHandler<GetSections, IEnumerable<SectionDto>>
+    IContextProvider contextProvider) : IQueryHandler<GetSection, SectionDto>
 {
-    public async Task<IEnumerable<SectionDto>?> HandleAsync(GetSections query, CancellationToken cancellationToken = default)
+    public async Task<SectionDto?> HandleAsync(GetSection query, CancellationToken cancellationToken = default)
     {
         var context = contextProvider.Current();
+        var section = await sectionRepository.GetAsync(n => n.UserId == Guid.Parse(context.UserId!) && n.Id == query.Id,
+            cancellationToken);
 
-        var users = await sectionRepository.FindAsync(n => n.UserId == Guid.Parse(context.UserId!), cancellationToken);
-
-        return users.Select(n => n.AsDto());
+        return section?.AsDto();
     }
 }

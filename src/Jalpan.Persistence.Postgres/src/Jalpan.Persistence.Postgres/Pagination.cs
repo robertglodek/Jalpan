@@ -6,7 +6,8 @@ namespace Jalpan.Persistence.Postgres;
 
 public static class Pagination
 {
-    public static Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, IPagedQuery query, CancellationToken cancellationToken = default)
+    public static Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, IPagedQuery query,
+        CancellationToken cancellationToken = default)
         => data.PaginateAsync(query.OrderBy, query.SortOrder, query.Page, query.Results, cancellationToken);
 
     public static async Task<PagedResult<T>> PaginateAsync<T>(this IQueryable<T> data, string? orderBy,
@@ -25,7 +26,7 @@ public static class Pagination
         };
 
         var totalResults = await data.CountAsync(cancellationToken);
-        var totalPages = totalResults <= results ? 1 : (int) Math.Floor((double) totalResults / results);
+        var totalPages = totalResults <= results ? 1 : (int)Math.Floor((double)totalResults / results);
 
         List<T> result;
         if (string.IsNullOrWhiteSpace(orderBy))
@@ -36,11 +37,25 @@ public static class Pagination
 
         if (sortOrder?.ToLowerInvariant() == "asc")
         {
-            result = await data.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            if (typeof(T).GetProperty(orderBy) != null)
+            {
+                result = await data.OrderBy(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                result = await data.Limit(page, results).ToListAsync(cancellationToken);
+            }
         }
         else
         {
-            result = await data.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            if (typeof(T).GetProperty(orderBy) != null)
+            {
+                result = await data.OrderByDescending(ToLambda<T>(orderBy)).Limit(page, results).ToListAsync(cancellationToken);
+            }
+            else
+            {
+                result = await data.Limit(page, results).ToListAsync(cancellationToken);
+            }
         }
 
         return PagedResult<T>.Create(result, page, results, totalPages, totalResults);

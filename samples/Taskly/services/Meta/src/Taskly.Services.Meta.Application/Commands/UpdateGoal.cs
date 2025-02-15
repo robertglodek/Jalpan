@@ -3,7 +3,8 @@
 [UsedImplicitly]
 public sealed class UpdateGoal(Guid id, string name, string? description) : ICommand<Empty>
 {
-    public Guid Id { get; } = id;
+    [Hidden]
+    public Guid Id { get; set; } = id;
     public string Name { get; } = name;
     public string? Description { get; } = description;
 }

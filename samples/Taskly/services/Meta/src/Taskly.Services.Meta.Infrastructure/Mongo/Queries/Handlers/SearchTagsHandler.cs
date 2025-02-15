@@ -1,5 +1,6 @@
 using Jalpan.Contexts.Providers;
 using Jalpan.Handlers;
+using Jalpan.Pagination;
 using Jalpan.Persistence.MongoDB.Repositories;
 using Taskly.Services.Meta.Application.DTO;
 using Taskly.Services.Meta.Application.Queries;
@@ -8,16 +9,16 @@ using Taskly.Services.Meta.Infrastructure.Mongo.Documents;
 namespace Taskly.Services.Meta.Infrastructure.Mongo.Queries.Handlers;
 
 [UsedImplicitly]
-internal sealed class GetTagsHandler(
+internal sealed class SearchTagsHandler(
     IMongoDbRepository<TagDocument, Guid> tagRepository,
-    IContextProvider contextProvider) : IQueryHandler<GetTags, IEnumerable<TagDto>>
+    IContextProvider contextProvider) : IQueryHandler<SearchTags, PagedResult<TagDto>>
 {
-    public async Task<IEnumerable<TagDto>?> HandleAsync(GetTags query, CancellationToken cancellationToken = default)
+    public async Task<PagedResult<TagDto>?> HandleAsync(SearchTags query, CancellationToken cancellationToken = default)
     {
         var context = contextProvider.Current();
+        
+        var pagedResult = await tagRepository.BrowseAsync(n => n.UserId == Guid.Parse(context.UserId!), query, cancellationToken);
 
-        var users = await tagRepository.FindAsync(n => n.UserId == Guid.Parse(context.UserId!), cancellationToken);
-
-        return users.Select(n => n.AsDto());
+        return pagedResult.Map(d => d.AsDto());
     }
 }

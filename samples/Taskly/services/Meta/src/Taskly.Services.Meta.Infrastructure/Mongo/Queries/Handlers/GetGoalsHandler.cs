@@ -16,8 +16,8 @@ internal sealed class GetGoalsHandler(
     {
         var context = contextProvider.Current();
 
-        var users = await goalRepository.FindAsync(n => n.UserId == Guid.Parse(context.UserId!), cancellationToken);
+        var goals = await goalRepository.FindAsync(n => n.UserId == Guid.Parse(context.UserId!), cancellationToken);
 
-        return users.Select(n => n.AsDto());
+        return goals.Select(n => n.AsDto());
     }
 }
