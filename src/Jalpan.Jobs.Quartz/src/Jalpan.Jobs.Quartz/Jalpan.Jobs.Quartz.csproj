@@ -13,7 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
+	  <PackageReference Include="Quartz.Extensions.Hosting" Version="3.14.0" />
 	</ItemGroup>
 
 	<ItemGroup>

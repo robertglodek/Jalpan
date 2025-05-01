@@ -10,14 +10,14 @@
 	<ImplicitUsings>enable</ImplicitUsings>
 	<Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.30.0" />
+  </ItemGroup>
 	
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Jalpan.Jobs.Quartz.Exceptions;
+﻿using Jalpan.Jobs.Quartz.Attributes;
+using Jalpan.Jobs.Quartz.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 
@@ -76,7 +77,7 @@ public static class Extensions
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         var jobTypes = assemblies.SelectMany(a => a.GetTypes())
-            .Where(t => typeof(IJob).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
+            .Where(t => typeof(IJob).IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false } && t.IsDefined(typeof(IgnoreAttribute), inherit: false))
             .ToArray();
 
         foreach (var jobType in jobTypes)
@@ -85,8 +86,7 @@ public static class Extensions
         }
     }
 
-    private static void AddJobAndTrigger(this IServiceCollectionQuartzConfigurator quartzConfigurator, Type jobType,
-        QuartzOptions options)
+    private static void AddJobAndTrigger(this IServiceCollectionQuartzConfigurator quartzConfigurator, Type jobType, QuartzOptions options)
     {
         var jobKey = new JobKey(jobType.Name);
         quartzConfigurator.AddJob(jobType, jobKey);

@@ -146,8 +146,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{35
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Task", "Task", "{1C928D38-EDBC-4081-8E5C-49284097829D}"
 	ProjectSection(SolutionItems) = preProject
-		samples\Taskly\services\Task\Dockerfile = samples\Taskly\services\Task\Dockerfile
 		samples\Taskly\services\Task\.gitlab-ci.yml = samples\Taskly\services\Task\.gitlab-ci.yml
+		samples\Taskly\services\Task\Dockerfile = samples\Taskly\services\Task\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F66D3D7C-EAAF-4050-AB82-3E06E11B6770}"
@@ -164,8 +164,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Task.Infras
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identity", "Identity", "{8D2B98F2-E423-4128-B198-BC99F227A545}"
 	ProjectSection(SolutionItems) = preProject
-		samples\Taskly\services\Identity\Dockerfile = samples\Taskly\services\Identity\Dockerfile
 		samples\Taskly\services\Identity\.gitlab-ci.yml = samples\Taskly\services\Identity\.gitlab-ci.yml
+		samples\Taskly\services\Identity\Dockerfile = samples\Taskly\services\Identity\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D9FE616C-B39A-45EB-A540-BE750EE12373}"
@@ -182,14 +182,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Identity.Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{00D5C9B7-CC72-47BA-B325-E5F73E55B13E}"
 	ProjectSection(SolutionItems) = preProject
-		samples\Taskly\services\Notification\Dockerfile = samples\Taskly\services\Notification\Dockerfile
 		samples\Taskly\services\Notification\.gitlab-ci.yml = samples\Taskly\services\Notification\.gitlab-ci.yml
+		samples\Taskly\services\Notification\Dockerfile = samples\Taskly\services\Notification\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Report", "Report", "{C1849BFA-9191-47DE-B0F0-E4FECABBADB6}"
 	ProjectSection(SolutionItems) = preProject
-		samples\Taskly\services\Report\Dockerfile = samples\Taskly\services\Report\Dockerfile
 		samples\Taskly\services\Report\.gitlab-ci.yml = samples\Taskly\services\Report\.gitlab-ci.yml
+		samples\Taskly\services\Report\Dockerfile = samples\Taskly\services\Report\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADEF7793-F9FA-43B1-83B7-FD8C3EE4FE6F}"
@@ -233,7 +233,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Persistence.SqlServe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F90C1362-27A0-4CEF-88FA-2A206D2B42D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jalpan.Persistence.SqlServer", "src\Jalpan.Persistence.SqlServer\src\Jalpan.Persistence.SqlServer\Jalpan.Persistence.SqlServer.csproj", "{DAFE20F1-BA8D-47DD-9562-1227FC9D049F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jalpan.Persistence.SqlServer", "src\Jalpan.Persistence.SqlServer\src\Jalpan.Persistence.SqlServer\Jalpan.Persistence.SqlServer.csproj", "{DAFE20F1-BA8D-47DD-9562-1227FC9D049F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{FD61844B-5432-4F1E-96E0-97E89AC8572F}"
 EndProject
@@ -241,25 +241,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8A441FBB-4A3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6F421955-A168-439B-B5D6-8B16B4C44ADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Meta.Api", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Api\Taskly.Services.Meta.Api.csproj", "{8D87CD31-BC14-41ED-8028-543715D3EAF4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Meta.Api", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Api\Taskly.Services.Meta.Api.csproj", "{8D87CD31-BC14-41ED-8028-543715D3EAF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Meta.Domain", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Domain\Taskly.Services.Meta.Domain.csproj", "{53289289-6DFE-4F6F-B8E6-02FA24F5A856}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Meta.Domain", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Domain\Taskly.Services.Meta.Domain.csproj", "{53289289-6DFE-4F6F-B8E6-02FA24F5A856}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Meta.Infrastructure", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Infrastructure\Taskly.Services.Meta.Infrastructure.csproj", "{6E283491-F6FC-421D-869E-41273B718F0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Meta.Infrastructure", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Infrastructure\Taskly.Services.Meta.Infrastructure.csproj", "{6E283491-F6FC-421D-869E-41273B718F0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Meta.Application", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Application\Taskly.Services.Meta.Application.csproj", "{96D56E8C-3E82-4BE6-94E7-7BA5AE22BB33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Meta.Application", "samples\Taskly\services\Meta\src\Taskly.Services.Meta.Application\Taskly.Services.Meta.Application.csproj", "{96D56E8C-3E82-4BE6-94E7-7BA5AE22BB33}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Note", "Note", "{14ABEE21-EC1E-4AFF-BE6F-E272594C597C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BF090F4E-A81A-4B3A-BA7F-846012153E68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Note.Api", "samples\Taskly\services\Note\src\Taskly.Services.Note.Api\Taskly.Services.Note.Api.csproj", "{49A31EEC-896D-4661-89E5-1972500F68FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Note.Api", "samples\Taskly\services\Note\src\Taskly.Services.Note.Api\Taskly.Services.Note.Api.csproj", "{49A31EEC-896D-4661-89E5-1972500F68FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Note.Application", "samples\Taskly\services\Note\src\Taskly.Services.Note.Application\Taskly.Services.Note.Application.csproj", "{9F4E47A2-210B-45DA-B581-0631C6CBEB45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Note.Application", "samples\Taskly\services\Note\src\Taskly.Services.Note.Application\Taskly.Services.Note.Application.csproj", "{9F4E47A2-210B-45DA-B581-0631C6CBEB45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Note.Domain", "samples\Taskly\services\Note\src\Taskly.Services.Note.Domain\Taskly.Services.Note.Domain.csproj", "{CDAFADCA-30EC-40D0-8FA5-4ABC54D66241}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Note.Domain", "samples\Taskly\services\Note\src\Taskly.Services.Note.Domain\Taskly.Services.Note.Domain.csproj", "{CDAFADCA-30EC-40D0-8FA5-4ABC54D66241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Note.Infrastructure", "samples\Taskly\services\Note\src\Taskly.Services.Note.Infrastructure\Taskly.Services.Note.Infrastructure.csproj", "{B1242B9B-C2CD-47B3-806A-42A0EB143F95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Note.Infrastructure", "samples\Taskly\services\Note\src\Taskly.Services.Note.Infrastructure\Taskly.Services.Note.Infrastructure.csproj", "{B1242B9B-C2CD-47B3-806A-42A0EB143F95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payments", "Payments", "{A30DA3E9-5C23-4814-9B9B-4C6DFA43CA24}"
 EndProject
@@ -267,13 +267,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EE448D11-0DC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{05923FD6-B653-469E-9C37-11A3FE6AC7DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Payments.Domain", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Domain\Taskly.Services.Payments.Domain.csproj", "{9D1E5217-D174-43D3-A57F-D138FA119B81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Payments.Domain", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Domain\Taskly.Services.Payments.Domain.csproj", "{9D1E5217-D174-43D3-A57F-D138FA119B81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Payments.Application", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Application\Taskly.Services.Payments.Application.csproj", "{A92FA3C2-0241-4CEC-B7DF-4423E2D783CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Payments.Application", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Application\Taskly.Services.Payments.Application.csproj", "{A92FA3C2-0241-4CEC-B7DF-4423E2D783CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Payments.Infrastructure", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Infrastructure\Taskly.Services.Payments.Infrastructure.csproj", "{21D84612-4755-46DE-9903-F3C5FFBD4210}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Payments.Infrastructure", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Infrastructure\Taskly.Services.Payments.Infrastructure.csproj", "{21D84612-4755-46DE-9903-F3C5FFBD4210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskly.Services.Payments.Api", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Api\Taskly.Services.Payments.Api.csproj", "{716CA6AF-87CD-4175-8431-7A1A90AF319A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Taskly.Services.Payments.Api", "samples\Taskly\services\Payments\src\Taskly.Services.Payments.Api\Taskly.Services.Payments.Api.csproj", "{716CA6AF-87CD-4175-8431-7A1A90AF319A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{8CBE3AA7-9266-4CA3-B10B-29321548AB68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Jalpan.Channels.Email.SendGrid", "Jalpan.Channels.Email.SendGrid", "{F8CB1E63-C51A-423F-A0C0-DC3164CF45CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE5E28F7-42B8-48B9-BFAC-D22916A90646}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{28B8E148-8B1A-46DA-95D0-FE30A050CC41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jalpan.Channels.Email.SendGrid", "src\Jalpan.Channels.Email.SendGrid\src\Jalpan.Channels.Email.SendGrid\Jalpan.Channels.Email.SendGrid.csproj", "{AFA84AD4-3853-494F-93E8-0E641A6B2F44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -485,6 +495,14 @@ Global
 		{716CA6AF-87CD-4175-8431-7A1A90AF319A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{716CA6AF-87CD-4175-8431-7A1A90AF319A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{716CA6AF-87CD-4175-8431-7A1A90AF319A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CBE3AA7-9266-4CA3-B10B-29321548AB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CBE3AA7-9266-4CA3-B10B-29321548AB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CBE3AA7-9266-4CA3-B10B-29321548AB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CBE3AA7-9266-4CA3-B10B-29321548AB68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFA84AD4-3853-494F-93E8-0E641A6B2F44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFA84AD4-3853-494F-93E8-0E641A6B2F44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFA84AD4-3853-494F-93E8-0E641A6B2F44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFA84AD4-3853-494F-93E8-0E641A6B2F44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -509,6 +527,7 @@ Global
 		{1CA18124-475F-4DAF-8B88-EB572D4BDEFB} = {F3CE7B68-A71E-4198-A6A1-418FBC2C1CD9}
 		{BB8A46FB-55AD-4E00-ACD6-7EA6A05F4738} = {1CA18124-475F-4DAF-8B88-EB572D4BDEFB}
 		{62127B0A-6DE9-47AE-8FB6-95344F12D242} = {27660AD0-CFEE-4DB4-9931-18803A26A7D3}
+		{D39A6037-3700-4F37-B5E5-174ECE3C4320} = {23A76B16-D48C-4F48-A59E-C2FA7DA3ED8B}
 		{A69ACBAE-B083-426B-BD6F-F9DEE544578F} = {27660AD0-CFEE-4DB4-9931-18803A26A7D3}
 		{D5E0F61E-41BC-467C-827E-302C6FEBBEC1} = {A69ACBAE-B083-426B-BD6F-F9DEE544578F}
 		{B3BA81D1-C685-4F4B-A655-A6758431E2DB} = {D5E0F61E-41BC-467C-827E-302C6FEBBEC1}
@@ -587,7 +606,6 @@ Global
 		{3BA16826-979C-45D3-9E17-54295EFCF1CF} = {9B235ABD-DEEE-441E-AEFA-1022B3DB1E6B}
 		{AA3B702C-BAF6-489E-A251-9BDAD726F5B6} = {3BA16826-979C-45D3-9E17-54295EFCF1CF}
 		{23A76B16-D48C-4F48-A59E-C2FA7DA3ED8B} = {62127B0A-6DE9-47AE-8FB6-95344F12D242}
-		{D39A6037-3700-4F37-B5E5-174ECE3C4320} = {23A76B16-D48C-4F48-A59E-C2FA7DA3ED8B}
 		{17D0844A-10A2-4E6E-8B0B-4AAD60AB002C} = {27660AD0-CFEE-4DB4-9931-18803A26A7D3}
 		{F90C1362-27A0-4CEF-88FA-2A206D2B42D1} = {17D0844A-10A2-4E6E-8B0B-4AAD60AB002C}
 		{DAFE20F1-BA8D-47DD-9562-1227FC9D049F} = {F90C1362-27A0-4CEF-88FA-2A206D2B42D1}
@@ -611,6 +629,11 @@ Global
 		{A92FA3C2-0241-4CEC-B7DF-4423E2D783CB} = {EE448D11-0DCD-442C-A3FF-C92A9E220DF0}
 		{21D84612-4755-46DE-9903-F3C5FFBD4210} = {EE448D11-0DCD-442C-A3FF-C92A9E220DF0}
 		{716CA6AF-87CD-4175-8431-7A1A90AF319A} = {EE448D11-0DCD-442C-A3FF-C92A9E220DF0}
+		{8CBE3AA7-9266-4CA3-B10B-29321548AB68} = {3BA16826-979C-45D3-9E17-54295EFCF1CF}
+		{F8CB1E63-C51A-423F-A0C0-DC3164CF45CD} = {27660AD0-CFEE-4DB4-9931-18803A26A7D3}
+		{DE5E28F7-42B8-48B9-BFAC-D22916A90646} = {F8CB1E63-C51A-423F-A0C0-DC3164CF45CD}
+		{28B8E148-8B1A-46DA-95D0-FE30A050CC41} = {F8CB1E63-C51A-423F-A0C0-DC3164CF45CD}
+		{AFA84AD4-3853-494F-93E8-0E641A6B2F44} = {DE5E28F7-42B8-48B9-BFAC-D22916A90646}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BD1658A-F18C-408B-B206-A21057A6E039}

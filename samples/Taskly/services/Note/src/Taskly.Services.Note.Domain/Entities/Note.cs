@@ -1,5 +1,4 @@
 ﻿using Taskly.Services.Note.Domain.Exceptions;
-using Taskly.Services.Note.Domain.ValueObjects;
 
 namespace Taskly.Services.Note.Domain.Entities;
 
@@ -39,9 +38,9 @@ public sealed class Note : AggregateRoot
         Content = content;
     }
 
-    public void UpdateLinks(IEnumerable<Link>? links) => Links = links ?? new List<Link>();
+    public void UpdateLinks(IEnumerable<Link>? links) => Links = links ?? [];
     
-    public IEnumerable<Link> Links { get; private set; }
+    public IEnumerable<Link>? Links { get; private set; }
     public Guid UserId { get; private set; }
     public string Name { get; private set; }
     public string Content { get; private set; }

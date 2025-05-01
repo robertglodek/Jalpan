@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Description>Jalpan.Discovery.SendGrid</Description>
+		<Authors>Robert Głodek</Authors>
+		<AssemblyName>Jalpan.Discovery.SendGrid</AssemblyName>
+		<Title>Jalpan.Discovery.SendGrid</Title>
+		<PackageId>Jalpan.Discovery.SendGrid</PackageId>
+		<PackageTags>Jalpan.Discovery.SendGrid</PackageTags>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
+
+</Project>

@@ -8,12 +8,5 @@ internal sealed class NoteDocument : IIdentifiable<Guid>
     public string Name { get; init; } = null!;
     public string? Description { get; init; }
     public Guid UserId { get; init; }
-
-
-
-    internal sealed class LinkDocument
-    {
-        public string Url { get; init; } = null!;
-        public string? Name { get; init; }
-    }
+    public IEnumerable<LinkDocument>? Links { get; init; }
 }
