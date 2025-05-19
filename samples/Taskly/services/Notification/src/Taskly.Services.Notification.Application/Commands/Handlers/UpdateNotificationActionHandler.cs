@@ -8,10 +8,10 @@ using Taskly.Services.Notification.Application.Exceptions;
 using Taskly.Services.Notification.Domain.Repositories;
 
 
-public sealed class UpdateNotificationHandler(IContextProvider contextProvider,
-    INotificationRepository notificationRepository,
+public sealed class UpdateNotificationScheduleHandler(IContextProvider contextProvider,
+    INotificationScheduleRepository notificationRepository,
     IDateTime dateTime,
-    ILogger<UpdateNotificationHandler> logger) : ICommandHandler<UpdateNotification, Empty>
+    ILogger<UpdateNotificationScheduleHandler> logger) : ICommandHandler<UpdateNotification, Empty>
 {
     public async Task<Empty> HandleAsync(UpdateNotification command, CancellationToken cancellationToken = default)
         => await Empty.ExecuteAsync(async () =>

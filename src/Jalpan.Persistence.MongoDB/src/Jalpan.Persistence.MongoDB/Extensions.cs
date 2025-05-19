@@ -56,6 +56,32 @@ public static class Extensions
         await collection.Indexes.CreateOneAsync(createIndexModel);
     }
 
+    public static async Task DropIndexAsync<TModel>(
+        this IMongoCollection<TModel> collection,
+        params Expression<Func<TModel, object>>[] fields)
+    {
+        if (fields == null || fields.Length == 0)
+            throw new ArgumentException("At least one field must be specified.", nameof(fields));
+
+        // Build index keys
+        var keys = Builders<TModel>.IndexKeys.Ascending(fields[0]);
+        for (var i = 1; i < fields.Length; i++)
+            keys = keys.Ascending(fields[i]);
+
+        // Use the new RenderArgs overload
+        var args = new RenderArgs<TModel>(
+            collection.DocumentSerializer,
+            collection.Settings.SerializerRegistry
+        );
+
+        var renderedKeys = keys.Render(args);
+
+        // MongoDB default naming convention: field1_1_field2_1_...
+        var indexName = string.Join("_", renderedKeys.Names.Select(name => $"{name}_1"));
+
+        await collection.Indexes.DropOneAsync(indexName);
+    }
+
     public static IJalpanBuilder AddMongoRepository<TEntity, TIdentifiable>(
         this IJalpanBuilder builder,
         string collectionName)

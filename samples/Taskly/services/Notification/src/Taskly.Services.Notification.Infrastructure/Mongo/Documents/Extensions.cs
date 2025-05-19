@@ -6,7 +6,7 @@ namespace Taskly.Services.Notification.Infrastructure.Mongo.Documents;
 
 internal static class Extensions
 {
-    public static Domain.Entities.Notification AsEntity(this NotificationDocument document)
+    public static Domain.Entities.NotificationSchedule AsEntity(this NotificationDocument document)
         => new(document.Id, document.CreatedAt, document.LastModifiedAt, document.UserId, document.Name, document.Search, document.Tags, document.SectionId, document.GoalId, document.Schedule.AsEntity());
 
 
@@ -14,7 +14,7 @@ internal static class Extensions
        => new(document.ReminderTiming, document.ScheduleFrequency, document.CustomOffsetValue, document.SendTime);
 
 
-    public static NotificationDocument AsDocument(this Domain.Entities.Notification entity)
+    public static NotificationDocument AsDocument(this Domain.Entities.NotificationSchedule entity)
         => new()
         {
             Id = entity.Id,

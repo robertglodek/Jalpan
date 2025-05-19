@@ -53,7 +53,9 @@ public static class Extensions
             .AddHttpContextAccessor()
             .AddErrorToMessageHandlerDecorators()
             .AddTransient<IUserRepository, UserRepository>()
-            .AddTransient<INotificationRepository, NotificationRepository>()
+            .AddTransient<INotificationScheduleRepository, NotificationRepository>()
+            .AddTransient<IRoleAssignmentRepository, RoleAssignmentRepository>()
+            .AddTransient<IPermissionAssignmentRepository, PermissionAssignmentRepository>()
             .AddHealthChecks().AddMongoCheck().AddSelfCheck().AddRedisCheck();
 
         return builder;

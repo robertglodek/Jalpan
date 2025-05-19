@@ -6,12 +6,12 @@ using Taskly.Services.Notification.Domain.Repositories;
 
 namespace Taskly.Services.Notification.Application.Commands.Handlers;
 
-public sealed class CreateNotificationHandler(IContextProvider contextProvider,
-    INotificationRepository notificationRepository,
+public sealed class CreateNotificationActionHandler(IContextProvider contextProvider,
+    INotificationScheduleRepository notificationRepository,
     IDateTime dateTime,
-    ILogger<CreateNotificationHandler> logger) : ICommandHandler<CreateNotificationSchedule, Guid>
+    ILogger<CreateNotificationActionHandler> logger) : ICommandHandler<CreateNotificationAction, Guid>
 {
-    public async Task<Guid> HandleAsync(CreateNotificationSchedule command, CancellationToken cancellationToken = default)
+    public async Task<Guid> HandleAsync(CreateNotificationAction command, CancellationToken cancellationToken = default)
     {
         var context = contextProvider.Current();
 

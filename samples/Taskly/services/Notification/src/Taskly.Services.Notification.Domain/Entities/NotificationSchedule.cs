@@ -2,7 +2,7 @@
 
 namespace Taskly.Services.Notification.Domain.Entities;
 
-public sealed class Notification : AggregateRoot
+public sealed class NotificationSchedule : AggregateRoot
 {
     public Guid UserId { get; set; }
     public string Name { get; private set; }
@@ -12,7 +12,7 @@ public sealed class Notification : AggregateRoot
     public Guid? GoalId { get; set; }
     public Schedule Schedule { get; set; }
     public DateTime? LastModifiedAt { get; set; }
-    public Notification(Guid id, DateTime createdAt, DateTime? lastModifiedAt, Guid userId, string name, string? search, IEnumerable<string>? tags, Guid? sectionId, Guid? goalId, Schedule schedule)
+    public NotificationSchedule(Guid id, DateTime createdAt, DateTime? lastModifiedAt, Guid userId, string name, string? search, IEnumerable<string>? tags, Guid? sectionId, Guid? goalId, Schedule schedule)
     {
         Id = id;
 

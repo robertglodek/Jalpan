@@ -2,8 +2,13 @@
 
 public enum Interval
 {
-    None,
     Everyday,
+    Every2Days,
+    Every3Days,
+    Every4Days,
+    Every5Days,
+    Every6Days,
+    Every7Days,
     EveryMonday,
     EveryTuesday,
     EveryWednesday,

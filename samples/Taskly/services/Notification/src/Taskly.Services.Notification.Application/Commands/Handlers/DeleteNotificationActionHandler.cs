@@ -8,7 +8,7 @@ using Taskly.Services.Notification.Domain.Repositories;
 namespace Taskly.Services.Notification.Application.Commands.Handlers;
 
 public sealed class DeleteNotificationHandler(IContextProvider contextProvider,
-    INotificationRepository notificationRepository,
+    INotificationScheduleRepository notificationRepository,
     ILogger<DeleteNotificationHandler> logger) : ICommandHandler<DeleteNotification, Empty>
 {
     public async Task<Empty> HandleAsync(DeleteNotification command, CancellationToken cancellationToken = default)

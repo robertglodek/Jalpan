@@ -17,7 +17,7 @@ internal sealed class UserUpdatedHandler(IUserRepository userRepository, ILogger
 
         user.UpdateEmail(@event.Email);
         user.Role = Role.From(@event.Role);
-        user.Permissions = @event.Permissions;
+        user.UpdatePermissions(@event.Permissions?.Select(Permission.From));
         user.LastModifiedAt = dateTime.Now;
 
         await userRepository.UpdateAsync(user, cancellationToken);
