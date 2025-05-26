@@ -1,6 +1,6 @@
 ﻿namespace Taskly.Services.Task.Domain.Enums;
 
-public enum Interval
+public enum Interval: byte
 {
     Everyday,
     Every2Days,

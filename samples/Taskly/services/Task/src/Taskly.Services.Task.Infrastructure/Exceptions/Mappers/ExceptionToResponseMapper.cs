@@ -1,13 +1,13 @@
-using Jalpan;
+﻿using Jalpan;
 using Jalpan.Validation;
 using Jalpan.WebApi.Exceptions;
 using Jalpan.WebApi.Exceptions.Mappers;
 using System.Collections.Concurrent;
 using System.Net;
-using Taskly.Services.Meta.Application.Exceptions;
-using Taskly.Services.Meta.Domain.Exceptions;
+using Taskly.Services.Task.Application.Exceptions;
+using Taskly.Services.Task.Domain.Exceptions;
 
-namespace Taskly.Services.Meta.Infrastructure.Exceptions.Mappers;
+namespace Taskly.Services.Task.Infrastructure.Exceptions.Mappers;
 
 [UsedImplicitly]
 internal sealed class ExceptionToResponseMapper : IExceptionToResponseMapper

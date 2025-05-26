@@ -5,11 +5,12 @@ namespace Taskly.Services.Task.Domain.Entities;
 
 public sealed class Task : AggregateRoot
 {
+    public Guid UserId { get; private set; }
     public string Name { get; private set; }
-    public string? Description { get; private set; }
-    public Guid? SectionId { get; private set; }
-    public Guid? GoalId { get; private set; }
-    public Guid? RootTaskId { get; private set; }
+    public string? Description { get; set; }
+    public Guid? SectionId { get; set; }
+    public Guid? GoalId { get; set; }
+    public Guid? RootTaskId { get; set; }
     public PriorityLevel PriorityLevel { get; private set; }
     public IEnumerable<Guid> Tags { get; private set; }
     public bool Repeatable { get; private set; }
@@ -18,6 +19,8 @@ public sealed class Task : AggregateRoot
     public DateTime? DueDate { get; private set; }
 
     public Task(
+        Guid id,
+        Guid userId,
         string name,
         string? description,
         Guid? sectionId,
@@ -30,9 +33,11 @@ public sealed class Task : AggregateRoot
         TaskInterval? interval,
         DateTime? dueDate)
     {
-        ValidateName(name);
+        UpdateName(name);
         ValidateIntervalAndDueDate(interval, dueDate);
 
+        Id = id;
+        UserId = userId;
         Name = name;
         Description = description;
         SectionId = sectionId;
@@ -46,12 +51,10 @@ public sealed class Task : AggregateRoot
         Active = interval is not null || active;
     }
 
-    private static void ValidateName(string name)
+    public void UpdateName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new InvalidTaskNameException();
-        }
+        if (string.IsNullOrEmpty(name)) throw new InvalidTaskNameException();
+        Name = name;
     }
 
     private static void ValidateIntervalAndDueDate(TaskInterval? interval, DateTime? dueDate)

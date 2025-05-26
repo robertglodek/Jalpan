@@ -1,1 +1,1 @@
-﻿
+﻿global using JetBrains.Annotations;

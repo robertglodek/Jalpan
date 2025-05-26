@@ -18,6 +18,7 @@ using Jalpan.WebApi.Swagger;
 using Jalpan.WebApi.Swagger.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Taskly.Services.Meta.Domain.Repositories;
 using Taskly.Services.Meta.Infrastructure.Exceptions.Mappers;
 using Taskly.Services.Meta.Infrastructure.Mongo.Documents;
