@@ -21,6 +21,5 @@ internal sealed class UserUpdatedHandler(IUserRepository userRepository, ILogger
         user.LastModifiedAt = dateTime.Now;
 
         await userRepository.UpdateAsync(user, cancellationToken);
-        await Task.CompletedTask;
     }
 }

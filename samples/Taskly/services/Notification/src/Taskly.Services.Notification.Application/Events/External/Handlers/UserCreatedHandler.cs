@@ -21,7 +21,5 @@ internal sealed class UserCreatedHandler(IUserRepository userRepository, ILogger
         logger.LogInformation("Received '{EventName}' event with user id: {UserId}", nameof(UserCreated).Underscore(), @event.Id);
         user = new User(@event.Id, @event.Email, Role.From(@event.Role), dateTime.Now, null, @event.Permissions?.Select(Permission.From));
         await userRepository.AddAsync(user, cancellationToken);
-
-        await Task.CompletedTask;
     }
 }

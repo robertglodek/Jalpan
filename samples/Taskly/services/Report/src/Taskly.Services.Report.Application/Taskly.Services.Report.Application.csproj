@@ -1,13 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Taskly.Services.Report.Domain\Taskly.Services.Report.Domain.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Contexts\src\Jalpan.Contexts\Jalpan.Contexts.csproj" />
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan.Jobs.Quartz\src\Jalpan.Jobs.Quartz\Jalpan.Jobs.Quartz.csproj" />
+		<ProjectReference Include="..\Taskly.Services.Report.Domain\Taskly.Services.Report.Domain.csproj" />
+		<ProjectReference Include="..\..\..\..\..\..\src\Jalpan\src\Jalpan\Jalpan.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Commands\" />
+		<Folder Include="DTO\" />
+		<Folder Include="Exceptions\" />
+		<Folder Include="Queries\" />
+	</ItemGroup>
 
 </Project>

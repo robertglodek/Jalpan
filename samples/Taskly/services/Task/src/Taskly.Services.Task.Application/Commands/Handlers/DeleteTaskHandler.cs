@@ -16,12 +16,7 @@ internal sealed class DeleteTaskHandler(IContextProvider contextProvider, ITaskR
         {
             var context = contextProvider.Current();
 
-            var task = await taskRepository.GetAsync(command.Id, cancellationToken);
-            if (task == null)
-            {
-                throw new TaskNotFoundException(command.Id);
-            }
-
+            var task = await taskRepository.GetAsync(command.Id, cancellationToken) ?? throw new TaskNotFoundException(command.Id);
             if (task.UserId != Guid.Parse(context.UserId!))
             {
                 throw new UnauthorizedTaskAccessException(task.Id, Guid.Parse(context.UserId!));

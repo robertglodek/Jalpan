@@ -5,19 +5,24 @@ namespace Taskly.Services.Task.Domain.Entities;
 
 public sealed class Task : AggregateRoot
 {
+    private IEnumerable<Guid> _tags = [];
     public Guid UserId { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; set; }
     public Guid? SectionId { get; set; }
     public Guid? GoalId { get; set; }
     public Guid? RootTaskId { get; set; }
-    public PriorityLevel PriorityLevel { get; private set; }
-    public IEnumerable<Guid> Tags { get; private set; }
-    public bool Repeatable { get; private set; }
-    public bool Active { get; private set; }
+    public PriorityLevel PriorityLevel { get; set; }
+    public IEnumerable<Guid> Tags 
+    {
+        get => _tags;
+        set => _tags = value ?? [];
+    }
+    public bool Repeatable { get; set; }
+    public bool Active { get; set; }
     public TaskInterval? Interval { get; private set; }
     public DateTime? DueDate { get; private set; }
-
+    public DateTime? ModifiedAt { get; set; }
     public Task(
         Guid id,
         Guid userId,
@@ -34,7 +39,7 @@ public sealed class Task : AggregateRoot
         DateTime? dueDate)
     {
         UpdateName(name);
-        ValidateIntervalAndDueDate(interval, dueDate);
+        UpdateIntervalAndDueDate(interval, dueDate);
 
         Id = id;
         UserId = userId;
@@ -46,9 +51,7 @@ public sealed class Task : AggregateRoot
         PriorityLevel = priorityLevel;
         Tags = tags;
         Repeatable = repeatable;
-        Interval = interval;
-        DueDate = dueDate;
-        Active = interval is not null || active;
+        Active = active;
     }
 
     public void UpdateName(string name)
@@ -57,11 +60,14 @@ public sealed class Task : AggregateRoot
         Name = name;
     }
 
-    private static void ValidateIntervalAndDueDate(TaskInterval? interval, DateTime? dueDate)
+    public void UpdateIntervalAndDueDate(TaskInterval? interval, DateTime? dueDate)
     {
         if (interval is not null && dueDate is not null)
         {
             throw new TaskCannotHaveIntervalAndDueDateException();
         }
+
+        Interval = interval;
+        DueDate = dueDate;
     }
 }
